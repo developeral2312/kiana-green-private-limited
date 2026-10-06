@@ -1,0 +1,194 @@
+{% load static %}
+
+<!-- ================= SIDEBAR ================= -->
+<nav id="sidebar" class="sidebar bg-body-tertiary border-end">
+
+    <!-- ===== HEADER (LOGO + TOGGLE) ===== -->
+    <div class="sidebar-header d-flex align-items-center justify-content-between px-3 py-2">
+
+        <!-- Logo -->
+                <!-- Custom HTML Text Logo -->
+        <div class="sidebar-logo d-flex align-items-center" style="gap: 8px;">
+            <!-- Keeping only the small leaf/sun icon -->
+            <img src="{% static 'images/logo1.png' %}" 
+                 class="img-fluid" 
+                 alt="Icon" 
+                 style="height: 38px; width: 38px; object-fit: contain; mix-blend-mode: multiply;">
+            
+            <div class="sidebar-logo-full d-flex flex-column justify-content-center" style="line-height: 1;">
+                <span style="font-size: 1.3rem; font-weight: 800; color: #1f4e3d; letter-spacing: 0.5px; margin-bottom: 2px;">KIANA</span>
+                <span style="font-size: 0.75rem; font-weight: 600; color: #4ade80; letter-spacing: 2px;">GREEN</span>
+            </div>
+        </div>
+
+        <!-- Sidebar Toggle: ONLY on desktop. On mobile, hamburger in topnavbar is used. -->
+        <label for="sidebarToggleCheckbox" class="toggle-btn d-none d-lg-flex">
+            <i class="bi bi-chevron-left arrow-icon"></i>
+        </label>
+
+    </div>
+
+
+    <!-- ===== SIDEBAR MENU ===== -->
+    <ul class="nav flex-column px-3" id="sidebarMenu">
+
+        <!-- ================= DASHBOARD ================= -->
+        <li class="nav-item">
+
+            <a href="{% url 'dashboard' %}"
+               class="nav-link d-flex align-items-center {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}"
+               data-bs-toggle="tooltip"
+               data-bs-placement="right"
+               title="Dashboard">
+
+                <i class="bi bi-speedometer2 nav-icon  text-primary "></i>
+                <span class="link-text ms-2">Dashboard</span>
+
+            </a>
+
+        </li>
+
+        <!-- ================= TASKS ================= -->
+        <li class="sidebar-heading mt-3 text-muted small">MY TASKS</li>
+        <li class="nav-item">
+            <a class="nav-link d-flex align-items-center justify-content-between"
+               data-bs-toggle="collapse"
+               href="#myTasksMenu">
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-list-check nav-icon text-primary"></i>
+                    <span class="link-text ms-2">
+                        Assigned Tasks
+                    </span>
+                </div>
+                
+            </a>
+            <div class="collapse submenu" id="myTasksMenu" data-bs-parent="#sidebarMenu">
+                <ul class="nav flex-column ms-4">
+                    <li>
+                        <a class="nav-link" href="{% url 'installation_tasks' %}?filter=today">
+                            Today's Tasks
+                        </a>
+                    </li>
+                    <li>
+                        <a class="nav-link" href="{% url 'installation_tasks' %}?filter=pending">
+                            Pending Tasks
+                        </a>
+                    </li>
+                    <li>
+                        <a class="nav-link" href="{% url 'installation_tasks' %}?filter=overdue">
+                            Overdue Tasks
+                        </a>
+                    </li>
+                    <li>
+                        <a class="nav-link" href="{% url 'installation_tasks' %}?filter=completed">Completed Tasks</a>
+                    </li>
+
+                </ul>
+            </div>
+        </li>
+
+        <!-- ================= PROJECTS ================= -->
+        <li class="sidebar-heading mt-3 text-muted small">MY PROJECTS</li>
+        <li class="nav-item">
+            <a class="nav-link d-flex align-items-center justify-content-between"
+               data-bs-toggle="collapse"
+               href="#staffProjectsMenu">
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-folder2-open nav-icon text-warning"></i>
+                    <span class="link-text ms-2">
+                        Projects
+                        {% if project_count %}<span class="badge bg-success rounded-pill">{{ project_count }}</span>{% endif %}
+                    </span>
+                </div>
+                
+            </a>
+            <div class="collapse submenu" id="staffProjectsMenu" data-bs-parent="#sidebarMenu">
+                <ul class="nav flex-column ms-4">
+                    <li><a class="nav-link" href="{% url 'project_list' %}">Assigned Projects</a></li>
+                    <li><a class="nav-link" href="{% url 'layouts' %}">View Project Layouts</a></li>
+                </ul>
+            </div>
+        </li>
+
+        <!-- ================= INSTALLATION WORK ================= -->
+        <li class="sidebar-heading mt-3 text-muted small">INSTALLATION WORK</li>
+        <li class="nav-item">
+            <a class="nav-link d-flex align-items-center justify-content-between"
+               data-bs-toggle="collapse"
+               href="#installationWorkMenu">
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-tools nav-icon text-success"></i>
+                    <span class="link-text ms-2">
+                        Work Progress
+                    </span>
+                </div>
+                
+            </a>
+            <div class="collapse submenu" id="installationWorkMenu" data-bs-parent="#sidebarMenu">
+                <ul class="nav flex-column ms-4">
+                    <li><a class="nav-link" href="{% url 'update_work_progress' %}">Update Work Progress</a></li>
+                    <li><a class="nav-link" href="{% url 'upload_photos' %}">Upload Installation Photos</a></li>
+                    <li><a class="nav-link" href="{% url 'report_issues' %}">Report Issues</a></li>
+                </ul>
+            </div>
+        </li>
+
+        <!-- ================= MATERIALS ================= -->
+        <li class="sidebar-heading mt-3 text-muted small">MATERIALS</li>
+        <li class="nav-item">
+            <a class="nav-link d-flex align-items-center justify-content-between"
+               data-bs-toggle="collapse"
+               href="#materialsMenu">
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-box-seam nav-icon text-secondary"></i>
+                    <span class="link-text ms-2">
+                        Inventory
+                    </span>
+                </div>
+                
+            </a>
+            <div class="collapse submenu" id="materialsMenu" data-bs-parent="#sidebarMenu">
+                <ul class="nav flex-column ms-4">
+                    <li><a class="nav-link" href="{% url 'allocation_list' %}">View Assigned Materials</a></li>
+                    <li><a class="nav-link" href="{% url 'request_material' %}">Request Additional Materials</a></li>
+                </ul>
+            </div>
+        </li>
+
+        <li class="sidebar-heading mt-3 text-muted small text-uppercase">System</li>
+        <!-- ================= NOTIFICATIONS ================= -->
+        <li class="nav-item mt-3">
+            <a href="{% url 'notifications' %}" class="nav-link d-flex align-items-center">
+                <i class="bi bi-bell nav-icon text-danger"></i>
+                <span class="link-text ms-2">Notifications</span>
+            </a>
+        </li>
+
+
+        <!-- ================= PROFILE ================= -->        
+        <li class="nav-item mt-3">
+            <a href="{% url 'profile' %}" class="nav-link d-flex align-items-center">
+                <i class="bi bi-person-circle nav-icon text-primary"></i>
+                <span class="link-text ms-2">My Profile</span>
+            </a>
+        </li>
+
+    </ul>
+
+</nav>
+
+
+<!-- ================= TOOLTIP SCRIPT ================= -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    var tooltipTriggerList = [].slice.call(
+        document.querySelectorAll('[data-bs-toggle="tooltip"]')
+    );
+
+    tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+
+});
+</script>

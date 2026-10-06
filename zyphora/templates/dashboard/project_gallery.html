@@ -1,0 +1,157 @@
+{% extends 'dashboard/dashboard.html' %}
+{% load static %}
+
+{% block link %}
+<link rel="stylesheet" href="{% static 'css/dashboard/project_gallery.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<!-- Breadcrumb -->
+<nav aria-label="breadcrumb" class="mb-3">
+    <ol class="breadcrumb mb-0">
+        <li class="breadcrumb-item">
+            <a href="{% url request.user.role %}">{{ request.user.role|title }} Dashboard</a>
+        </li>
+        <li class="breadcrumb-item">
+            <a href="{% url 'project_list' %}">Projects</a>
+        </li>
+        <li class="breadcrumb-item">
+            <a href="{% url 'project_detail' project.id %}">{{ project.title }}</a>
+        </li>
+        <li class="breadcrumb-item active">Gallery</li>
+    </ol>
+</nav>
+
+<div class="container-fluid mt-3">
+
+    <!-- Header -->
+    <div class="d-flex justify-content-between mb-3">
+        <h4 class="fw-bold text-primary">{{ project.title }} Gallery</h4>
+
+        <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#uploadFileModal">
+            Upload Media
+        </button>
+    </div>
+
+    <!-- Gallery -->
+    <div class="row">
+        {% for file in files %}
+        <div class="col-md-4 col-lg-3 mb-4">
+            <div class="card shadow-sm border-0">
+
+                <div onclick="openViewer({{ forloop.counter0 }})">
+
+                    {% if file.is_video %}
+                        <video class="media-preview w-100 rounded-top">
+                            <source src="{{ file.file.url }}">
+                        </video>
+                    {% else %}
+                        <img src="{{ file.file.url }}" class="media-preview w-100 rounded-top">
+                    {% endif %}
+
+                </div>
+
+                <div class="p-2">
+                    <small class="text-muted">{{ file.caption|default:"No caption" }}</small><br>
+                    <small class="badge bg-info">{{ file.get_category_display }}</small>
+
+                    <div class="d-flex justify-content-between mt-2">
+                        <button class="btn btn-sm btn-outline-primary"
+                                data-bs-toggle="modal"
+                                data-bs-target="#captionModal{{file.id}}">
+                            <i class="bi bi-pencil"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Caption Modal -->
+        <div class="modal fade" id="captionModal{{file.id}}">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form method="POST" action="{% url 'update_caption' file.id %}">
+                        {% csrf_token %}
+                        <div class="modal-header">
+                            <h5>Update Caption</h5>
+                        </div>
+                        <div class="modal-body">
+                            <input type="text" name="caption" value="{{file.caption}}" class="form-control">
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-primary">Save</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        {% empty %}
+        <p>No media uploaded</p>
+        {% endfor %}
+    </div>
+
+</div>
+
+<!-- FULLSCREEN VIEWER -->
+<div id="mediaViewer" class="media-viewer d-none">
+    <span class="viewer-close" onclick="closeViewer()">×</span>
+    <span class="viewer-nav left" onclick="prevMedia()">❮</span>
+    <span class="viewer-nav right" onclick="nextMedia()">❯</span>
+    <div class="viewer-content" id="viewerContent"></div>
+</div>
+
+<!-- MEDIA DATA -->
+<script>
+const mediaFiles = [
+    {% for file in files %}
+        {
+            url: "{{ file.file.url }}",
+            isVideo: {{ file.is_video|yesno:"true,false" }}
+        },
+    {% endfor %}
+]
+</script>
+
+<!-- VIEWER SCRIPT -->
+<script>
+let currentIndex = 0
+
+function openViewer(index) {
+    currentIndex = index
+    document.getElementById("mediaViewer").classList.remove("d-none")
+    renderViewer()
+}
+
+function closeViewer() {
+    document.getElementById("mediaViewer").classList.add("d-none")
+}
+
+function renderViewer() {
+    const media = mediaFiles[currentIndex]
+    const container = document.getElementById("viewerContent")
+
+    if (media.isVideo) {
+        container.innerHTML = `<video controls autoplay><source src="${media.url}"></video>`
+    } else {
+        container.innerHTML = `<img src="${media.url}">`
+    }
+}
+
+function nextMedia() {
+    currentIndex = (currentIndex + 1) % mediaFiles.length
+    renderViewer()
+}
+
+function prevMedia() {
+    currentIndex = (currentIndex - 1 + mediaFiles.length) % mediaFiles.length
+    renderViewer()
+}
+
+document.addEventListener("keydown", function(e){
+    if(e.key === "Escape") closeViewer()
+})
+</script>
+
+{% endblock %}

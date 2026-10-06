@@ -1,0 +1,221 @@
+{% load static %}
+
+<!-- ================= SIDEBAR ================= -->
+<nav id="sidebar" class="sidebar bg-body-tertiary border-end">
+
+    <!-- ===== HEADER (LOGO + TOGGLE) ===== -->
+    <div class="sidebar-header d-flex align-items-center justify-content-between px-3 py-2">
+
+        <!-- Logo -->
+                <!-- Custom HTML Text Logo -->
+        <div class="sidebar-logo d-flex align-items-center" style="gap: 8px;">
+            <!-- Keeping only the small leaf/sun icon -->
+            <img src="{% static 'images/logo1.png' %}" 
+                 class="img-fluid" 
+                 alt="Icon" 
+                 style="height: 38px; width: 38px; object-fit: contain; mix-blend-mode: multiply;">
+            
+            <div class="sidebar-logo-full d-flex flex-column justify-content-center" style="line-height: 1;">
+                <span style="font-size: 1.3rem; font-weight: 800; color: #1f4e3d; letter-spacing: 0.5px; margin-bottom: 2px;">KIANA</span>
+                <span style="font-size: 0.75rem; font-weight: 600; color: #4ade80; letter-spacing: 2px;">GREEN</span>
+            </div>
+        </div>
+
+        <!-- Sidebar Toggle: ONLY on desktop. On mobile, hamburger in topnavbar is used. -->
+        <label for="sidebarToggleCheckbox" class="toggle-btn d-none d-lg-flex">
+            <i class="bi bi-chevron-left arrow-icon"></i>
+        </label>
+
+    </div>
+
+
+    <!-- ===== SIDEBAR MENU ===== -->
+    <ul class="nav flex-column px-3" id="sidebarMenu">
+
+        <!-- ================= DASHBOARD ================= -->
+        <li class="nav-item">
+
+            <a href="{% url 'dashboard' %}"
+               class="nav-link d-flex align-items-center {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}"
+               data-bs-toggle="tooltip"
+               data-bs-placement="right"
+               title="Dashboard">
+
+                <i class="bi bi-speedometer2 nav-icon  text-primary "></i>
+                <span class="link-text ms-2">Dashboard</span>
+
+            </a>
+
+        </li>        
+        
+        <!-- CRM -->
+        <li class="sidebar-heading mt-3 text-muted small">CRM MANAGEMENT</li>
+        <li class="nav-item">
+            <a class="nav-link d-flex align-items-center justify-content-between {% if request.resolver_match.url_name in 'lead_list add_lead review' %}active{% endif %}" 
+               data-bs-toggle="collapse" href="#crmMenu" aria-expanded="false">
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-person-lines-fill nav-icon text-primary"></i>
+                    <span class="link-text ms-2">CRM</span>
+                </div>
+                
+            </a>
+            <div class="collapse submenu" id="crmMenu" data-bs-parent="#sidebarMenu">
+                <ul class="nav flex-column ms-4">
+                    <li><a href="{% url 'lead_list' %}" class="nav-link">All Leads</a></li>
+                    <li><a href="{% url 'add_lead' %}" class="nav-link">Add Lead</a></li>
+                    <li><a href="{% url 'review' %}" class="nav-link">User Reviews</a></li>
+                </ul>
+            </div>
+        </li>
+
+        <!-- PROJECTS -->
+        <li class="sidebar-heading mt-3 text-muted small">PROJECT MANAGEMENT</li>
+        <li class="nav-item">
+            <a class="nav-link d-flex align-items-center justify-content-between {% if request.resolver_match.url_name in 'project_list recent_activity' %}active{% endif %}" 
+               data-bs-toggle="collapse" href="#projectMenu">
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-briefcase nav-icon text-warning"></i>
+                    <span class="link-text ms-2">Projects</span>
+                </div>
+                
+            </a>
+            <div class="collapse submenu" id="projectMenu" data-bs-parent="#sidebarMenu">
+                <ul class="nav flex-column ms-4">
+                    <li><a href="{% url 'project_list' %}" class="nav-link">All Projects</a></li>
+                    <li><a class="nav-link" href="{% url 'feasibility_list' %}">Feasibility Study</a></li>
+                    <li><a class="nav-link" href="{% url 'design_list' %}">Design Management</a></li>
+                    <li><a class="nav-link" href="{% url 'installation_progress' %}">Installation Progress</a></li>
+                    <li><a class="nav-link" href="{% url 'licensing_list' %}">Licensing Progress</a></li>
+                    <li><a class="nav-link" href="{% url 'energisation_projects' %}">Energisation</a></li>
+                    <li><a href="{% url 'completed_projects' %}" class="nav-link">Completed Projects</a></li>
+                    <li><a href="{% url 'recent_activity' %}" class="nav-link">Recent Activity</a></li>
+                    <li><a href="{% url 'gallery_projects' %}" class="nav-link">Project Gallery</a></li>
+
+                </ul>
+            </div>
+        </li>
+
+        <!-- EMPLOYEES -->
+        <li class="sidebar-heading mt-3 text-muted small">EMPLOYEE MANAGEMENT</li>
+        <li class="nav-item">
+            <a class="nav-link d-flex align-items-center justify-content-between {% if request.resolver_match.url_name in 'emplist addemp' %}active{% endif %}" 
+               data-bs-toggle="collapse" href="#employeeMenu">
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-people nav-icon text-success"></i>
+                    <span class="link-text ms-2">Employees</span>
+                </div>
+                
+            </a>
+            <div class="collapse submenu" id="employeeMenu" data-bs-parent="#sidebarMenu">
+                <ul class="nav flex-column ms-4">
+                    <li><a href="{% url 'emplist' %}" class="nav-link">Employee List</a></li>
+                    <li><a href="{% url 'addemp' %}" class="nav-link">New Employee</a></li>
+                    <li><a href="{% url 'assigned_tasks' %}" class="nav-link">Assigned Tasks</a></li>
+                </ul>
+            </div>
+        </li>
+
+        <!-- PROCUREMENT -->
+        <li class="sidebar-heading mt-3 text-muted small">PROCUREMENT</li>
+        <li class="nav-item">
+            <a class="nav-link d-flex align-items-center justify-content-between" 
+               data-bs-toggle="collapse" href="#procurementMenu">
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-box-seam nav-icon text-purple"></i>
+                    <span class="link-text ms-2">Procurement</span>
+                </div>
+                
+            </a>
+            <div class="collapse submenu" id="procurementMenu" data-bs-parent="#sidebarMenu">
+                <ul class="nav flex-column ms-4">
+                    <li><a href="{% url 'material_list' %}" class="nav-link">Materials</a></li>
+                    <li><a href="{% url 'admin_material_requests' %}" class="nav-link">Material Requests</a></li>
+                    <li><a class="nav-link" href="{% url 'allocation_list' %}">Allocated Materials</a></li>
+                    <li><a href="{% url 'vendor_list' %}" class="nav-link">Vendors</a></li>
+                    <li><a href="{% url 'purchase_order_list' %}" class="nav-link">Purchase Orders</a></li>
+                    <li><a href="{% url 'goods_received_list' %}" class="nav-link">Goods Received</a></li>
+                    <li><a href="{% url 'stock_list' %}" class="nav-link">Stock Levels</a></li>
+                </ul>
+            </div>
+        </li>
+
+
+        <!-- ================= FINANCE ================= -->
+        <li class="sidebar-heading mt-3 text-muted small text-uppercase">Finance</li>
+        <li class="nav-item mt-2">
+            <a class="nav-link d-flex align-items-center justify-content-between"
+            data-bs-toggle="collapse"
+            href="#financeMenu">
+
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-cash-coin nav-icon"></i>
+                    <span class="link-text ms-2">Finance</span>
+                </div>
+
+                
+            </a>
+
+            <div class="collapse submenu" id="financeMenu" data-bs-parent="#sidebarMenu">
+                <ul class="nav flex-column ms-4">
+                    <li><a href="{% url 'invoice_list' %}" class="nav-link">Invoices</a></li>
+                    <li><a href="{% url 'client_payments' %}" class="nav-link">Payments</a></li>
+                    <li><a href="{% url 'all_expenses' %}" class="nav-link">Expenses</a></li>
+                    <li><a href="{% url 'project_costing' %}" class="nav-link">Project Costing</a></li>
+                </ul>
+            </div>
+        </li>
+
+        <!-- CONTENT / BLOG -->
+        <li class="sidebar-heading mt-3 text-muted small">CONTENT</li>
+        <li class="nav-item">
+            <a class="nav-link d-flex align-items-center justify-content-between" 
+               data-bs-toggle="collapse" href="#blogMenu">
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-journal-text nav-icon text-danger"></i>
+                    <span class="link-text ms-2">Blog</span>
+                </div>
+                
+            </a>
+            <div class="collapse submenu" id="blogMenu" data-bs-parent="#sidebarMenu">
+                <ul class="nav flex-column ms-4">
+                    <li><a href="{% url 'blogposts' %}" class="nav-link">All Posts</a></li>
+                    <li><a href="{% url 'addpost' %}" class="nav-link">Add Post</a></li>
+                </ul>
+            </div>
+        </li>
+
+        <li class="sidebar-heading mt-3 text-muted small text-uppercase">System</li>
+        <!-- ================= NOTIFICATIONS ================= -->
+        <li class="nav-item mt-3">
+            <a href="{% url 'notifications' %}" class="nav-link d-flex align-items-center">
+                <i class="bi bi-bell nav-icon text-danger"></i>
+                <span class="link-text ms-2">Notifications</span>
+            </a>
+        </li>
+        
+        <!-- ================= PROFILE ================= -->        
+        <li class="nav-item mt-3">
+            <a href="{% url 'admin_profile' %}" class="nav-link d-flex align-items-center">
+                <i class="bi bi-person-circle nav-icon text-primary"></i>
+                <span class="link-text ms-2">My Profile</span>
+            </a>
+        </li>
+    </ul>
+
+</nav>
+
+
+<!-- ================= TOOLTIP SCRIPT ================= -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    var tooltipTriggerList = [].slice.call(
+        document.querySelectorAll('[data-bs-toggle="tooltip"]')
+    );
+
+    tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+
+});
+</script>

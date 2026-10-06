@@ -1,0 +1,21 @@
+/* ABOUT CSS */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
+
+body {
+    font-family: 'Outfit', sans-serif;
+}
+.text-dark-navy { color: #0f172a !important; }
+.tracking-wider { letter-spacing: 0.1em; }
+.max-w-700 { max-width: 700px; }
+
+.about-hero {
+    min-height: 50vh;
+    background: url('/static/images/energy.avif') no-repeat center center/cover;
+    background-attachment: fixed;
+}
+.hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.85);
+    z-index: 1;
+}

@@ -1,0 +1,267 @@
+{% extends 'dashboard/dashboard.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block link %}
+<link rel="stylesheet" href="{% static 'css/dashboard/admin/admin.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="main-content">
+    <div class="container-fluid">
+
+        <!-- KPI CARDS - ROW 1 -->
+        <div class="row g-4 mb-4">
+            <div class="col-12 col-sm-6 col-lg-3">
+                <div class="kpi-card text-center" style="background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);">
+                    <div class="kpi-icon"><i class="bi bi-graph-up-arrow"></i></div>
+                    <div class="kpi-value">₹{{ revenue|intcomma }}</div>
+                    <div class="kpi-label">Total Revenue</div>
+                </div>
+            </div>
+            <div class="col-12 col-sm-6 col-lg-3">
+                <div class="kpi-card text-center" style="background: linear-gradient(135deg, #10b981 0%, #34d399 100%);">
+                    <div class="kpi-icon"><i class="bi bi-wallet2"></i></div>
+                    <div class="kpi-value">₹{{ total_collected|intcomma }}</div>
+                    <div class="kpi-label">Total Collected</div>
+                </div>
+            </div>
+            <div class="col-12 col-sm-6 col-lg-3">
+                <div class="kpi-card text-center" style="background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);">
+                    <div class="kpi-icon"><i class="bi bi-hourglass-split"></i></div>
+                    <div class="kpi-value">₹{{ total_outstanding|intcomma }}</div>
+                    <div class="kpi-label">Outstanding Payments</div>
+                </div>
+            </div>
+            <div class="col-12 col-sm-6 col-lg-3">
+                <div class="kpi-card text-center" style="background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);">
+                    <div class="kpi-icon"><i class="bi bi-funnel"></i></div>
+                    <div class="kpi-value">₹{{ pipeline_value|intcomma }}</div>
+                    <div class="kpi-label">Pipeline Value (Est.)</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- KPI CARDS - ROW 2 -->
+        <div class="row g-4 mb-4">
+            <div class="col-6 col-lg-2">
+                <div class="glass-card stat-box stat-box-leads">
+                    <span class="text-muted"><i class="bi bi-people me-1"></i> Total Leads</span>
+                    <h3 class="text-dark">{{ total_leads }}</h3>
+                </div>
+            </div>
+            <div class="col-6 col-lg-2">
+                <div class="glass-card stat-box stat-box-conv">
+                    <span class="text-muted"><i class="bi bi-arrow-repeat me-1"></i> Conv Rate</span>
+                    <h3 class="text-success">{{ conversion_rate }}%</h3>
+                </div>
+            </div>
+            <div class="col-6 col-lg-2">
+                <div class="glass-card stat-box stat-box-active">
+                    <span class="text-muted"><i class="bi bi-lightning-charge me-1"></i> Active</span>
+                    <h3 class="text-primary">{{ active_projects }}</h3>
+                </div>
+            </div>
+            <div class="col-6 col-lg-2">
+                <div class="glass-card stat-box stat-box-value">
+                    <span class="text-muted"><i class="bi bi-cash-stack me-1"></i> Avg Value</span>
+                    <h3 class="text-info">₹{{ avg_project_value|floatformat:0|intcomma }}</h3>
+                </div>
+            </div>
+            <div class="col-12 col-lg-4">
+                <div class="glass-card bottleneck-box p-3 h-100">
+                    <h6 class="text-danger fw-bold mb-3"><i class="bi bi-exclamation-triangle-fill me-2"></i> Workflow Bottlenecks</h6>
+                    <div class="d-flex justify-content-between text-dark fw-medium small mb-3">
+                        <span class="bg-light px-2 py-1 rounded">Installs: <span class="text-danger ms-1">{{ pending_installation }}</span></span>
+                        <span class="bg-light px-2 py-1 rounded">Net-M: <span class="text-danger ms-1">{{ pending_net_metering }}</span></span>
+                        <span class="bg-light px-2 py-1 rounded">Sub: <span class="text-danger ms-1">{{ pending_subsidy }}</span></span>
+                    </div>
+                    <div class="alert alert-danger py-2 px-3 mb-0 border-0 small fw-bold">
+                        <i class="bi bi-clock-history me-1"></i> {{ delayed_projects }} Projects Past SLA Deadline
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CHART ROW -->
+        <div class="row mt-4">
+            <!-- Revenue vs Pending Payments Bar -->
+            <div class="col-md-6 mb-4">
+                <div class="glass-card p-4">
+                    <h6 class="fw-bold mb-3">Collections vs Outstanding</h6>
+                    <canvas id="financeChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Project Type Distribution -->
+            <div class="col-md-6 mb-4">
+                <div class="glass-card p-4">
+                    <h6 class="fw-bold mb-3">Project Type Distribution</h6>
+                    <canvas id="projectTypeChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- CHART ROW 2 -->
+        <div class="row">
+            <!-- Lead Conversion Doughnut -->
+            <div class="col-md-6 mb-4">
+                <div class="glass-card p-4">
+                    <h6 class="fw-bold mb-3">Lead to Project Conversion</h6>
+                    <canvas id="conversionChart" width="300" height="300"></canvas>
+                </div>
+            </div>
+
+            <!-- Project Status Pie -->
+            <div class="col-md-6 mb-4">
+                <div class="glass-card p-4">
+                    <h6 class="fw-bold mb-3">Project Status Distribution</h6>
+                    <canvas id="statusChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- RECENT LEADS -->
+        <div class="glass-card p-4 mb-4">
+            <h5 class="fw-bold mb-4">Recent Leads</h5>
+            <div class="table-responsive-wrapper">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Phone</th>
+                                <th>Service</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for lead in recent_leads %}
+                            <tr>
+                                <td>{{ lead.name }}</td>
+                                <td>{{ lead.phone }}</td>
+                                <td>{{ lead.get_service_display }}</td>
+                                <td>
+                                    <span class="badge bg-primary">{{ lead.get_status_display }}</span>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- SCRIPTS -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+
+<script>
+const converted = {{ converted }};
+const notConverted = {{ not_converted }};
+const totalLeads = converted + notConverted || 1;
+
+const projectTypes = {{ project_types|safe }};
+const projectCounts = {{ project_counts|safe }};
+const projectStatuses = {{ statuses|safe }};
+const statusCounts = {{ status_counts|safe }};
+
+const revenue = {{ revenue }};
+const totalCollected = {{ total_collected }};
+const totalOutstanding = {{ total_outstanding }};
+
+// =======================
+// Lead Conversion Doughnut
+// =======================
+new Chart(document.getElementById('conversionChart'), {
+    type: 'doughnut',
+    data: {
+        labels: ['Converted', 'Not Converted'],
+        datasets: [{
+            data: [converted, notConverted],
+            backgroundColor: ['#28a745', '#dc3545'],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        plugins: {
+            legend: { position: 'bottom' },
+            tooltip: {
+                callbacks: {
+                    label: function(ctx) {
+                        const value = ctx.parsed;
+                        const percent = ((value / totalLeads) * 100).toFixed(1);
+                        return `${ctx.label}: ${value} (${percent}%)`;
+                    }
+                }
+            },
+            datalabels: {
+                color: '#fff',
+                formatter: (value) => ((value / totalLeads) * 100).toFixed(1) + '%',
+                font: { weight: 'bold', size: 14 }
+            }
+        },
+        cutout: '60%'
+    },
+    plugins: [ChartDataLabels]
+});
+
+// =======================
+// Project Type Bar
+// =======================
+new Chart(document.getElementById('projectTypeChart'), {
+    type: 'bar',
+    data: {
+        labels: projectTypes,
+        datasets: [{
+            label: 'Number of Projects',
+            data: projectCounts,
+            backgroundColor: ['#0d6efd','#198754','#ffc107','#6f42c1','#dc3545']
+        }]
+    },
+    options: {
+        plugins: { legend: { display: false } }
+    }
+});
+
+// =======================
+// Project Status Pie
+// =======================
+new Chart(document.getElementById('statusChart'), {
+    type: 'pie',
+    data: {
+        labels: {{ statuses|safe }},
+        datasets: [{
+            data: {{ status_counts|safe }},
+            backgroundColor: ['#ffc107','#17a2b8','#007bff','#6f42c1','#28a745','#6c757d','#fd7e14','#0dcaf0','#198754','#dc3545']
+        }]
+    },
+    options: {
+        plugins: { legend: { position: 'bottom' } }
+    }
+});
+
+// =======================
+// Revenue vs Pending Payments Bar
+// =======================
+new Chart(document.getElementById('financeChart'), {
+    type: 'bar',
+    data: {
+        labels: ['Collected','Outstanding'],
+        datasets: [{
+            label: 'Amount (₹)',
+            data: [totalCollected, totalOutstanding],
+            backgroundColor: ['#28a745','#dc3545']
+        }]
+    },
+    options: {
+        plugins: { legend: { display: false } },
+        scales: {
+            y: { beginAtZero: true }
+        }
+    }
+});
+</script>
+
+{% endblock %}

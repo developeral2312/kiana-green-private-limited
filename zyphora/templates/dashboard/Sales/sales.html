@@ -1,0 +1,236 @@
+{% extends 'dashboard/dashboard.html' %}
+{% load static %}
+
+{% block link %}
+<link rel="stylesheet" href="{% static 'css/dashboard/sales/sales.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="main-content">
+<div class="container-fluid">
+
+<!-- ================= KPI CARDS ================= -->
+
+<div class="row g-4 align-items-stretch">
+
+<div class="col-12 col-sm-6 col-lg-3 d-flex">
+    <div class="kpi-card leads w-100 text-center">
+        <div class="kpi-icon"><i class="bi bi-person-lines-fill"></i></div>
+        <div class="kpi-value">{{ total_leads|default:0 }}</div>
+        <div class="kpi-label">Total Leads</div>
+    </div>
+</div>
+
+<div class="col-12 col-sm-6 col-lg-3 d-flex">
+    <div class="kpi-card open w-100 text-center">
+        <div class="kpi-icon"><i class="bi bi-exclamation-circle-fill"></i></div>
+        <div class="kpi-value">{{ open_leads|default:0 }}</div>
+        <div class="kpi-label">Open Leads</div>
+    </div>
+</div>
+
+<div class="col-12 col-sm-6 col-lg-3 d-flex">
+    <div class="kpi-card closed w-100 text-center">
+        <div class="kpi-icon"><i class="bi bi-check-circle-fill"></i></div>
+        <div class="kpi-value">{{ closed_deals|default:0 }}</div>
+        <div class="kpi-label">Deals Closed</div>
+    </div>
+</div>
+
+<div class="col-12 col-sm-6 col-lg-3 d-flex">
+    <div class="kpi-card revenue w-100 text-center">
+        <div class="kpi-icon"><i class="bi bi-graph-up"></i></div>
+        <div class="kpi-value">{{ conversion_rate|default:0 }}%</div>
+        <div class="kpi-label">Conversion</div>
+    </div>
+</div>
+
+</div>
+
+
+<!-- ================= CHART + RECENT ================= -->
+
+<div class="row mt-4 g-4 align-items-stretch">
+
+<!-- Lead Funnel -->
+<div class="col-lg-6 d-flex">
+    <div class="dashboard-card w-100">
+        <h6 class="mb-3">Lead Funnel</h6>
+
+        <div class="chart-container">
+            <canvas id="leadFunnelChart"></canvas>
+            <div class="empty-state" id="funnelEmpty">No funnel data available</div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Leads -->
+<div class="col-lg-6 d-flex">
+    <div class="dashboard-card w-100">
+        <h6 class="mb-3">Recent Leads</h6>
+
+        <ul class="list-group custom-list">
+            {% for lead in recent_leads %}
+            <li class="list-item d-flex justify-content-between align-items-center">
+                <div>
+                    <strong>{{ lead.name }}</strong><br>
+                    <small class="text-muted">{{ lead.get_status_display }}</small>
+                </div>
+                <span class="badge bg-primary">{{ lead.score }}</span>
+            </li>
+            {% empty %}
+            <div class="empty-list">No recent leads</div>
+            {% endfor %}
+        </ul>
+
+    </div>
+</div>
+
+</div>
+
+
+<!-- ================= LIST SECTIONS ================= -->
+
+<div class="row mt-4 g-4 align-items-stretch">
+
+<!-- Top Leads -->
+<div class="col-lg-6 d-flex">
+    <div class="dashboard-card w-100">
+        <h6 class="mb-3">Top Leads</h6>
+
+        <ul class="list-group custom-list">
+            {% for lead in top_leads %}
+            <li class="list-item d-flex justify-content-between align-items-center">
+                {{ lead.name }}
+                <span class="badge bg-primary">{{ lead.score }}</span>
+            </li>
+            {% empty %}
+            <div class="empty-list">No leads available</div>
+            {% endfor %}
+        </ul>
+
+    </div>
+</div>
+
+
+<!-- Drop-off -->
+<div class="col-lg-6 d-flex">
+    <div class="dashboard-card w-100">
+        <h6 class="mb-3">Drop-off Analysis</h6>
+
+        <div class="drop-item">
+            <span>After Contact</span>
+            <span class="badge bg-danger">{{ drop_contact|default:0 }}</span>
+        </div>
+
+        <div class="drop-item">
+            <span>After Site Visit</span>
+            <span class="badge bg-warning text-dark">{{ drop_visit|default:0 }}</span>
+        </div>
+
+        <div class="drop-item">
+            <span>Before Conversion</span>
+            <span class="badge bg-secondary">{{ drop_conversion|default:0 }}</span>
+        </div>
+
+    </div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+
+<!-- ================= CHART JS ================= -->
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+
+let charts = {};
+
+function renderCharts(){
+
+    const isDark = document.documentElement.getAttribute("data-bs-theme") === "dark";
+
+    const textColor = isDark ? "#e5e7eb" : "#212529";
+    const gridColor = isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.08)";
+
+    const funnelData = JSON.parse('{{ funnel_data|safe }}');
+
+    Object.values(charts).forEach(c => c.destroy());
+    charts = {};
+
+    /* Check if data exists */
+    const hasData = funnelData.some(item => item.count > 0);
+
+    if(hasData){
+
+        document.getElementById("funnelEmpty").style.display = "none";
+
+        const ctx = document.getElementById("leadFunnelChart").getContext("2d");
+
+        charts.funnel = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: funnelData.map(d => d.status),
+                datasets: [{
+                    data: funnelData.map(d => d.count),
+                    backgroundColor: [
+                        "#0d6efd",
+                        "#ffc107",
+                        "#20c997",
+                        "#198754"
+                    ],
+                    borderRadius: 10
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: { color: textColor },
+                        grid: { color: gridColor }
+                    },
+                    x: {
+                        ticks: { color: textColor },
+                        grid: { display: false }
+                    }
+                }
+            }
+        });
+
+    } else {
+
+        document.getElementById("funnelEmpty").style.display = "block";
+
+    }
+}
+
+/* Init */
+
+document.addEventListener("DOMContentLoaded", () => {
+    setTimeout(renderCharts, 100);
+});
+
+/* Dark mode listener */
+
+const observer = new MutationObserver(() => {
+    setTimeout(renderCharts, 100);
+});
+
+observer.observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ['data-bs-theme']
+});
+
+</script>
+
+{% endblock %}

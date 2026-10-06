@@ -1,0 +1,188 @@
+/* ================= MAIN CONTENT ================= */
+
+.main-content {
+    overflow-x: hidden;
+    padding-bottom: 20px;
+}
+
+
+/* ================= KPI CARDS ================= */
+
+.kpi-card {
+    width: 100%;
+    min-height: 170px;
+    border-radius: 16px;
+    padding: 26px 20px;
+
+    color: #fff;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    transition: all 0.3s ease;
+
+    backdrop-filter: blur(10px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+}
+
+.kpi-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.18);
+}
+
+
+/* ================= KPI TEXT ================= */
+
+.kpi-icon {
+    font-size: 2.2rem;
+    margin-bottom: 8px;
+    opacity: 0.95;
+}
+
+.kpi-value {
+    font-size: 1.9rem;
+    font-weight: 700;
+    margin: 6px 0;
+}
+
+.kpi-label {
+    font-size: 0.9rem;
+    opacity: 0.9;
+}
+
+
+/* ================= KPI COLORS ================= */
+
+.kpi-card.assigned {
+    background: linear-gradient(135deg, #0d6efd, #4f8cff);
+}
+
+.kpi-card.ongoing {
+    background: linear-gradient(135deg, #ffc107, #ffda6a);
+    color: #000;
+}
+
+.kpi-card.completed {
+    background: linear-gradient(135deg, #198754, #46c37b);
+}
+
+.kpi-card.pending {
+    background: linear-gradient(135deg, #dc3545, #ff6b6b);
+}
+
+
+/* ================= DASHBOARD CARDS ================= */
+
+.dashboard-card {
+    width: 100%;
+    border-radius: 16px;
+
+    padding: 20px 20px 10px 20px;
+
+    background: #fff;
+    color: #212529;
+
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+    transition: 0.25s ease;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 14px 35px rgba(0, 0, 0, 0.15);
+}
+
+
+/* ================= DARK MODE ================= */
+
+[data-bs-theme="dark"] .dashboard-card {
+    background: #1e1e2f;
+    color: #f1f1f1;
+}
+
+
+/* ================= CARD TITLES ================= */
+
+.dashboard-card h6 {
+    font-weight: 600;
+    margin-bottom: 16px;
+    font-size: 0.95rem;
+}
+
+
+/* ================= CHART CONTAINER ================= */
+
+.chart-container {
+    position: relative;
+    width: 100%;
+    height: 220px;
+    margin-top: 10px;
+}
+
+.chart-container canvas {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+}
+
+
+/* ================= EMPTY STATE ================= */
+
+.empty-state {
+    position: absolute;
+    inset: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 14px;
+    color: #888;
+
+    z-index: 1;
+}
+
+
+/* ================= LIST ITEMS ================= */
+
+.list-item {
+    padding: 10px 12px;
+    border-radius: 10px;
+    transition: 0.2s;
+}
+
+.list-item:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+[data-bs-theme="dark"] .list-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.empty-list {
+    text-align: center;
+    font-size: 0.9rem;
+    color: #888;
+    padding: 10px 0;
+}
+
+
+/* ================= MOBILE ================= */
+
+@media (max-width: 768px) {
+
+    .kpi-card {
+        min-height: 150px;
+        padding: 20px;
+    }
+
+    .kpi-value {
+        font-size: 1.6rem;
+    }
+
+    .chart-container {
+        height: 200px;
+    }
+
+}

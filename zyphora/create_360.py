@@ -1,0 +1,227 @@
+import os
+
+views_path = r"c:\Users\dell\Documents\solar-project\Zyphora_Solar\zyphora\crm\views.py"
+
+with open(views_path, "r", encoding="utf-8") as f:
+    content = f.read()
+
+old_360 = """def customer_360(request, phone):
+    \"\"\" Customer 360 Degree View \"\"\"
+    leads = Lead.objects.filter(phone=phone)
+    projects = Project.objects.filter(lead__phone=phone)
+    invoices = Invoice.objects.filter(project__in=projects)
+    
+    data = {
+        "customer": phone,
+        "total_leads": leads.count(),
+        "total_projects": projects.count(),
+        "total_invoices": invoices.count(),
+        "revenue_value": sum(i.total_amount for i in invoices if i.status == 'paid')
+    }
+    return JsonResponse(data)"""
+
+new_360 = """def customer_360(request, phone):
+    \"\"\" Customer 360 Degree View \"\"\"
+    leads = Lead.objects.filter(phone=phone).prefetch_related('activities', 'followups')
+    projects = Project.objects.filter(lead__phone=phone)
+    invoices = Invoice.objects.filter(project__in=projects)
+    
+    main_lead = leads.first()
+    
+    context = {
+        "phone": phone,
+        "main_lead": main_lead,
+        "leads": leads,
+        "projects": projects,
+        "invoices": invoices,
+        "revenue_value": sum(i.total_amount for i in invoices if i.status == 'paid')
+    }
+    return render(request, 'crm/customer_360.html', context)"""
+
+if old_360 in content:
+    content = content.replace(old_360, new_360)
+    with open(views_path, "w", encoding="utf-8") as f:
+        f.write(content)
+
+
+# Create customer_360.html
+html_path = r"c:\Users\dell\Documents\solar-project\Zyphora_Solar\zyphora\templates\crm\customer_360.html"
+os.makedirs(os.path.dirname(html_path), exist_ok=True)
+
+html_content = """{% extends 'dashboard/dashboard.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block link %}
+<style>
+    .glass-card {
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+    [data-bs-theme="dark"] .glass-card {
+        background: rgba(30, 41, 59, 0.6);
+        border-color: rgba(255, 255, 255, 0.05);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+    .glass-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+    }
+    .profile-header {
+        background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+        color: white;
+        padding: 30px;
+        border-radius: 16px;
+        position: relative;
+        overflow: hidden;
+    }
+    .profile-header::after {
+        content: '';
+        position: absolute;
+        right: -50px; top: -50px;
+        width: 200px; height: 200px;
+        background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 70%);
+    }
+    .timeline {
+        border-left: 2px solid #3b82f6;
+        padding-left: 20px;
+        position: relative;
+    }
+    .timeline-item {
+        position: relative;
+        margin-bottom: 20px;
+    }
+    .timeline-dot {
+        position: absolute;
+        left: -27px;
+        top: 0;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: #3b82f6;
+        border: 2px solid #fff;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-3">
+    <!-- Header -->
+    <div class="profile-header mb-4 shadow-sm">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h2 class="fw-bold mb-1"><i class="bi bi-person-bounding-box me-2"></i> {% if main_lead %}{{ main_lead.name }}{% else %}Unknown Customer{% endif %}</h2>
+                <p class="mb-0 fs-5"><i class="bi bi-telephone-fill me-2"></i> {{ phone }}</p>
+            </div>
+            <div class="text-end">
+                <p class="mb-1 opacity-75">Customer Lifetime Value</p>
+                <h3 class="fw-bold mb-0">₹{{ revenue_value|intcomma }}</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- LEFT COLUMN -->
+        <div class="col-lg-4">
+            
+            <!-- CRM Data -->
+            <div class="glass-card p-4 mb-4">
+                <h5 class="fw-bold mb-3"><i class="bi bi-funnel-fill text-primary me-2"></i> Leads & Queries</h5>
+                {% for l in leads %}
+                <div class="border-bottom pb-2 mb-2">
+                    <strong>{{ l.get_service_display }}</strong>
+                    <span class="badge bg-primary float-end">{{ l.get_status_display }}</span>
+                    <div class="text-muted small mt-1">Source: {{ l.get_source_display }} | Added: {{ l.created_at|date:"M d, Y" }}</div>
+                </div>
+                {% empty %}
+                <p class="text-muted">No leads found.</p>
+                {% endfor %}
+            </div>
+
+            <!-- Invoices -->
+            <div class="glass-card p-4">
+                <h5 class="fw-bold mb-3"><i class="bi bi-receipt text-success me-2"></i> Invoices & Payments</h5>
+                {% for inv in invoices %}
+                <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-2">
+                    <div>
+                        <div class="fw-bold">{{ inv.invoice_number }}</div>
+                        <div class="small text-muted">{{ inv.date_issued|date:"M d" }}</div>
+                    </div>
+                    <div class="text-end">
+                        <div class="fw-bold">₹{{ inv.total_amount|intcomma }}</div>
+                        <span class="badge {% if inv.status == 'paid' %}bg-success{% else %}bg-warning{% endif %}">{{ inv.status|title }}</span>
+                    </div>
+                </div>
+                {% empty %}
+                <p class="text-muted">No invoices found.</p>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- MIDDLE COLUMN (Projects) -->
+        <div class="col-lg-4">
+            <div class="glass-card p-4 h-100">
+                <h5 class="fw-bold mb-4"><i class="bi bi-folder-fill text-warning me-2"></i> Solar Projects</h5>
+                {% for proj in projects %}
+                <div class="card mb-3 border border-secondary border-opacity-25 shadow-sm">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between mb-2">
+                            <strong class="fs-5">{{ proj.project_id|default:proj.title }}</strong>
+                            <span class="badge bg-info">{{ proj.get_status_display }}</span>
+                        </div>
+                        <p class="mb-2 text-muted small"><i class="bi bi-geo-alt-fill"></i> {{ proj.location|default:"No Location provided" }}</p>
+                        
+                        <div class="progress mt-3" style="height: 8px;">
+                            <div class="progress-bar bg-success" style="width: {{ proj.progress_percent }}%"></div>
+                        </div>
+                        <div class="mt-3 text-end">
+                            <a href="{% url 'view_project' proj.id %}" class="btn btn-sm btn-outline-primary">Open Project Workspace</a>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="text-center py-5 text-muted">
+                    <i class="bi bi-folder-x fs-1 opacity-50"></i>
+                    <p class="mt-2">No active projects yet.</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- RIGHT COLUMN (Activity Log) -->
+        <div class="col-lg-4">
+            <div class="glass-card p-4 h-100">
+                <h5 class="fw-bold mb-4"><i class="bi bi-clock-history text-danger me-2"></i> Universal Activity Log</h5>
+                <div class="timeline">
+                    {% if main_lead %}
+                        {% for act in main_lead.activities.all|slice:":10" %}
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <strong class="d-block">{{ act.title }}</strong>
+                            <span class="text-muted small d-block mb-1">{{ act.created_at|date:"M d H:i" }} | {{ act.created_by.first_name|default:"System" }}</span>
+                            <p class="small mb-0">{{ act.description }}</p>
+                        </div>
+                        {% empty %}
+                        <p class="text-muted">No timeline activity recorded.</p>
+                        {% endfor %}
+                    {% else %}
+                        <p class="text-muted">No main lead found.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+"""
+
+with open(html_path, "w", encoding="utf-8") as f:
+    f.write(html_content)
+
+print("Customer 360 UI Created!")

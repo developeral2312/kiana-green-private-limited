@@ -1,0 +1,109 @@
+{% extends 'dashboard/dashboard.html' %}
+{% block content %}
+
+<!-- Breadcrumb -->
+<nav aria-label="breadcrumb" class="mb-3">
+  <ol class="breadcrumb mb-0 align-items-center">
+    <li class="breadcrumb-item">
+        <a href="{% url request.user.role %}" class="d-flex align-items-center">
+            {{ request.user.role|title }} Dashboard
+        </a>
+    </li>
+    <li class="breadcrumb-item active d-flex align-items-center">
+        View Service Report
+    </li>
+  </ol>
+</nav>
+
+<div class="container my-5">
+
+    <!-- 🔷 HEADER -->
+    <div class="text-center mb-4">
+        <h2 class="fw-bold">Kiana Green Private Limited Service Report</h2>
+        <p class="text-muted mb-0">Report ID: SR-{{ report.id }}</p>
+        <p class="text-muted">Date: {{ report.created_at|date:"d M Y, H:i" }}</p>
+        <hr>
+    </div>
+
+    <!-- 🔷 SERVICE REQUEST & PROJECT INFO -->
+    <div class="section mb-4">
+        <h5 class="fw-bold">Service Information</h5>
+        <table class="table table-bordered">
+            <tbody>
+                <tr>
+                    <th style="width:200px;">Service Request</th>
+                    <td>{{ report.service_request.title }}</td>
+                </tr>
+                <tr>
+                    <th>Project</th>
+                    <td>{{ report.service_request.project.title }}</td>
+                </tr>
+                <tr>
+                    <th>Customer Name</th>
+                    <td>{{ report.service_request.project.lead.name }}</td>
+                </tr>
+                <tr>
+                    <th>Customer Contact</th>
+                    <td>{{ report.service_request.project.lead.phone }}</td>
+                </tr>
+                <tr>
+                    <th>Customer Email</th>
+                    <td>{{ report.service_request.project.lead.email|default:"-" }}</td>
+                </tr>
+                <tr>
+                    <th>Location</th>
+                    <td>{{ report.service_request.project.lead.location|default:"-" }}</td>
+                </tr>
+                <tr>
+                    <th>Reported By</th>
+                    <td>{{ report.report_by.name }}</td>
+                </tr>
+                <tr>
+                    <th>Assigned Engineer</th>
+                    <td>
+                        {% if report.service_request.assigned_to %}
+                            {{ report.service_request.assigned_to.name }}
+                        {% else %}
+                            <em>Not assigned</em>
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <th>Status</th>
+                    <td>{{ report.service_request.status|capfirst }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- 🔷 REPORT DETAILS -->
+    <div class="section mb-4">
+        <h5 class="fw-bold">Report Details</h5>
+        <div class="border rounded p-3" style="white-space: pre-line;">
+            {{ report.report_text }}
+        </div>
+    </div>
+
+    <!-- 🔷 IMAGES -->
+    <div class="section mb-4">
+        <h5 class="fw-bold">Attached Images</h5>
+        {% if report.images %}
+            <div class="row g-3">
+                <div class="col-md-4 col-sm-6">
+                    <img src="{{ report.images.url }}" class="img-fluid border rounded" alt="Service Image">
+                </div>
+            </div>
+        {% else %}
+            <p class="text-muted"><em>No images attached.</em></p>
+        {% endif %}
+    </div>
+
+    <!-- 🔷 ACTION BUTTONS -->
+    <div class="d-flex justify-content-between mt-4">
+        <a href="{% url 'download_report' 'service' report.id %}" class="btn btn-primary">Download PDF</a>
+        <a href="{% url 'service_reports' %}" class="btn btn-secondary">Back to Service Reports</a>
+    </div>
+
+</div>
+
+{% endblock %}

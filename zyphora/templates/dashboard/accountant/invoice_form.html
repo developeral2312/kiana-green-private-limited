@@ -1,0 +1,85 @@
+{% extends "dashboard/dashboard.html" %}
+
+{% block content %}
+<div class="container mt-5">
+
+    <!-- Breadcrumbs -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ title }}</li>
+        </ol>
+    </nav>
+
+    <!-- Form Card -->
+    <div class="card shadow border-0">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0"><i class="bi bi-receipt me-2"></i>{{ title }}</h5>
+        </div>
+        <div class="card-body">
+
+            <form method="POST">
+                {% csrf_token %}
+                <div class="row g-4">
+
+                    <!-- Project -->
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Project</label>
+                        {{ form.project }}
+                    </div>
+
+                    <!-- Invoice Number -->
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Invoice Number</label>
+                        {{ form.invoice_number }}
+                    </div>
+
+                    <!-- Issue Date -->
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Issue Date</label>
+                        {{ form.issue_date }}
+                    </div>
+
+                    <!-- Due Date -->
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Due Date</label>
+                        {{ form.due_date }}
+                    </div>
+
+                    <!-- Total Amount -->
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Total Amount</label>
+                        {{ form.total_amount }}
+                    </div>
+
+                    <!-- Status -->
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Status</label>
+                        {{ form.status }}
+                    </div>
+
+                    <!-- Notes -->
+                    <div class="col-12">
+                        <label class="form-label fw-bold">Notes</label>
+                        {{ form.notes }}
+                    </div>
+
+                </div>
+
+                <!-- Form Actions -->
+                <div class="mt-4 d-flex justify-content-end gap-2">
+                    <button type="submit" class="btn btn-success btn-lg">
+                        <i class="bi bi-check-circle me-1"></i> Save
+                    </button>
+                    <a href="{% url 'invoice_list' %}" class="btn btn-outline-secondary btn-lg">
+                        <i class="bi bi-x-circle me-1"></i> Cancel
+                    </a>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+
+</div>
+{% endblock %}

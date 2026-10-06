@@ -1,0 +1,172 @@
+{% extends 'dashboard/dashboard.html' %}
+
+{% block content %}
+<div class="container mt-4">
+
+    <!-- Breadcrumbs -->
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb mb-0">
+            <li class="breadcrumb-item">
+                <a href="{% url request.user.role %}">{{ request.user.role|title }} Dashboard</a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">{{ title }}</li>
+        </ol>
+    </nav>
+
+    <h4 class="mb-4 text-primary">{{ title }}</h4>
+
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <!-- MAIN INFO -->
+        <div class="card shadow-sm mb-4 p-3">
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <label class="form-label">Project</label>
+                    {{ form.project|add_class:"form-select" }}
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Expense Date</label>
+                    {{ form.expense_date|add_class:"form-control" }}
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Category</label>
+                    {{ form.category|add_class:"form-select" }}
+                </div>
+                <div class="col-12">
+                    <label class="form-label">Notes</label>
+                    {{ form.notes|add_class:"form-control" }}
+                </div>
+            </div>
+        </div>
+
+        <!-- EXPENSE ITEMS -->
+        <div class="card shadow-sm mb-4 p-3">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <h5>Expense Items</h5>
+                <button type="button" class="btn btn-sm btn-primary" onclick="addItem()">
+                    <i class="bi bi-plus-lg"></i> Add Item
+                </button>
+            </div>
+
+            {{ item_formset.management_form }}
+            <div id="items-container">
+                {% for form in item_formset %}
+                <div class="row g-2 align-items-center item-form mb-2">
+                    <div class="col-md-6">
+                        {{ form.description|add_class:"form-control" }}
+                    </div>
+                    <div class="col-md-4">
+                        {{ form.amount|add_class:"form-control" }}
+                    </div>
+                    <div class="col-md-2 text-end">
+                        <button type="button" class="btn btn-danger btn-sm" onclick="removeItem(this)">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="text-end mt-2">
+                <strong>Total: ₹ <span id="totalAmount">0.00</span></strong>
+            </div>
+        </div>
+
+        <!-- RECEIPTS -->
+        <div class="card shadow-sm mb-4 p-3">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <h5>Receipts</h5>
+                <button type="button" class="btn btn-sm btn-primary" onclick="addReceipt()">
+                    <i class="bi bi-plus-lg"></i> Add Receipt
+                </button>
+            </div>
+
+            {{ receipt_formset.management_form }}
+            <div id="receipts-container">
+                {% for form in receipt_formset %}
+                <div class="row receipt-form mb-2">
+                    <div class="col-md-10">
+                        {{ form.file|add_class:"form-control" }}
+                    </div>
+                    <div class="col-md-2 text-end">
+                        <button type="button" class="btn btn-danger btn-sm" onclick="removeReceipt(this)">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="text-end">
+            <button type="submit" class="btn btn-success btn-lg">
+                <i class="bi bi-check-circle"></i> Submit Expense
+            </button>
+        </div>
+    </form>
+</div>
+
+<!-- JS: Add/Remove items & receipts, update total -->
+<script>
+function updateTotal() {
+    let total = 0;
+    document.querySelectorAll("input[name$='amount']").forEach(input => {
+        total += parseFloat(input.value) || 0;
+    });
+    document.getElementById("totalAmount").innerText = total.toFixed(2);
+}
+document.addEventListener("input", updateTotal);
+
+function addItem() {
+    let container = document.getElementById("items-container");
+    let totalForms = document.getElementById("id_items-TOTAL_FORMS");
+    let index = totalForms.value;
+    container.insertAdjacentHTML('beforeend', `
+        <div class="row g-2 align-items-center item-form mb-2">
+            <div class="col-md-6">
+                <input type="text" name="items-${index}-description" class="form-control" placeholder="Description">
+            </div>
+            <div class="col-md-4">
+                <input type="number" name="items-${index}-amount" class="form-control" placeholder="Amount" step="0.01">
+            </div>
+            <div class="col-md-2 text-end">
+                <button type="button" class="btn btn-danger btn-sm" onclick="removeItem(this)">
+                    <i class="bi bi-trash"></i>
+                </button>
+            </div>
+        </div>
+    `);
+    totalForms.value = parseInt(index) + 1;
+}
+
+function removeItem(button) {
+    button.closest('.item-form').remove();
+    updateTotal();
+}
+
+function addReceipt() {
+    let container = document.getElementById("receipts-container");
+    let totalForms = document.getElementById("id_receipts-TOTAL_FORMS");
+    let index = totalForms.value;
+    container.insertAdjacentHTML('beforeend', `
+        <div class="row receipt-form mb-2">
+            <div class="col-md-10">
+                <input type="file" name="receipts-${index}-file" class="form-control">
+            </div>
+            <div class="col-md-2 text-end">
+                <button type="button" class="btn btn-danger btn-sm" onclick="removeReceipt(this)">
+                    <i class="bi bi-trash"></i>
+                </button>
+            </div>
+        </div>
+    `);
+    totalForms.value = parseInt(index) + 1;
+}
+
+function removeReceipt(button) {
+    button.closest('.receipt-form').remove();
+}
+</script>
+
+{% endblock %}

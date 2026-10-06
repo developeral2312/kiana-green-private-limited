@@ -1,0 +1,254 @@
+/* ================= GLOBAL IMAGE SAFETY =================*/
+
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+.custom-navbar .navbar-logo {
+    width: 36px !important;
+    height: 36px !important;
+    max-width: 36px !important;
+    object-fit: contain;
+}
+
+/* ================= ALERTS ================= */
+
+.alert-wrapper {
+    position: fixed;
+    top: 70px;
+    right: 20px;
+    z-index: 2000;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.auto-fade {
+    animation: fadeInOut 5s ease forwards;
+}
+
+@keyframes fadeInOut {
+    0%   { opacity: 0; transform: translateY(-10px); }
+    10%  { opacity: 1; transform: translateY(0); }
+    80%  { opacity: 1; transform: translateY(0); }
+    100% { opacity: 0; transform: translateY(-10px); }
+}
+
+/* ================= GLOBAL FONT ================= */
+body {
+    font-family: 'Outfit', sans-serif;
+}
+
+/* ================= NAVBAR — BASE ================= */
+
+.custom-navbar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    /* Premium Glassmorphism */
+    background: rgba(15, 23, 42, 0.85) !important;
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    z-index: 100;
+    padding: 0.8rem 0;           
+    transition: all 0.4s ease;
+}
+
+/* Brand: keep image + text on one line, never shrink */
+.custom-navbar .navbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    padding: 0;
+}
+
+/* Logo size controlled here — NOT inline style */
+.custom-navbar .navbar-logo {
+    width: 45px;
+    height: 45px;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+
+/* Orange "SOLAR" text */
+.text-solar {
+    color: #2ecc71;
+}
+
+/* Toggler: never wraps, always right-aligned */
+.custom-navbar .navbar-toggler {
+    flex-shrink: 0;
+    border-color: rgba(255, 255, 255, 0.2);
+    padding: 6px 10px;
+}
+
+.custom-navbar .navbar-toggler:focus {
+    box-shadow: none;
+    outline: none;
+}
+
+/* Nav links */
+.custom-navbar .nav-link {
+    color: rgba(255, 255, 255, 0.85) !important;
+    font-weight: 500;
+    font-size: 1.05rem;
+    margin: 0 0.8rem;
+    position: relative;
+    transition: color 0.3s ease;
+}
+
+.custom-navbar .nav-link:hover, .custom-navbar .nav-link.active {
+    color: #2ecc71 !important;
+}
+
+/* Premium Underline Animation on Hover */
+.custom-navbar .nav-link::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    display: block;
+    bottom: 2px;
+    left: 0;
+    background: #2ecc71;
+    transition: width 0.3s ease;
+}
+
+.custom-navbar .nav-link:hover::after, .custom-navbar .nav-link.active::after {
+    width: 100%;
+}
+
+/* Team Portal button (No underline on hover) */
+.custom-navbar .btn-login::after {
+    display: none !important;
+}
+
+.custom-navbar .btn-login {
+    background: linear-gradient(135deg, #2ecc71, #27ae60);
+    color: #ffffff !important;
+    padding: 0.5rem 1.5rem;
+    border-radius: 30px;
+    font-weight: 600;
+    margin-left: 1rem;
+    display: inline-flex;
+    align-items: center;
+    box-shadow: 0 4px 15px rgba(46, 204, 113, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+}
+
+.custom-navbar .btn-login:hover {
+    background: linear-gradient(135deg, #27ae60, #1e8449);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(46, 204, 113, 0.5);
+    color: #ffffff !important;
+}
+
+/* ================= NAVBAR — MOBILE (≤ 991px) ================= */
+/*
+   KEY FIX: On mobile the navbar is position:absolute with a
+   semi-transparent background. When the collapse opens, the nav
+   links render over the hero image making them unreadable.
+
+   Fix: give the entire navbar a solid dark background on mobile
+   so the expanded menu is always legible. Desktop keeps the
+   transparent floating look.
+*/
+
+@media (max-width: 991px) {
+
+    .custom-navbar {
+        /* Solid background — no hero bleedthrough */
+        background-color: rgba(5, 5, 5, 0.93) !important;
+        padding: 0.4rem 0;
+    }
+
+    /* Expanded menu item spacing */
+    .custom-navbar .navbar-collapse .nav-link {
+        padding: 0.65rem 0.25rem;
+        margin: 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .custom-navbar .navbar-collapse .nav-item:last-child .nav-link {
+        border-bottom: none;
+        margin-top: 0.25rem;
+        margin-bottom: 0.25rem;
+    }
+
+    /* Team Portal: full width on mobile */
+    .custom-navbar .btn-login {
+        display: flex;
+        justify-content: center;
+        margin-left: 0;
+        margin-top: 0.5rem;
+        margin-bottom: 0.25rem;
+        width: 100%;
+    }
+
+}
+
+/* ================= HERO ================= */
+
+.hero {
+    position: relative;
+    height: 65vh;
+    width: 100%;
+    background: url('/static/images/hero.png') no-repeat center center / cover;
+}
+
+.hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.25);
+    z-index: 0;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 1;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding-left: 3rem;
+    color: white;
+}
+
+/* ================= HERO — RESPONSIVE ================= */
+
+@media (max-width: 768px) {
+
+    .hero {
+        height: 55vh;
+    }
+
+    .hero-content {
+        padding-left: 1.25rem;
+        padding-right: 1.25rem;
+        align-items: center;
+        text-align: center;
+    }
+
+}
+
+@media (max-width: 480px) {
+
+    .hero {
+        height: 50vh;
+    }
+
+    .hero-content {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+}

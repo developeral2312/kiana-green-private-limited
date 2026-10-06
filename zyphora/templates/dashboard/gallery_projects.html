@@ -1,0 +1,94 @@
+{% extends 'dashboard/dashboard.html' %}
+{% load static %}
+
+{% block link %}
+<link rel="stylesheet" href="{% static 'css/dashboard/gallery_projects.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<!-- Breadcrumb -->
+<nav aria-label="breadcrumb" class="mb-3">
+    <ol class="breadcrumb mb-0">
+        <li class="breadcrumb-item">
+            <a href="{% url request.user.role %}">
+                {{ request.user.role|title }} Dashboard
+            </a>
+        </li>
+        <li class="breadcrumb-item active">
+            Project Gallery
+        </li>
+    </ol>
+</nav>
+
+<div class="container mt-4">
+
+    <!-- Header -->
+    <div class="mb-3">
+        <h4 class="fw-bold mb-1 text-primary">
+            <i class="bi bi-images me-2"></i> Project Gallery
+        </h4>
+        <p class="text-muted mb-0">
+            Browse and manage project image galleries
+        </p>
+    </div>
+
+    <!-- Projects Grid -->
+    <div class="row mt-4">
+
+        {% for project in projects %}
+        <div class="col-md-4 mb-4">
+
+            <div class="card shadow-sm border-0 h-100">
+
+                <div class="card-body d-flex flex-column">
+
+                    <!-- Project Title -->
+                    <h5 class="fw-semibold mb-1">
+                        {{ project.title }}
+                    </h5>
+
+                    <!-- Project Type -->
+                    <small class="text-muted mb-3">
+                        {{ project.get_project_type_display|default:project.project_type }}
+                    </small>
+
+                    <!-- CTA -->
+                    <div class="mt-auto">
+                        <a href="{% url 'project_gallery' project.id %}?next=gallery"
+                           class="btn btn-outline-primary btn-sm w-100">
+                            <i class="bi bi-images me-1"></i>
+                            Open Gallery
+                        </a>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {% empty %}
+
+        <!-- Empty State -->
+        <div class="col-12">
+            <div class="text-center p-5 border rounded">
+
+                <i class="bi bi-folder fs-1 text-muted"></i>
+
+                <h6 class="mt-3 fw-semibold">No Projects Found</h6>
+
+                <p class="text-muted mb-0">
+                    Projects will appear here once they are created.
+                </p>
+
+            </div>
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endblock %}

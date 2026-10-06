@@ -1,0 +1,156 @@
+.main-content {
+    overflow-x: hidden;
+    padding-bottom: 20px;
+}
+
+/* ================= KPI CARDS ================= */
+
+.kpi-card {
+    min-height: 170px;
+    border-radius: 16px;
+    padding: 24px;
+    color: #fff;
+
+    backdrop-filter: blur(10px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+
+    transition: 0.3s ease;
+}
+
+.kpi-card:hover {
+    transform: translateY(-5px);
+}
+
+.kpi-icon {
+    font-size: 2.2rem;
+}
+
+.kpi-value {
+    font-size: 1.9rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+/* KPI COLORS */
+
+.leads {
+    background: linear-gradient(135deg,#0d6efd,#3b8dff);
+}
+
+.open {
+    background: linear-gradient(135deg,#ffc107,#ffda6a);
+    color:#000;
+}
+
+.closed {
+    background: linear-gradient(135deg,#198754,#42b883);
+}
+
+.revenue {
+    background: linear-gradient(135deg,#6f42c1,#9b6bff);
+}
+
+/* ================= DASHBOARD CARD ================= */
+
+.dashboard-card {
+    border-radius: 16px;
+    padding: 20px;
+    background: #ffffff;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+    transition: 0.3s ease;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-3px);
+}
+
+/* DARK MODE CARD */
+
+[data-bs-theme="dark"] .dashboard-card {
+    background: #1e1e2d;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.6);
+    border: 1px solid rgba(255,255,255,0.05);
+}
+
+/* ================= CHART ================= */
+
+.chart-container {
+    position: relative;
+    height: 280px;
+    padding: 10px;
+    border-radius: 12px;
+}
+
+[data-bs-theme="dark"] .chart-container {
+    background: rgba(255,255,255,0.03);
+}
+
+/* ================= EMPTY STATES ================= */
+
+.empty-state {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 14px;
+    color: #999;
+}
+
+.empty-list {
+    text-align: center;
+    padding: 20px;
+    color: #999;
+}
+
+[data-bs-theme="dark"] .empty-state,
+[data-bs-theme="dark"] .empty-list {
+    color: #aaa;
+}
+
+/* ================= LIST ================= */
+
+.custom-list {
+    padding: 0;
+    margin: 0;
+}
+
+.list-item {
+    padding: 10px 12px;
+    border-radius: 10px;
+    transition: 0.2s;
+}
+
+.list-item:hover {
+    background: rgba(0,0,0,0.05);
+}
+
+/* DARK LIST HOVER */
+
+[data-bs-theme="dark"] .list-item:hover {
+    background: rgba(255,255,255,0.05);
+}
+
+/* ================= DROP ITEMS ================= */
+
+.drop-item {
+    display: flex;
+    justify-content: space-between;
+
+    padding: 10px 12px;
+    margin-bottom: 8px;
+
+    border-radius: 10px;
+    background: rgba(0,0,0,0.03);
+}
+
+[data-bs-theme="dark"] .drop-item {
+    background: rgba(255,255,255,0.05);
+}
+
+/* ================= MOBILE ================= */
+
+@media (max-width:768px){
+    .kpi-card{
+        min-height: 140px;
+    }
+}
