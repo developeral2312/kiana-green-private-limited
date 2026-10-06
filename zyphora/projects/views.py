@@ -11,7 +11,8 @@ from django.http import JsonResponse
 from django.contrib import messages
 from django.http import HttpResponse
 from django.template.loader import render_to_string
-# from weasyprint import HTML
+from xhtml2pdf import pisa
+from io import BytesIO
 from django.views.decorators.http import require_POST
 
 
@@ -694,9 +695,9 @@ def create_feasibility_general(request):
 
     # Filter projects in feasibility stage
     if user.role == "admin":
-        projects = Project.objects.filter(status='feasibility')
+        projects = Project.objects.filter(status__in=['lead', 'feasibility'])
     else:
-        projects = Project.objects.filter(engineer=engineer, status='feasibility')
+        projects = Project.objects.filter(engineer=engineer, status__in=['lead', 'feasibility'])
 
     if request.method == "POST":
         project_id = request.POST.get("project")
@@ -1140,15 +1141,15 @@ def installation_progress(request):
     engineer = Employee.objects.filter(user=request.user).first()
     search = request.GET.get('q', '')
 
-    # Base projects in structure/electrical
-    projects = Project.objects.filter(status__in=['structure', 'electrical'])
+    # Base projects in structure/electrical/licensing
+    projects = Project.objects.filter(status__in=['structure', 'electrical', 'licensing'])
 
     # Engineer sees only their projects
     if engineer and request.user.role == 'engineer':
         projects = projects.filter(engineer=engineer)
 
-    # Staff users for assignment dropdown
-    staff_users = CustomUser.objects.filter(role='staff')
+    # Staff/Engineer users for assignment dropdown
+    staff_users = CustomUser.objects.filter(role__in=['staff', 'engineer'])
 
     if request.method == 'POST':
         form_type = request.POST.get('form_type')
@@ -1181,6 +1182,7 @@ def installation_progress(request):
                 task.status = 'completed'
                 task.notes = (task.notes or '') + f'\nMarked completed by {request.user}'
                 task.save()
+                task.project.update_status()
                 if task.assigned_to:
                     create_notification(
                         recipient=task.assigned_to,
@@ -1931,7 +1933,6 @@ def download_report(request, type, id=None):
 
     # 🔹 GENERATE PDF
     html = render_to_string(template, context)
-    # pdf = HTML(string=html).write_pdf()
 
     # File name logic
     filename = type
@@ -1940,8 +1941,14 @@ def download_report(request, type, id=None):
     elif type in ['service', 'expense', 'feasibility', 'invoice', 'purchase', 'costing'] and id:
         filename += f"_{id}_{timezone.now().date()}"
 
-    # Return HTML temporarily since Weasyprint is not working
-    return HttpResponse(html)
+    result = BytesIO()
+    pdf = pisa.pisaDocument(BytesIO(html.encode("UTF-8")), result)
+    if not pdf.err:
+        response = HttpResponse(result.getvalue(), content_type='application/pdf')
+        response['Content-Disposition'] = f'attachment; filename="{filename}.pdf"'
+        return response
+    
+    return HttpResponse('Error generating PDF', status=500)
 
 
 

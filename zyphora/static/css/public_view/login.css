@@ -1,17 +1,97 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+
 body {
-    background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
-                url("/static/images/bg.png") center/cover no-repeat;
-    font-family: Arial, sans-serif;
+    background: linear-gradient(rgba(0, 15, 5, 0.6), rgba(0, 0, 0, 0.8)),
+                url("/static/images/bg.png") center/cover no-repeat fixed;
+    font-family: 'Inter', sans-serif;
+    color: #fff;
+    margin: 0;
+    height: 100vh;
+    overflow: hidden;
 }
 
-.login-card {
-    border-radius: 15px;
+.login-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    padding: 20px;
 }
 
-.card {
-    backdrop-filter: blur(5px);
+.glass-card {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 40px;
+    width: 100%;
+    max-width: 420px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease;
 }
 
-.login-card a{
-    text-decoration: none;
+.glass-card:hover {
+    transform: translateY(-5px);
+}
+
+.brand-title {
+    font-weight: 700;
+    font-size: 28px;
+    letter-spacing: -0.5px;
+    color: #fff;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+
+.brand-title .text-warning {
+    color: #FFD700 !important;
+}
+
+.form-control-glass {
+    background: rgba(255, 255, 255, 0.08) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    color: #fff !important;
+    border-radius: 12px;
+    padding: 14px 15px;
+    transition: all 0.3s ease;
+    font-size: 15px;
+}
+
+.form-control-glass::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.form-control-glass:focus {
+    background: rgba(255, 255, 255, 0.15) !important;
+    border-color: #FFD700 !important;
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.2) !important;
+    outline: none;
+}
+
+.btn-glass {
+    background: linear-gradient(135deg, #FFD700, #F39C12);
+    border: none;
+    color: #000;
+    font-weight: 700;
+    border-radius: 12px;
+    padding: 14px;
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(243, 156, 18, 0.3);
+}
+
+.btn-glass:hover {
+    background: linear-gradient(135deg, #F39C12, #FFD700);
+    box-shadow: 0 6px 20px rgba(243, 156, 18, 0.5);
+    transform: translateY(-2px);
+    color: #000;
+}
+
+.subtitle {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 14px;
+    margin-bottom: 30px;
+    letter-spacing: 0.5px;
 }

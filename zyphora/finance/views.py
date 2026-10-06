@@ -272,7 +272,7 @@ def create_expense(request):
 @login_required(login_url='/users/login')
 def my_expenses(request):
     expenses = ExpenseReport.objects.filter(
-        submitted_by=request.user.employee
+        submitted_by=request.user
     ).prefetch_related("items", "receipts").order_by("-created_at")
     return render(request, "dashboard/accountant/my_expenses.html", {"expenses": expenses})
 

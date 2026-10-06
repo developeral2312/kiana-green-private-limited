@@ -56,7 +56,6 @@ def edit_material(request, mid):
     
     return render(request, "dashboard/edit_material.html", {"form": form, "material": material})
 
-
 def delete_material(request, mid):
     material = Material.objects.get(id=mid)
     
@@ -164,7 +163,6 @@ def purchase_order_list(request):
         "purchase_orders": purchase_orders,
         "today": today
     }
-
     return render(request, "dashboard/purchase_order_list.html", context)
 
 
@@ -444,7 +442,7 @@ def request_material(request):
 
 def my_requests(request):
     requests = MaterialAllocation.objects.filter(
-        allocated_by=request.user.employee
+        allocated_by=request.user
     ).order_by('-id')
 
     return render(request, "dashboard/my_requests.html", {"requests": requests})

@@ -44,16 +44,17 @@ def delete_review(request, rid):
     review = Review.objects.get(id=rid)
     review.delete()
 
-    admin = CustomUser.objects.get(role='admin')
+    admins = CustomUser.objects.filter(role='admin')
 
-    create_notification(
-        recipient=admin,
-        sender=request.user,
-        title="Review Deleted",
-        message=f"Review from {review.name} has been deleted",
-        link=reverse('review'),
-        category="crm"
-    )
+    for admin in admins:
+        create_notification(
+            recipient=admin,
+            sender=request.user,
+            title="Review Deleted",
+            message=f"Review from {review.name} has been deleted",
+            link=reverse('review'),
+            category="crm"
+        )
 
     return redirect(review_list)
 
@@ -146,13 +147,14 @@ def add_lead(request):
                 description=f"Lead added manually by {{request.user.username}}",
                 created_by=request.user
             )
-            admin = CustomUser.objects.get(role='admin')
-            create_notification(
-                recipient=admin,
-                title="New Lead Added",
-                message=f"{lead.name} has been added to CRM",
-                link=reverse('view_lead', kwargs={'lid': lead.id})
-            )
+            admins = CustomUser.objects.filter(role='admin')
+            for admin in admins:
+                create_notification(
+                    recipient=admin,
+                    title="New Lead Added",
+                    message=f"{lead.name} has been added to CRM",
+                    link=reverse('view_lead', kwargs={'lid': lead.id})
+                )
             return redirect(lead_list)
     else: 
         form = LeadForm()
@@ -502,14 +504,15 @@ def edit_site_visit(request,vid):
         if form.is_valid():
             form.save()
 
-            admin = CustomUser.objects.get(role='admin')
-            create_notification(
-                recipient=admin,
-                title='Site Visit Updated',
-                message=f'Engineer {visit.engineer} updated the site visit for the lead {visit.lead}.\nScheduled Date : {visit.scheduled_date}\nStatus : {visit.status}',
-                sender=request.user,
-                link= reverse('lead_list'),
-                category='crm'
+            admins = CustomUser.objects.filter(role='admin')
+            for admin in admins:
+                create_notification(
+                    recipient=admin,
+                    title='Site Visit Updated',
+                    message=f'Engineer {visit.engineer} updated the site visit for the lead {visit.lead}.\nScheduled Date : {visit.scheduled_date}\nStatus : {visit.status}',
+                    sender=request.user,
+                    link= reverse('lead_list'),
+                    category='crm'
                 )
             
             # Redirect to the appropriate tab (today/upcoming/completed)

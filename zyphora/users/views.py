@@ -49,19 +49,31 @@ import json
 
 def login_page(request):
     if request.method =="POST":
-        username = request.POST.get('username')
+        username_input = request.POST.get('username')
         password = request.POST.get('password')
 
-        user = authenticate(request,username=username,password=password)
+        # Check if user entered an email instead of username
+        if '@' in username_input:
+            try:
+                user_obj = CustomUser.objects.get(email=username_input)
+                username_to_check = user_obj.username
+            except CustomUser.DoesNotExist:
+                username_to_check = username_input # will fail authentication
+        else:
+            username_to_check = username_input
+
+        user = authenticate(request, username=username_to_check, password=password)
 
         if user:
-            login(request,user)
+            login(request, user)
             create_notification(
                             recipient=user,
                             title='New Login',
-                            message='You logged in to Lumora Solar CRM successfully.',
+                            message='You logged in to Kiana Green CRM successfully.',
                             )
             return redirect(dashboard)
+        else:
+            messages.error(request, 'Invalid credentials. Please try again.')
 
     return render(request,'public_view/login.html')
 

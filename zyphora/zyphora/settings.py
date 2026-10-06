@@ -17,14 +17,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 # Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-ttnkys3cc-+6gl#z+y#-p4^xe9i78tz(7z-ai$_g@6utq6u6)n'
-
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
 ALLOWED_HOSTS = []
 
 
@@ -149,7 +145,7 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True       # Important: TLS on port 587
 EMAIL_USE_SSL = False 
 EMAIL_HOST_USER = 'sajmiya@gmail.com'
-EMAIL_HOST_PASSWORD = 'your-email-password-here'
+EMAIL_HOST_PASSWORD = 'cfilwejcaspfmbzy'
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 
@@ -159,4 +155,5 @@ CELERY_TASK_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'Asia/Kolkata'
 
 
-GROQ_API_KEY = "your-groq-api-key-here"
+import os
+GROQ_API_KEY = os.environ.get("GROQ_API_KEY", "")

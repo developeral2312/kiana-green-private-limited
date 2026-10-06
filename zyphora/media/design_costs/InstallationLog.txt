@@ -1,0 +1,12 @@
+************************************* Invoked: Mon Oct 5 12:45:58 2026
+[0] Arguments: C:\Users\dell\Downloads\msys2-x86_64-20260927.exe
+[11] Operations sanity check succeeded.
+[15] Warning: Cannot create lock file "C:\Users\dell\AppData\Local\Temp\msys2-x86_64-202609271234865.lock": The process cannot access the file because it is being used by another process.
+ (0x00000020)
+[117] UnableToStart : Unable to start installer : Another msys2-x86_64-20260927 instance is already running. Wait until it finishes, close it, or restart your system.
+************************************* Invoked: Mon Oct 5 12:45:58 2026
+[0] Arguments: C:\Users\dell\Downloads\msys2-x86_64-20260927.exe
+[18] Operations sanity check succeeded.
+[20] Warning: Cannot create lock file "C:\Users\dell\AppData\Local\Temp\msys2-x86_64-202609271234865.lock": The process cannot access the file because it is being used by another process.
+ (0x00000020)
+[131] UnableToStart : Unable to start installer : Another msys2-x86_64-20260927 instance is already running. Wait until it finishes, close it, or restart your system.

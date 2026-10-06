@@ -67,7 +67,13 @@
                                     <td><strong>PO-{{ g.purchase_order.id }}</strong></td>
                                     <td>{{ g.purchase_order.vendor.name }}</td>
                                     <td>{{ g.received_date|date:"d M Y" }}</td>
-                                    <td>{{ g.received_by.name|default:g.received_by.user.username }}</td>
+                                    <td>
+                                        {% if g.received_by %}
+                                            {{ g.received_by.name|default:g.received_by.user.username }}
+                                        {% else %}
+                                            <span class="text-muted">Admin / System</span>
+                                        {% endif %}
+                                    </td>
                                     <td>{{ g.notes|default:"-" }}</td>
                                 </tr>
                             {% empty %}

@@ -165,7 +165,7 @@
     {% for doc in task.documents.all %}
         <li>
             {{ doc.get_document_type_display }} -
-            <a href="{{ doc.file.url }}" target="_blank" class="btn btn-outline-primary">{{doc.caption|default:View}}</a>
+            <a href="{{ doc.file.url }}" target="_blank" class="btn btn-outline-primary">{{doc.caption|default:"View"}}</a>
         </li>
     {% endfor %}
 {% endfor %}

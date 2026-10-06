@@ -9,7 +9,13 @@ class EmployeeForm(forms.ModelForm):
         model = Employee
         exclude = ['user', 'profile_pic']
         widgets = {
-            'date_joined': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'})
+            'date_joined': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+            'access_level': forms.Select(choices=[
+                ('', 'Select Access Level'),
+                ('billing', 'Billing Only'),
+                ('salary', 'Salary Management'),
+                ('full', 'Full Financial Access')
+            ])
         }
 
     def __init__(self, *args, **kwargs):
