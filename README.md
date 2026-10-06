@@ -1,4 +1,4 @@
-# ☀️ Zyphora Solar ERP
+# ☀️ KIANA GREEN Solar ERP
 
 A **modular Django-based ERP system for solar companies** designed to manage the complete lifecycle of solar projects — from lead generation to installation, licensing, procurement, finance, and final project completion.
 
