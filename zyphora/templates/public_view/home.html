@@ -15,7 +15,7 @@
         <div class="row align-items-center">
             
             <!-- Hero Text -->
-            <div class="col-lg-7 text-white animate__animated animate__fadeInUp pe-lg-5">
+            <div class="col-lg-7 text-white pe-lg-5">
                 <div class="premium-badge mb-4">
                     <i class="fa-solid fa-leaf text-success me-2"></i> India's Most Trusted Solar Partner
                 </div>
@@ -44,26 +44,32 @@
             </div>
             
             <!-- Hero Lead Form -->
-            <div class="col-lg-5 mt-5 mt-lg-0 animate__animated animate__fadeInRight">
+            <div class="col-lg-5 mt-5 mt-lg-0">
                 <div class="glass-form-card p-4 p-md-5">
                     <div class="text-center mb-4">
-                        <h4 class="fw-bold text-dark mb-1">Get Your Free Solar Quote</h4>
-                        <p class="text-muted small">Fill out the form below and our experts will contact you within 24 hours.</p>
+                        <h4 class="fw-bold text-light mb-1">Get Your Free Solar Quote</h4>
+                        <p class="text-light opacity-75 small">Fill out the form below and our experts will contact you within 24 hours.</p>
                     </div>
                     
                     <form action="{% url 'contact' %}" method="POST">
                         {% csrf_token %}
-                        <div class="mb-3">
-                            <label class="form-label text-dark fw-semibold small">Full Name</label>
-                            <input type="text" name="name" class="form-control premium-input" placeholder="e.g. Aditya Sharma" required>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label text-light fw-semibold small">Full Name</label>
+                                <input type="text" name="name" class="form-control premium-input" placeholder="e.g. Aditya Sharma" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label text-light fw-semibold small">Email Address</label>
+                                <input type="email" name="email" class="form-control premium-input" placeholder="e.g. name@example.com">
+                            </div>
                         </div>
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label class="form-label text-dark fw-semibold small">Phone Number</label>
+                                <label class="form-label text-light fw-semibold small">Phone Number</label>
                                 <input type="text" name="phone" class="form-control premium-input" placeholder="+91 XXXXX XXXXX" required>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label class="form-label text-dark fw-semibold small">Average Monthly Bill</label>
+                                <label class="form-label text-light fw-semibold small">Average Monthly Bill</label>
                                 <select class="form-select premium-input" name="bill" required>
                                     <option value="">Select Range</option>
                                     <option value="Under ₹3,000">Under ₹3,000</option>
@@ -73,9 +79,22 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="mb-4">
-                            <label class="form-label text-dark fw-semibold small">City / Location</label>
-                            <input type="text" name="location" class="form-control premium-input" placeholder="e.g. Lucknow, UP" required>
+                        <div class="row">
+                            <div class="col-md-6 mb-4">
+                                <label class="form-label text-light fw-semibold small">City / Location</label>
+                                <input type="text" name="location" class="form-control premium-input" placeholder="e.g. Lucknow, UP" required>
+                            </div>
+                            <div class="col-md-6 mb-4">
+                                <label class="form-label text-light fw-semibold small">Service Required</label>
+                                <select class="form-select premium-input" name="service" required>
+                                    <option value="">Select Service</option>
+                                    <option value="ongrid">On-grid Solar</option>
+                                    <option value="offgrid">Off-grid Solar</option>
+                                    <option value="hybrid">Hybrid Solar</option>
+                                    <option value="leakproof">Leakproof Solar Roof</option>
+                                    <option value="commercial">Commercial Solar</option>
+                                </select>
+                            </div>
                         </div>
                         <button type="submit" class="btn btn-premium-submit w-100 py-3 fw-bold fs-5 shadow">
                             Request Free Consultation <i class="fa-solid fa-arrow-right ms-2"></i>
@@ -107,11 +126,13 @@
 <div class="section-padding bg-light">
     <div class="container">
         <div class="row align-items-center">
-            <div class="col-lg-6 mb-5 mb-lg-0">
-                <img src="/static/images/energy.avif" class="img-fluid rounded-4 shadow-lg w-100" style="object-fit: cover; height: 500px;">
-                <div class="floating-stat-card shadow-lg bg-white p-4 rounded-4 text-center">
-                    <h2 class="text-success fw-bolder display-5 mb-0">10+</h2>
-                    <p class="text-muted fw-bold mb-0 text-uppercase" style="font-size: 0.8rem; letter-spacing: 1px;">Years of Excellence</p>
+            <div class="col-lg-6 mb-5 mb-lg-0 pe-lg-5">
+                <div class="position-relative">
+                    <img src="/static/images/energy.avif" class="img-fluid rounded-4 shadow-lg w-100" style="object-fit: cover; height: 500px;">
+                    <div class="floating-stat-card shadow-lg bg-white p-4 rounded-4 text-center">
+                        <h2 class="text-success fw-bolder display-5 mb-0">10+</h2>
+                        <p class="text-muted fw-bold mb-0 text-uppercase" style="font-size: 0.8rem; letter-spacing: 1px;">Years of Excellence</p>
+                    </div>
                 </div>
             </div>
             <div class="col-lg-6 ps-lg-5">
@@ -355,7 +376,7 @@
                             {% endif %}
                         {% endfor %}
                     </div>
-                    <p class="text-muted fst-italic mb-4" style="line-height: 1.7; position: relative; z-index: 2;">"{{ review.review_text }}"</p>
+                    <p class="text-muted fst-italic mb-4" style="line-height: 1.7; position: relative; z-index: 2;">"{{ review.review }}"</p>
                     <div class="d-flex align-items-center mt-auto">
                         <div class="avatar-circle bg-dark-navy text-white fw-bold d-flex align-items-center justify-content-center rounded-circle me-3" style="width: 50px; height: 50px; font-size: 1.2rem;">
                             {{ review.name|make_list|first|upper }}

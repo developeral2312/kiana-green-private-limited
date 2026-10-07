@@ -1,0 +1,4440 @@
+[
+{
+    "model": "sessions.session",
+    "pk": "vwysrg5owie16fsj7qjascfg88dtcf1b",
+    "fields": {
+        "session_data": ".eJxVjjsOgzAQBe-yNVhegz9Qps8ZrPXaBBKCJQxVlLtHKBRJ-2Y0ei_wtG-j30ta_RShB4TqdwvEj7QcIN5puWXBednWKYhDESct4ppjmi-n-xcYqYzQg9GDJopoWTIZ7ZRuG-x0cMkoNsmilmy0s8FIJmuTShidigPqplXMEiqYqWx-yOvze7SrsUbboXKNcRbeH14jQCQ:1xE2ic:mPsg5iq3hk7ltAyVgppnU4eBWoo-Hdtzen8ut2YlCTs",
+        "expire_date": "2026-10-20T10:48:22.107Z"
+    }
+},
+{
+    "model": "users.customuser",
+    "fields": {
+        "password": "pbkdf2_sha256$1200000$Xr0MVPryiUuhwj2UtrjgHB$6ztT5RNVd+KKSul+gH16vX2miynGMxtDHt+0oD34YPU=",
+        "last_login": "2026-10-07T08:50:53.608Z",
+        "is_superuser": true,
+        "first_name": "aditya",
+        "last_name": "verma",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2026-10-05T07:40:39.151Z",
+        "username": "aditya1",
+        "email": "adityaverma1285515@gmail.com",
+        "role": "admin",
+        "must_change_password": false,
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "users.customuser",
+    "fields": {
+        "password": "pbkdf2_sha256$1200000$QSiAAeHpEfWANDv6ybH5Sz$8UnkmyHbj8fRak+YGn3jihIBU6JILSz0K1/9ql9ug5s=",
+        "last_login": "2026-10-05T11:23:06.004Z",
+        "is_superuser": false,
+        "first_name": "",
+        "last_name": "",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2026-10-05T08:54:59.678Z",
+        "username": "aditya2",
+        "email": "developeral2312@gmail.com",
+        "role": "staff",
+        "must_change_password": false,
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "users.customuser",
+    "fields": {
+        "password": "pbkdf2_sha256$1200000$7eVR4Y4DjcRlywZ0hpILow$+L40AIl2TdykFtHDIu4dytIuXzklvNCD1XaMppPVkpc=",
+        "last_login": null,
+        "is_superuser": true,
+        "first_name": "",
+        "last_name": "",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2026-10-06T04:24:26.852Z",
+        "username": "admin_test",
+        "email": "admin_test@example.com",
+        "role": "admin",
+        "must_change_password": false,
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "users.customuser",
+    "fields": {
+        "password": "pbkdf2_sha256$1200000$CLXZ6LAsZynJsseTKKM1c5$brmZTpMqpcuCa1PjkSB3Q/Af3kZ0xbSwF8M+Mpw+NPQ=",
+        "last_login": "2026-10-06T08:29:01.425Z",
+        "is_superuser": false,
+        "first_name": "",
+        "last_name": "",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2026-10-06T05:40:48.675Z",
+        "username": "eng_test",
+        "email": "eng@example.com",
+        "role": "engineer",
+        "must_change_password": false,
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "users.customuser",
+    "fields": {
+        "password": "pbkdf2_sha256$1200000$i4kucwgfMFLsNbA6tNJWXP$yVxGIGpljEFs4YwmKnN7syi6I0uHjntLE7tZ5hwHdTc=",
+        "last_login": "2026-10-06T09:29:14.702Z",
+        "is_superuser": false,
+        "first_name": "",
+        "last_name": "",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2026-10-06T05:40:49.984Z",
+        "username": "sales_test",
+        "email": "sales@example.com",
+        "role": "sales",
+        "must_change_password": false,
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "users.customuser",
+    "fields": {
+        "password": "pbkdf2_sha256$1200000$p5ClgIQlrME8JAUv0Kd3E4$Nq9DIjfjNxhy9Y7H/fYEi2fyhOgtc/70t0KN4GHOBKU=",
+        "last_login": "2026-10-06T10:29:28.339Z",
+        "is_superuser": false,
+        "first_name": "",
+        "last_name": "",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2026-10-06T09:15:15.651Z",
+        "username": "ACHARYA",
+        "email": "ACHARYA@GMAIL.COM",
+        "role": "engineer",
+        "must_change_password": false,
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "users.customuser",
+    "fields": {
+        "password": "pbkdf2_sha256$1200000$xC7PaJwZLWz6pZ94i56FEq$mrqYr2nURq+UDvU+ouOkqxEJzu7NuVKn8LQH+OjAkh4=",
+        "last_login": null,
+        "is_superuser": false,
+        "first_name": "",
+        "last_name": "",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2026-10-06T09:23:25.552Z",
+        "username": "ACCON1",
+        "email": "ACCCOU@GMAIL.COM",
+        "role": "accountant",
+        "must_change_password": true,
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "users.employee",
+    "pk": 1,
+    "fields": {
+        "user": [
+            "aditya2"
+        ],
+        "employee_id": null,
+        "profile_pic": "",
+        "name": "Developer",
+        "phone": "08810842863",
+        "address": "BHANAULI",
+        "designation": "ai",
+        "date_joined": "2026-10-05",
+        "is_active": true,
+        "specialization": null,
+        "access_level": null,
+        "supervisor": [
+            "aditya1"
+        ]
+    }
+},
+{
+    "model": "users.employee",
+    "pk": 2,
+    "fields": {
+        "user": [
+            "eng_test"
+        ],
+        "employee_id": "EMP-001",
+        "profile_pic": "",
+        "name": "Test Engineer",
+        "phone": null,
+        "address": null,
+        "designation": "Senior Installer",
+        "date_joined": null,
+        "is_active": true,
+        "specialization": null,
+        "access_level": null,
+        "supervisor": null
+    }
+},
+{
+    "model": "users.employee",
+    "pk": 3,
+    "fields": {
+        "user": [
+            "sales_test"
+        ],
+        "employee_id": "EMP-002",
+        "profile_pic": "",
+        "name": "Test Sales",
+        "phone": null,
+        "address": null,
+        "designation": "Sales Exec",
+        "date_joined": null,
+        "is_active": true,
+        "specialization": null,
+        "access_level": null,
+        "supervisor": null
+    }
+},
+{
+    "model": "users.employee",
+    "pk": 4,
+    "fields": {
+        "user": [
+            "ACHARYA"
+        ],
+        "employee_id": "EMP006",
+        "profile_pic": "",
+        "name": "Aditya Verma",
+        "phone": "09956665489",
+        "address": "bhanauli\r\nbhanauli , barabanki",
+        "designation": "SDFAS",
+        "date_joined": "2026-10-06",
+        "is_active": true,
+        "specialization": "AF",
+        "access_level": null,
+        "supervisor": null
+    }
+},
+{
+    "model": "users.employee",
+    "pk": 5,
+    "fields": {
+        "user": [
+            "ACCON1"
+        ],
+        "employee_id": "EMP007",
+        "profile_pic": "",
+        "name": "ADITYA VERMA",
+        "phone": "09956665489",
+        "address": "uttar pradesh 9956665489",
+        "designation": "ACCOUNTANT",
+        "date_joined": "2026-10-06",
+        "is_active": true,
+        "specialization": null,
+        "access_level": "Full Financial Acces",
+        "supervisor": null
+    }
+},
+{
+    "model": "users.notification",
+    "pk": 1,
+    "fields": {
+        "recipient": [
+            "aditya1"
+        ],
+        "sender": null,
+        "title": "New Login",
+        "message": "You logged in to Lumora Solar CRM successfully.",
+        "category": "system",
+        "link": null,
+        "is_read": true,
+        "created_at": "2026-10-05T08:44:07.603Z"
+    }
+},
+{
+    "model": "users.notification",
+    "pk": 2,
+    "fields": {
+        "recipient": [
+            "aditya1"
+        ],
+        "sender": null,
+        "title": "New Lead Added",
+        "message": "aditya vermqa has been added from website contact form",
+        "category": "crm",
+        "link": "/users/notifications/",
+        "is_read": true,
+        "created_at": "2026-10-05T08:48:42.925Z"
+    }
+},
+{
+    "model": "users.notification",
+    "pk": 3,
+    "fields": {
+        "recipient": [
+            "aditya1"
+        ],
+        "sender": null,
+        "title": "New Login",
+        "message": "You logged in to Lumora Solar CRM successfully.",
+        "category": "system",
+        "link": null,
+        "is_read": true,
+        "created_at": "2026-10-05T08:48:48.593Z"
+    }
+},
+{
+    "model": "users.notification",
+    "pk": 4,
+    "fields": {
+        "recipient": [
+            "aditya1"
+        ],
+        "sender": [
+            "aditya1"
+        ],
+        "title": "Follow-up Scheduled",
+        "message": "Follow-up scheduled with aditya vermqa on 2027-01-12",
+        "category": "crm",
+        "link": "/crm/update-lead/1/",
+        "is_read": true,
+        "created_at": "2026-10-05T08:52:23.356Z"
+    }
+},
+{
+    "model": "users.notification",
+    "pk": 5,
+    "fields": {
+        "recipient": [
+            "aditya1"
+        ],
+        "sender": [
+            "aditya1"
+        ],
+        "title": "Site Visit Scheduled",
+        "message": "Site visit for aditya vermqa scheduled on 2027-01-12",
+        "category": "crm",
+        "link": "/crm/update-lead/1/",
+        "is_read": true,
+        "created_at": "2026-10-05T08:52:49.745Z"
+    }
+},
+{
+    "model": "users.notification",
+    "pk": 6,
+    "fields": {
+        "recipient": [
+            "aditya1"
+        ],
+        "sender": [
+            "aditya1"
+        ],
+        "title": "New Employee Added",
+        "message": "Developer (ai) has joined the team.",
+        "category": "employee",
+        "link": "/users/emplist/",
+        "is_read": true,
+        "created_at": "2026-10-05T08:55:05.097Z"
+    }
+},
+{
+    "model": "users.notification",
+    "pk": 7,
+    "fields": {
+        "recipient": [
+            "aditya2"
+        ],
+        "sender": null,
+        "title": "Welcome to the Team!",
+        "message": "Hi Developer, welcome to Kiana Green Private Limited! We're excited to have you onboard as ai.",
+        "category": "system",
+        "link": "/users/dashboard/",
+        "is_read": false,
+        "created_at": "2026-10-05T08:55:05.102Z"
+    }
+},
+{
+    "model": "users.notification",
+    "pk": 8,
+    "fields": {
+        "recipient": [
+            "aditya1"
+        ],
+        "sender": null,
+        "title": "New Login",
+        "message": "You logged in to Lumora Solar CRM successfully.",
+        "category": "system",
+        "link": null,
+        "is_read": true,
+        "created_at": "2026-10-05T11:15:20.436Z"
+    }
+},
+{
+    "model": "users.notification",
+    "pk": 9,
+    "fields": {
+        "recipient": [
+            "aditya1"
+        ],
+        "sender": null,
+        "title": "New Login",
+        "message": "You logged in to Lumora Solar CRM successfully.",
+        "category": "system",
+        "link": null,
+        "is_read": true,
+        "created_at": "2026-10-05T11:19:59.565Z"
+    }
+},
+{
+    "model": "users.notification",
+    "pk": 10,
+    "fields": {
+        "recipient": [
+            "aditya2"
+        ],
+        "sender": null,
+        "title": "New Login",
+        "message": "You logged in to Lumora Solar CRM successfully.",
+        "category": "system",
+        "link": null,
+        "is_read": false,
+        "created_at": "2026-10-05T11:23:06.016Z"
+    }
+},
+{
+    "model": "users.notification",
+    "pk": 11,
+    "fields": {
+        "recipient": [
+            "aditya2"
+        ],
+        "sender": null,
+        "title": "Change Password",
+        "message": "Please update your temporary password",
+        "category": null,
+        "link": "/users/password/",
+        "is_read": false,
+        "created_at": "2026-10-05T11:23:06.061Z"
+    }
+},
+{
+    "model": "users.notification",
+    "pk": 12,
+    "fields": {
+        "recipient": [
+            "aditya1"
+        ],
+        "sender": null,
+        "title": "New Lead Added",
+        "message": "rohan has been added from website contact form",
+        "category": "crm",
+        "link": "/users/notifications/",
+        "is_read": true,
+        "created_at": "2026-10-05T11:36:08.195Z"
+    }
+},
+{
+    "model": "users.notification",
+    "pk": 13,
+    "fields": {
+        "recipient": [
+            "aditya1"
+        ],
+        "sender": null,
+        "title": "New Login",
+        "message": "You logged in to Lumora Solar CRM successfully.",
+        "category": "system",
+        "link": null,
+        "is_read": true,
+        "created_at": "2026-10-05T11:37:44.786Z"
+    }
+},
+{
+    "model": "users.notification",
+    "pk": 14,
+    "fields": {
+        "recipient": [
+            "aditya1"
+        ],
+        "sender": null,
+        "title": "New Login",
+        "message": "You logged in to Lumora Solar CRM successfully.",
+        "category": "system",
+        "link": null,
+        "is_read": true,
+        "created_at": "2026-10-05T12:34:40.138Z"
+    }
+},
+{
+    "model": "users.notification",
+    "pk": 15,
+    "fields": {
+        "recipient": [
+            "aditya1"
+        ],
+        "sender": null,
+        "title": "New Login",
+        "message": "You logged in to Lumora Solar CRM successfully.",
+        "category": "system",
+        "link": null,
+        "is_read": true,
+        "created_at": "2026-10-06T04:27:46.484Z"
+    }
+},
+{
+    "model": "users.notification",
+    "pk": 16,
+    "fields": {
+        "recipient": [
+            "aditya2"
+        ],
+        "sender": [
+            "aditya1"
+        ],
+        "title": "hello towmmorw will meeting",
+        "message": "you",
+        "category": "admin",
+        "link": null,
+        "is_read": false,
+        "created_at": "2026-10-06T04:32:28.004Z"
+    }
+},
+{
+    "model": "users.notification",
+    "pk": 17,
+    "fields": {
+        "recipient": [
+            "aditya1"
+        ],
+        "sender": [
+            "aditya1"
+        ],
+        "title": "helo",
+        "message": "hm",
+        "category": "projects",
+        "link": "/projects/view-project/2/",
+        "is_read": true,
+        "created_at": "2026-10-06T05:55:30.324Z"
+    }
+},
+{
+    "model": "users.notification",
+    "pk": 18,
+    "fields": {
+        "recipient": [
+            "admin_test"
+        ],
+        "sender": [
+            "aditya1"
+        ],
+        "title": "helo",
+        "message": "hm",
+        "category": "projects",
+        "link": "/projects/view-project/2/",
+        "is_read": false,
+        "created_at": "2026-10-06T05:55:30.339Z"
+    }
+},
+{
+    "model": "users.notification",
+    "pk": 19,
+    "fields": {
+        "recipient": [
+            "eng_test"
+        ],
+        "sender": [
+            "aditya1"
+        ],
+        "title": "helo",
+        "message": "hm",
+        "category": "projects",
+        "link": "/projects/view-project/2/",
+        "is_read": false,
+        "created_at": "2026-10-06T05:55:30.359Z"
+    }
+},
+{
+    "model": "users.notification",
+    "pk": 20,
+    "fields": {
+        "recipient": [
+            "aditya1"
+        ],
+        "sender": null,
+        "title": "New Login",
+        "message": "You logged in to Kiana Green CRM successfully.",
+        "category": "system",
+        "link": null,
+        "is_read": true,
+        "created_at": "2026-10-06T07:26:59.554Z"
+    }
+},
+{
+    "model": "users.notification",
+    "pk": 21,
+    "fields": {
+        "recipient": [
+            "eng_test"
+        ],
+        "sender": [
+            "aditya1"
+        ],
+        "title": "Message from Admin",
+        "message": "Please upload the design for project 'Ongoing Offgrid Installation'.",
+        "category": "admin",
+        "link": "/projects/design-detail/4/",
+        "is_read": false,
+        "created_at": "2026-10-06T07:37:37.702Z"
+    }
+},
+{
+    "model": "users.notification",
+    "pk": 22,
+    "fields": {
+        "recipient": [
+            "aditya2"
+        ],
+        "sender": [
+            "aditya1"
+        ],
+        "title": "yes",
+        "message": "yes",
+        "category": "admin",
+        "link": null,
+        "is_read": false,
+        "created_at": "2026-10-06T07:38:12.202Z"
+    }
+},
+{
+    "model": "users.notification",
+    "pk": 23,
+    "fields": {
+        "recipient": [
+            "eng_test"
+        ],
+        "sender": [
+            "aditya1"
+        ],
+        "title": "Task structure_fixing marked completed",
+        "message": "Task \"structure_fixing\" in project \"Ongoing Offgrid Installation\" has been marked completed by aditya1.",
+        "category": "system",
+        "link": "/projects/work-progress/",
+        "is_read": false,
+        "created_at": "2026-10-06T07:54:49.950Z"
+    }
+},
+{
+    "model": "users.notification",
+    "pk": 24,
+    "fields": {
+        "recipient": [
+            "eng_test"
+        ],
+        "sender": null,
+        "title": "New Login",
+        "message": "You logged in to Kiana Green CRM successfully.",
+        "category": "system",
+        "link": null,
+        "is_read": false,
+        "created_at": "2026-10-06T08:29:01.440Z"
+    }
+},
+{
+    "model": "users.notification",
+    "pk": 25,
+    "fields": {
+        "recipient": [
+            "aditya1"
+        ],
+        "sender": null,
+        "title": "New Login",
+        "message": "You logged in to Kiana Green CRM successfully.",
+        "category": "system",
+        "link": null,
+        "is_read": true,
+        "created_at": "2026-10-06T08:44:56.546Z"
+    }
+},
+{
+    "model": "users.notification",
+    "pk": 26,
+    "fields": {
+        "recipient": [
+            "aditya1"
+        ],
+        "sender": null,
+        "title": "New Lead Added",
+        "message": "MITCHELL MARKS has been added to CRM",
+        "category": "system",
+        "link": "/crm/lead/7/",
+        "is_read": false,
+        "created_at": "2026-10-06T09:07:16.131Z"
+    }
+},
+{
+    "model": "users.notification",
+    "pk": 27,
+    "fields": {
+        "recipient": [
+            "admin_test"
+        ],
+        "sender": null,
+        "title": "New Lead Added",
+        "message": "MITCHELL MARKS has been added to CRM",
+        "category": "system",
+        "link": "/crm/lead/7/",
+        "is_read": false,
+        "created_at": "2026-10-06T09:07:16.147Z"
+    }
+},
+{
+    "model": "users.notification",
+    "pk": 28,
+    "fields": {
+        "recipient": [
+            "aditya1"
+        ],
+        "sender": [
+            "aditya1"
+        ],
+        "title": "Lead Deleted",
+        "message": "MITCHELL MARKS has been removed from CRM",
+        "category": "crm",
+        "link": "/crm/leads/",
+        "is_read": false,
+        "created_at": "2026-10-06T09:11:20.076Z"
+    }
+},
+{
+    "model": "users.notification",
+    "pk": 29,
+    "fields": {
+        "recipient": [
+            "aditya1"
+        ],
+        "sender": [
+            "aditya1"
+        ],
+        "title": "Employee registration Failed ",
+        "message": "UNIQUE constraint failed: users_customuser.email",
+        "category": "employee",
+        "link": "/users/emplist/",
+        "is_read": false,
+        "created_at": "2026-10-06T09:14:09.922Z"
+    }
+},
+{
+    "model": "users.notification",
+    "pk": 30,
+    "fields": {
+        "recipient": [
+            "aditya1"
+        ],
+        "sender": [
+            "aditya1"
+        ],
+        "title": "New Employee Added",
+        "message": "Aditya Verma (SDFAS) has joined the team.",
+        "category": "employee",
+        "link": "/users/emplist/",
+        "is_read": false,
+        "created_at": "2026-10-06T09:15:22.388Z"
+    }
+},
+{
+    "model": "users.notification",
+    "pk": 31,
+    "fields": {
+        "recipient": [
+            "ACHARYA"
+        ],
+        "sender": null,
+        "title": "Welcome to the Team!",
+        "message": "Hi Aditya Verma, welcome to Kiana Green Private Limited! We're excited to have you onboard as SDFAS.",
+        "category": "system",
+        "link": "/users/dashboard/",
+        "is_read": false,
+        "created_at": "2026-10-06T09:15:22.391Z"
+    }
+},
+{
+    "model": "users.notification",
+    "pk": 32,
+    "fields": {
+        "recipient": [
+            "aditya1"
+        ],
+        "sender": [
+            "aditya1"
+        ],
+        "title": "New Employee Added",
+        "message": "ADITYA VERMA (ACCOUNTANT) has joined the team.",
+        "category": "employee",
+        "link": "/users/emplist/",
+        "is_read": false,
+        "created_at": "2026-10-06T09:23:31.460Z"
+    }
+},
+{
+    "model": "users.notification",
+    "pk": 33,
+    "fields": {
+        "recipient": [
+            "ACCON1"
+        ],
+        "sender": null,
+        "title": "Welcome to the Team!",
+        "message": "Hi ADITYA VERMA, welcome to Kiana Green Private Limited! We're excited to have you onboard as ACCOUNTANT.",
+        "category": "system",
+        "link": "/users/dashboard/",
+        "is_read": false,
+        "created_at": "2026-10-06T09:23:31.461Z"
+    }
+},
+{
+    "model": "users.notification",
+    "pk": 34,
+    "fields": {
+        "recipient": [
+            "aditya1"
+        ],
+        "sender": [
+            "aditya1"
+        ],
+        "title": "Follow-up Scheduled",
+        "message": "Follow-up scheduled with MITCHELL MARKS on 2026-10-07",
+        "category": "crm",
+        "link": "/crm/update-lead/7/",
+        "is_read": false,
+        "created_at": "2026-10-06T09:25:41.986Z"
+    }
+},
+{
+    "model": "users.notification",
+    "pk": 35,
+    "fields": {
+        "recipient": [
+            "admin_test"
+        ],
+        "sender": [
+            "aditya1"
+        ],
+        "title": "Follow-up Scheduled",
+        "message": "Follow-up scheduled with MITCHELL MARKS on 2026-10-07",
+        "category": "crm",
+        "link": "/crm/update-lead/7/",
+        "is_read": false,
+        "created_at": "2026-10-06T09:25:41.987Z"
+    }
+},
+{
+    "model": "users.notification",
+    "pk": 36,
+    "fields": {
+        "recipient": [
+            "sales_test"
+        ],
+        "sender": null,
+        "title": "New Login",
+        "message": "You logged in to Kiana Green CRM successfully.",
+        "category": "system",
+        "link": null,
+        "is_read": false,
+        "created_at": "2026-10-06T09:29:14.715Z"
+    }
+},
+{
+    "model": "users.notification",
+    "pk": 37,
+    "fields": {
+        "recipient": [
+            "aditya1"
+        ],
+        "sender": null,
+        "title": "New Login",
+        "message": "You logged in to Kiana Green CRM successfully.",
+        "category": "system",
+        "link": null,
+        "is_read": false,
+        "created_at": "2026-10-06T09:38:14.315Z"
+    }
+},
+{
+    "model": "users.notification",
+    "pk": 38,
+    "fields": {
+        "recipient": [
+            "ACHARYA"
+        ],
+        "sender": null,
+        "title": "New Login",
+        "message": "You logged in to Kiana Green CRM successfully.",
+        "category": "system",
+        "link": null,
+        "is_read": false,
+        "created_at": "2026-10-06T10:07:14.738Z"
+    }
+},
+{
+    "model": "users.notification",
+    "pk": 39,
+    "fields": {
+        "recipient": [
+            "ACHARYA"
+        ],
+        "sender": null,
+        "title": "Change Password",
+        "message": "Please update your temporary password",
+        "category": "system",
+        "link": "password",
+        "is_read": false,
+        "created_at": "2026-10-06T10:07:14.819Z"
+    }
+},
+{
+    "model": "users.notification",
+    "pk": 40,
+    "fields": {
+        "recipient": [
+            "ACHARYA"
+        ],
+        "sender": null,
+        "title": "Change Password",
+        "message": "Please update your temporary password",
+        "category": "system",
+        "link": "password",
+        "is_read": false,
+        "created_at": "2026-10-06T10:07:21.991Z"
+    }
+},
+{
+    "model": "users.notification",
+    "pk": 41,
+    "fields": {
+        "recipient": [
+            "ACHARYA"
+        ],
+        "sender": null,
+        "title": "Change Password",
+        "message": "Please update your temporary password",
+        "category": "system",
+        "link": "password",
+        "is_read": false,
+        "created_at": "2026-10-06T10:07:24.270Z"
+    }
+},
+{
+    "model": "users.notification",
+    "pk": 42,
+    "fields": {
+        "recipient": [
+            "ACHARYA"
+        ],
+        "sender": null,
+        "title": "Change Password",
+        "message": "Please update your temporary password",
+        "category": "system",
+        "link": "password",
+        "is_read": false,
+        "created_at": "2026-10-06T10:07:27.720Z"
+    }
+},
+{
+    "model": "users.notification",
+    "pk": 43,
+    "fields": {
+        "recipient": [
+            "aditya1"
+        ],
+        "sender": null,
+        "title": "New Login",
+        "message": "You logged in to Kiana Green CRM successfully.",
+        "category": "system",
+        "link": null,
+        "is_read": false,
+        "created_at": "2026-10-06T10:16:26.301Z"
+    }
+},
+{
+    "model": "users.notification",
+    "pk": 44,
+    "fields": {
+        "recipient": [
+            "ACHARYA"
+        ],
+        "sender": null,
+        "title": "New Login",
+        "message": "You logged in to Kiana Green CRM successfully.",
+        "category": "system",
+        "link": null,
+        "is_read": false,
+        "created_at": "2026-10-06T10:18:16.121Z"
+    }
+},
+{
+    "model": "users.notification",
+    "pk": 45,
+    "fields": {
+        "recipient": [
+            "aditya1"
+        ],
+        "sender": null,
+        "title": "New Login",
+        "message": "You logged in to Kiana Green CRM successfully.",
+        "category": "system",
+        "link": null,
+        "is_read": false,
+        "created_at": "2026-10-06T10:19:34.301Z"
+    }
+},
+{
+    "model": "users.notification",
+    "pk": 46,
+    "fields": {
+        "recipient": [
+            "ACHARYA"
+        ],
+        "sender": null,
+        "title": "New Login",
+        "message": "You logged in to Kiana Green CRM successfully.",
+        "category": "system",
+        "link": null,
+        "is_read": false,
+        "created_at": "2026-10-06T10:20:21.617Z"
+    }
+},
+{
+    "model": "users.notification",
+    "pk": 47,
+    "fields": {
+        "recipient": [
+            "aditya1"
+        ],
+        "sender": null,
+        "title": "New Login",
+        "message": "You logged in to Kiana Green CRM successfully.",
+        "category": "system",
+        "link": null,
+        "is_read": false,
+        "created_at": "2026-10-06T10:21:06.753Z"
+    }
+},
+{
+    "model": "users.notification",
+    "pk": 48,
+    "fields": {
+        "recipient": [
+            "aditya2"
+        ],
+        "sender": [
+            "aditya1"
+        ],
+        "title": "Installation task site_inspection assigned for MITCHELL MARKS hybrid Project",
+        "message": "You have been assigned the installation task: site_inspection for project MITCHELL MARKS hybrid Project.",
+        "category": "system",
+        "link": "/projects/work-progress/",
+        "is_read": false,
+        "created_at": "2026-10-06T10:25:51.631Z"
+    }
+},
+{
+    "model": "users.notification",
+    "pk": 49,
+    "fields": {
+        "recipient": [
+            "aditya2"
+        ],
+        "sender": [
+            "aditya1"
+        ],
+        "title": "Installation task panel_mounting assigned for MITCHELL MARKS hybrid Project",
+        "message": "You have been assigned the installation task: panel_mounting for project MITCHELL MARKS hybrid Project.",
+        "category": "system",
+        "link": "/projects/work-progress/",
+        "is_read": false,
+        "created_at": "2026-10-06T10:26:05.943Z"
+    }
+},
+{
+    "model": "users.notification",
+    "pk": 50,
+    "fields": {
+        "recipient": [
+            "ACHARYA"
+        ],
+        "sender": [
+            "aditya1"
+        ],
+        "title": "Installation task structure_fixing assigned for MITCHELL MARKS hybrid Project",
+        "message": "You have been assigned the installation task: structure_fixing for project MITCHELL MARKS hybrid Project.",
+        "category": "system",
+        "link": "/projects/work-progress/",
+        "is_read": false,
+        "created_at": "2026-10-06T10:28:06.458Z"
+    }
+},
+{
+    "model": "users.notification",
+    "pk": 51,
+    "fields": {
+        "recipient": [
+            "ACHARYA"
+        ],
+        "sender": [
+            "aditya1"
+        ],
+        "title": "Installation task wiring assigned for MITCHELL MARKS hybrid Project",
+        "message": "You have been assigned the installation task: wiring for project MITCHELL MARKS hybrid Project.",
+        "category": "system",
+        "link": "/projects/work-progress/",
+        "is_read": false,
+        "created_at": "2026-10-06T10:28:11.470Z"
+    }
+},
+{
+    "model": "users.notification",
+    "pk": 52,
+    "fields": {
+        "recipient": [
+            "ACHARYA"
+        ],
+        "sender": [
+            "aditya1"
+        ],
+        "title": "Task wiring marked completed",
+        "message": "Task \"wiring\" in project \"MITCHELL MARKS hybrid Project\" has been marked completed by aditya1.",
+        "category": "system",
+        "link": "/projects/work-progress/",
+        "is_read": false,
+        "created_at": "2026-10-06T10:28:13.237Z"
+    }
+},
+{
+    "model": "users.notification",
+    "pk": 53,
+    "fields": {
+        "recipient": [
+            "ACHARYA"
+        ],
+        "sender": [
+            "aditya1"
+        ],
+        "title": "Installation task testing assigned for MITCHELL MARKS hybrid Project",
+        "message": "You have been assigned the installation task: testing for project MITCHELL MARKS hybrid Project.",
+        "category": "system",
+        "link": "/projects/work-progress/",
+        "is_read": false,
+        "created_at": "2026-10-06T10:28:18.397Z"
+    }
+},
+{
+    "model": "users.notification",
+    "pk": 54,
+    "fields": {
+        "recipient": [
+            "ACHARYA"
+        ],
+        "sender": [
+            "aditya1"
+        ],
+        "title": "Task testing marked completed",
+        "message": "Task \"testing\" in project \"MITCHELL MARKS hybrid Project\" has been marked completed by aditya1.",
+        "category": "system",
+        "link": "/projects/work-progress/",
+        "is_read": false,
+        "created_at": "2026-10-06T10:28:22.205Z"
+    }
+},
+{
+    "model": "users.notification",
+    "pk": 55,
+    "fields": {
+        "recipient": [
+            "ACHARYA"
+        ],
+        "sender": null,
+        "title": "New Login",
+        "message": "You logged in to Kiana Green CRM successfully.",
+        "category": "system",
+        "link": null,
+        "is_read": false,
+        "created_at": "2026-10-06T10:29:28.351Z"
+    }
+},
+{
+    "model": "users.notification",
+    "pk": 56,
+    "fields": {
+        "recipient": [
+            "aditya1"
+        ],
+        "sender": null,
+        "title": "New Login",
+        "message": "You logged in to Kiana Green CRM successfully.",
+        "category": "system",
+        "link": null,
+        "is_read": false,
+        "created_at": "2026-10-06T10:30:18.660Z"
+    }
+},
+{
+    "model": "users.notification",
+    "pk": 57,
+    "fields": {
+        "recipient": [
+            "aditya2"
+        ],
+        "sender": [
+            "aditya1"
+        ],
+        "title": "Task panel_mounting marked completed",
+        "message": "Task \"panel_mounting\" in project \"MITCHELL MARKS hybrid Project\" has been marked completed by aditya1.",
+        "category": "system",
+        "link": "/projects/work-progress/",
+        "is_read": false,
+        "created_at": "2026-10-06T11:02:18.394Z"
+    }
+},
+{
+    "model": "users.notification",
+    "pk": 58,
+    "fields": {
+        "recipient": [
+            "aditya1"
+        ],
+        "sender": [
+            "aditya1"
+        ],
+        "title": "Invoice Updated",
+        "message": "Invoice INV-TEST-1 has been updated.",
+        "category": "invoice",
+        "link": "/finance/invoices/",
+        "is_read": false,
+        "created_at": "2026-10-06T12:09:04.932Z"
+    }
+},
+{
+    "model": "users.notification",
+    "pk": 59,
+    "fields": {
+        "recipient": [
+            "admin_test"
+        ],
+        "sender": [
+            "aditya1"
+        ],
+        "title": "Invoice Updated",
+        "message": "Invoice INV-TEST-1 has been updated.",
+        "category": "invoice",
+        "link": "/finance/invoices/",
+        "is_read": false,
+        "created_at": "2026-10-06T12:09:04.959Z"
+    }
+},
+{
+    "model": "users.notification",
+    "pk": 60,
+    "fields": {
+        "recipient": [
+            "ACCON1"
+        ],
+        "sender": [
+            "aditya1"
+        ],
+        "title": "Invoice Updated",
+        "message": "Invoice INV-TEST-1 has been updated.",
+        "category": "invoice",
+        "link": "/finance/invoices/",
+        "is_read": false,
+        "created_at": "2026-10-06T12:09:04.979Z"
+    }
+},
+{
+    "model": "users.notification",
+    "pk": 61,
+    "fields": {
+        "recipient": [
+            "aditya1"
+        ],
+        "sender": null,
+        "title": "Invoice Updated",
+        "message": "You updated invoice INV-TEST-1.",
+        "category": "invoice",
+        "link": "/finance/invoices/",
+        "is_read": false,
+        "created_at": "2026-10-06T12:09:04.997Z"
+    }
+},
+{
+    "model": "users.notification",
+    "pk": 62,
+    "fields": {
+        "recipient": [
+            "aditya1"
+        ],
+        "sender": null,
+        "title": "New Login",
+        "message": "You logged in to Kiana Green CRM successfully.",
+        "category": "system",
+        "link": null,
+        "is_read": false,
+        "created_at": "2026-10-07T08:31:23.411Z"
+    }
+},
+{
+    "model": "users.notification",
+    "pk": 63,
+    "fields": {
+        "recipient": [
+            "aditya1"
+        ],
+        "sender": null,
+        "title": "New Lead Added",
+        "message": "luckey has been added from website quote form",
+        "category": "crm",
+        "link": "/users/notifications/",
+        "is_read": false,
+        "created_at": "2026-10-07T08:36:29.080Z"
+    }
+},
+{
+    "model": "users.notification",
+    "pk": 64,
+    "fields": {
+        "recipient": [
+            "admin_test"
+        ],
+        "sender": null,
+        "title": "New Lead Added",
+        "message": "luckey has been added from website quote form",
+        "category": "crm",
+        "link": "/users/notifications/",
+        "is_read": false,
+        "created_at": "2026-10-07T08:36:29.123Z"
+    }
+},
+{
+    "model": "users.notification",
+    "pk": 65,
+    "fields": {
+        "recipient": [
+            "aditya1"
+        ],
+        "sender": null,
+        "title": "New Login",
+        "message": "You logged in to Kiana Green CRM successfully.",
+        "category": "system",
+        "link": null,
+        "is_read": false,
+        "created_at": "2026-10-07T08:36:37.437Z"
+    }
+},
+{
+    "model": "users.notification",
+    "pk": 66,
+    "fields": {
+        "recipient": [
+            "aditya1"
+        ],
+        "sender": [
+            "aditya1"
+        ],
+        "title": "Lead Deleted",
+        "message": "luckey has been removed from CRM",
+        "category": "crm",
+        "link": "/crm/leads/",
+        "is_read": false,
+        "created_at": "2026-10-07T08:40:57.715Z"
+    }
+},
+{
+    "model": "users.notification",
+    "pk": 67,
+    "fields": {
+        "recipient": [
+            "aditya1"
+        ],
+        "sender": [
+            "aditya1"
+        ],
+        "title": "Lead Deleted",
+        "message": "luckey has been removed from CRM",
+        "category": "crm",
+        "link": "/crm/leads/",
+        "is_read": false,
+        "created_at": "2026-10-07T08:41:01.196Z"
+    }
+},
+{
+    "model": "users.notification",
+    "pk": 68,
+    "fields": {
+        "recipient": [
+            "aditya1"
+        ],
+        "sender": [
+            "aditya1"
+        ],
+        "title": "Lead Deleted",
+        "message": "luckey has been removed from CRM",
+        "category": "crm",
+        "link": "/crm/leads/",
+        "is_read": false,
+        "created_at": "2026-10-07T08:41:05.378Z"
+    }
+},
+{
+    "model": "users.notification",
+    "pk": 69,
+    "fields": {
+        "recipient": [
+            "aditya1"
+        ],
+        "sender": null,
+        "title": null,
+        "message": "New review received from aditya verma",
+        "category": "crm",
+        "link": "/users/notifications/",
+        "is_read": false,
+        "created_at": "2026-10-07T08:45:37.517Z"
+    }
+},
+{
+    "model": "users.notification",
+    "pk": 70,
+    "fields": {
+        "recipient": [
+            "admin_test"
+        ],
+        "sender": null,
+        "title": null,
+        "message": "New review received from aditya verma",
+        "category": "crm",
+        "link": "/users/notifications/",
+        "is_read": false,
+        "created_at": "2026-10-07T08:45:37.531Z"
+    }
+},
+{
+    "model": "users.notification",
+    "pk": 71,
+    "fields": {
+        "recipient": [
+            "aditya1"
+        ],
+        "sender": null,
+        "title": null,
+        "message": "New review received from aditya verma",
+        "category": "crm",
+        "link": "/users/notifications/",
+        "is_read": false,
+        "created_at": "2026-10-07T08:48:26.900Z"
+    }
+},
+{
+    "model": "users.notification",
+    "pk": 72,
+    "fields": {
+        "recipient": [
+            "admin_test"
+        ],
+        "sender": null,
+        "title": null,
+        "message": "New review received from aditya verma",
+        "category": "crm",
+        "link": "/users/notifications/",
+        "is_read": false,
+        "created_at": "2026-10-07T08:48:26.916Z"
+    }
+},
+{
+    "model": "users.notification",
+    "pk": 73,
+    "fields": {
+        "recipient": [
+            "aditya1"
+        ],
+        "sender": null,
+        "title": null,
+        "message": "New review received from mohan",
+        "category": "crm",
+        "link": "/users/notifications/",
+        "is_read": false,
+        "created_at": "2026-10-07T08:48:59.832Z"
+    }
+},
+{
+    "model": "users.notification",
+    "pk": 74,
+    "fields": {
+        "recipient": [
+            "admin_test"
+        ],
+        "sender": null,
+        "title": null,
+        "message": "New review received from mohan",
+        "category": "crm",
+        "link": "/users/notifications/",
+        "is_read": false,
+        "created_at": "2026-10-07T08:48:59.848Z"
+    }
+},
+{
+    "model": "users.notification",
+    "pk": 75,
+    "fields": {
+        "recipient": [
+            "aditya1"
+        ],
+        "sender": null,
+        "title": "New Lead Added",
+        "message": "rohit has been added from website contact form",
+        "category": "crm",
+        "link": "/users/notifications/",
+        "is_read": false,
+        "created_at": "2026-10-07T08:50:06.456Z"
+    }
+},
+{
+    "model": "users.notification",
+    "pk": 76,
+    "fields": {
+        "recipient": [
+            "admin_test"
+        ],
+        "sender": null,
+        "title": "New Lead Added",
+        "message": "rohit has been added from website contact form",
+        "category": "crm",
+        "link": "/users/notifications/",
+        "is_read": false,
+        "created_at": "2026-10-07T08:50:06.471Z"
+    }
+},
+{
+    "model": "users.notification",
+    "pk": 77,
+    "fields": {
+        "recipient": [
+            "aditya1"
+        ],
+        "sender": null,
+        "title": "New Login",
+        "message": "You logged in to Kiana Green CRM successfully.",
+        "category": "system",
+        "link": null,
+        "is_read": false,
+        "created_at": "2026-10-07T08:50:53.622Z"
+    }
+},
+{
+    "model": "projects.historicalproject",
+    "pk": 1,
+    "fields": {
+        "id": 1,
+        "title": "PDF Tester Lead ongrid Project",
+        "project_id": "KG-UP-2026-00001",
+        "project_type": "ongrid",
+        "description": null,
+        "start_date": null,
+        "end_date": null,
+        "location": null,
+        "status": "lead",
+        "created_at": "2026-10-06T04:24:28.254Z",
+        "updated_at": "2026-10-06T04:24:28.254Z",
+        "lead": 3,
+        "engineer": null,
+        "history_date": "2026-10-06T04:24:28.270Z",
+        "history_change_reason": null,
+        "history_type": "+",
+        "history_user": null
+    }
+},
+{
+    "model": "projects.historicalproject",
+    "pk": 2,
+    "fields": {
+        "id": 2,
+        "title": "Completed Project Lead ongrid Project",
+        "project_id": "KG-UP-2026-00002",
+        "project_type": "ongrid",
+        "description": null,
+        "start_date": null,
+        "end_date": null,
+        "location": null,
+        "status": "lead",
+        "created_at": "2026-10-06T05:40:51.146Z",
+        "updated_at": "2026-10-06T05:40:51.146Z",
+        "lead": 4,
+        "engineer": null,
+        "history_date": "2026-10-06T05:40:51.159Z",
+        "history_change_reason": null,
+        "history_type": "+",
+        "history_user": null
+    }
+},
+{
+    "model": "projects.historicalproject",
+    "pk": 3,
+    "fields": {
+        "id": 2,
+        "title": "Completed Project Lead ongrid Project",
+        "project_id": "KG-UP-2026-00002",
+        "project_type": "ongrid",
+        "description": null,
+        "start_date": null,
+        "end_date": null,
+        "location": null,
+        "status": "completed",
+        "created_at": "2026-10-06T05:40:51.146Z",
+        "updated_at": "2026-10-06T05:40:51.194Z",
+        "lead": 4,
+        "engineer": 2,
+        "history_date": "2026-10-06T05:40:51.206Z",
+        "history_change_reason": null,
+        "history_type": "~",
+        "history_user": null
+    }
+},
+{
+    "model": "projects.historicalproject",
+    "pk": 4,
+    "fields": {
+        "id": 3,
+        "title": "Ongoing Installation Lead offgrid Project",
+        "project_id": "KG-UP-2026-00003",
+        "project_type": "offgrid",
+        "description": null,
+        "start_date": null,
+        "end_date": null,
+        "location": null,
+        "status": "lead",
+        "created_at": "2026-10-06T06:19:08.205Z",
+        "updated_at": "2026-10-06T06:19:08.205Z",
+        "lead": 5,
+        "engineer": null,
+        "history_date": "2026-10-06T06:19:08.206Z",
+        "history_change_reason": null,
+        "history_type": "+",
+        "history_user": null
+    }
+},
+{
+    "model": "projects.historicalproject",
+    "pk": 5,
+    "fields": {
+        "id": 4,
+        "title": "Ongoing Offgrid Installation",
+        "project_id": "KG-UP-2026-00004",
+        "project_type": "offgrid",
+        "description": null,
+        "start_date": null,
+        "end_date": null,
+        "location": null,
+        "status": "structure",
+        "created_at": "2026-10-06T06:19:08.231Z",
+        "updated_at": "2026-10-06T06:19:08.231Z",
+        "lead": null,
+        "engineer": 2,
+        "history_date": "2026-10-06T06:19:08.233Z",
+        "history_change_reason": null,
+        "history_type": "+",
+        "history_user": null
+    }
+},
+{
+    "model": "projects.historicalproject",
+    "pk": 6,
+    "fields": {
+        "id": 4,
+        "title": "Ongoing Offgrid Installation",
+        "project_id": "KG-UP-2026-00004",
+        "project_type": "offgrid",
+        "description": null,
+        "start_date": null,
+        "end_date": null,
+        "location": null,
+        "status": "structure",
+        "created_at": "2026-10-06T06:19:08.231Z",
+        "updated_at": "2026-10-06T06:19:08.251Z",
+        "lead": 5,
+        "engineer": 2,
+        "history_date": "2026-10-06T06:19:08.264Z",
+        "history_change_reason": null,
+        "history_type": "~",
+        "history_user": null
+    }
+},
+{
+    "model": "projects.historicalproject",
+    "pk": 7,
+    "fields": {
+        "id": 4,
+        "title": "Ongoing Offgrid Installation",
+        "project_id": "KG-UP-2026-00004",
+        "project_type": "offgrid",
+        "description": null,
+        "start_date": null,
+        "end_date": null,
+        "location": null,
+        "status": "electrical",
+        "created_at": "2026-10-06T06:19:08.231Z",
+        "updated_at": "2026-10-06T07:54:43.085Z",
+        "lead": 5,
+        "engineer": 2,
+        "history_date": "2026-10-06T07:54:43.110Z",
+        "history_change_reason": null,
+        "history_type": "~",
+        "history_user": [
+            "aditya1"
+        ]
+    }
+},
+{
+    "model": "projects.historicalproject",
+    "pk": 8,
+    "fields": {
+        "id": 5,
+        "title": "MITCHELL MARKS hybrid Project",
+        "project_id": "KG-UP-2026-00005",
+        "project_type": "hybrid",
+        "description": null,
+        "start_date": null,
+        "end_date": null,
+        "location": "SITAPUR",
+        "status": "lead",
+        "created_at": "2026-10-06T09:31:41.840Z",
+        "updated_at": "2026-10-06T09:31:41.840Z",
+        "lead": 7,
+        "engineer": null,
+        "history_date": "2026-10-06T09:31:41.842Z",
+        "history_change_reason": null,
+        "history_type": "+",
+        "history_user": [
+            "sales_test"
+        ]
+    }
+},
+{
+    "model": "projects.historicalproject",
+    "pk": 9,
+    "fields": {
+        "id": 5,
+        "title": "MITCHELL MARKS hybrid Project",
+        "project_id": "KG-UP-2026-00005",
+        "project_type": "hybrid",
+        "description": null,
+        "start_date": null,
+        "end_date": null,
+        "location": "SITAPUR",
+        "status": "design_prep",
+        "created_at": "2026-10-06T09:31:41.840Z",
+        "updated_at": "2026-10-06T09:50:34.251Z",
+        "lead": 7,
+        "engineer": null,
+        "history_date": "2026-10-06T09:50:34.265Z",
+        "history_change_reason": null,
+        "history_type": "~",
+        "history_user": [
+            "aditya1"
+        ]
+    }
+},
+{
+    "model": "projects.historicalproject",
+    "pk": 10,
+    "fields": {
+        "id": 5,
+        "title": "MITCHELL MARKS hybrid Project",
+        "project_id": "KG-UP-2026-00006",
+        "project_type": "hybrid",
+        "description": "",
+        "start_date": null,
+        "end_date": null,
+        "location": "SITAPUR",
+        "status": "design_prep",
+        "created_at": "2026-10-06T09:31:41.840Z",
+        "updated_at": "2026-10-06T10:04:47.128Z",
+        "lead": 7,
+        "engineer": 4,
+        "history_date": "2026-10-06T10:04:47.134Z",
+        "history_change_reason": null,
+        "history_type": "~",
+        "history_user": [
+            "aditya1"
+        ]
+    }
+},
+{
+    "model": "projects.historicalproject",
+    "pk": 11,
+    "fields": {
+        "id": 5,
+        "title": "MITCHELL MARKS hybrid Project",
+        "project_id": "KG-UP-2026-00006",
+        "project_type": "hybrid",
+        "description": "",
+        "start_date": null,
+        "end_date": null,
+        "location": "SITAPUR",
+        "status": "design_approval",
+        "created_at": "2026-10-06T09:31:41.840Z",
+        "updated_at": "2026-10-06T10:17:05.612Z",
+        "lead": 7,
+        "engineer": 4,
+        "history_date": "2026-10-06T10:17:05.627Z",
+        "history_change_reason": null,
+        "history_type": "~",
+        "history_user": [
+            "aditya1"
+        ]
+    }
+},
+{
+    "model": "projects.historicalproject",
+    "pk": 12,
+    "fields": {
+        "id": 5,
+        "title": "MITCHELL MARKS hybrid Project",
+        "project_id": "KG-UP-2026-00006",
+        "project_type": "hybrid",
+        "description": "",
+        "start_date": null,
+        "end_date": null,
+        "location": "SITAPUR",
+        "status": "design_costing",
+        "created_at": "2026-10-06T09:31:41.840Z",
+        "updated_at": "2026-10-06T10:21:21.040Z",
+        "lead": 7,
+        "engineer": 4,
+        "history_date": "2026-10-06T10:21:21.053Z",
+        "history_change_reason": null,
+        "history_type": "~",
+        "history_user": [
+            "aditya1"
+        ]
+    }
+},
+{
+    "model": "projects.historicalproject",
+    "pk": 13,
+    "fields": {
+        "id": 5,
+        "title": "MITCHELL MARKS hybrid Project",
+        "project_id": "KG-UP-2026-00006",
+        "project_type": "hybrid",
+        "description": "",
+        "start_date": null,
+        "end_date": null,
+        "location": "SITAPUR",
+        "status": "costing_approval",
+        "created_at": "2026-10-06T09:31:41.840Z",
+        "updated_at": "2026-10-06T10:21:49.263Z",
+        "lead": 7,
+        "engineer": 4,
+        "history_date": "2026-10-06T10:21:49.809Z",
+        "history_change_reason": null,
+        "history_type": "~",
+        "history_user": [
+            "aditya1"
+        ]
+    }
+},
+{
+    "model": "projects.historicalproject",
+    "pk": 14,
+    "fields": {
+        "id": 5,
+        "title": "MITCHELL MARKS hybrid Project",
+        "project_id": "KG-UP-2026-00006",
+        "project_type": "hybrid",
+        "description": "",
+        "start_date": "2026-10-06",
+        "end_date": null,
+        "location": "SITAPUR",
+        "status": "structure",
+        "created_at": "2026-10-06T09:31:41.840Z",
+        "updated_at": "2026-10-06T10:22:18.206Z",
+        "lead": 7,
+        "engineer": 4,
+        "history_date": "2026-10-06T10:22:18.230Z",
+        "history_change_reason": null,
+        "history_type": "~",
+        "history_user": [
+            "aditya1"
+        ]
+    }
+},
+{
+    "model": "projects.historicalproject",
+    "pk": 15,
+    "fields": {
+        "id": 5,
+        "title": "MITCHELL MARKS hybrid Project",
+        "project_id": "KG-UP-2026-00006",
+        "project_type": "hybrid",
+        "description": "",
+        "start_date": "2026-10-06",
+        "end_date": null,
+        "location": "SITAPUR",
+        "status": "structure",
+        "created_at": "2026-10-06T09:31:41.840Z",
+        "updated_at": "2026-10-06T10:22:18.368Z",
+        "lead": 7,
+        "engineer": 4,
+        "history_date": "2026-10-06T10:22:18.370Z",
+        "history_change_reason": null,
+        "history_type": "~",
+        "history_user": [
+            "aditya1"
+        ]
+    }
+},
+{
+    "model": "projects.historicalproject",
+    "pk": 16,
+    "fields": {
+        "id": 5,
+        "title": "MITCHELL MARKS hybrid Project",
+        "project_id": "KG-UP-2026-00006",
+        "project_type": "hybrid",
+        "description": "",
+        "start_date": "2026-10-06",
+        "end_date": null,
+        "location": "SITAPUR",
+        "status": "structure",
+        "created_at": "2026-10-06T09:31:41.840Z",
+        "updated_at": "2026-10-06T10:22:18.401Z",
+        "lead": 7,
+        "engineer": 4,
+        "history_date": "2026-10-06T10:22:18.402Z",
+        "history_change_reason": null,
+        "history_type": "~",
+        "history_user": [
+            "aditya1"
+        ]
+    }
+},
+{
+    "model": "projects.historicalproject",
+    "pk": 17,
+    "fields": {
+        "id": 5,
+        "title": "MITCHELL MARKS hybrid Project",
+        "project_id": "KG-UP-2026-00006",
+        "project_type": "hybrid",
+        "description": "",
+        "start_date": "2026-10-06",
+        "end_date": null,
+        "location": "SITAPUR",
+        "status": "structure",
+        "created_at": "2026-10-06T09:31:41.840Z",
+        "updated_at": "2026-10-06T10:22:18.433Z",
+        "lead": 7,
+        "engineer": 4,
+        "history_date": "2026-10-06T10:22:18.434Z",
+        "history_change_reason": null,
+        "history_type": "~",
+        "history_user": [
+            "aditya1"
+        ]
+    }
+},
+{
+    "model": "projects.historicalproject",
+    "pk": 18,
+    "fields": {
+        "id": 5,
+        "title": "MITCHELL MARKS hybrid Project",
+        "project_id": "KG-UP-2026-00006",
+        "project_type": "hybrid",
+        "description": "",
+        "start_date": "2026-10-06",
+        "end_date": null,
+        "location": "SITAPUR",
+        "status": "structure",
+        "created_at": "2026-10-06T09:31:41.840Z",
+        "updated_at": "2026-10-06T10:22:18.460Z",
+        "lead": 7,
+        "engineer": 4,
+        "history_date": "2026-10-06T10:22:18.461Z",
+        "history_change_reason": null,
+        "history_type": "~",
+        "history_user": [
+            "aditya1"
+        ]
+    }
+},
+{
+    "model": "projects.historicalproject",
+    "pk": 19,
+    "fields": {
+        "id": 5,
+        "title": "MITCHELL MARKS hybrid Project",
+        "project_id": "KG-UP-2026-00006",
+        "project_type": "hybrid",
+        "description": "",
+        "start_date": "2026-10-06",
+        "end_date": null,
+        "location": "SITAPUR",
+        "status": "structure",
+        "created_at": "2026-10-06T09:31:41.840Z",
+        "updated_at": "2026-10-06T10:22:18.486Z",
+        "lead": 7,
+        "engineer": 4,
+        "history_date": "2026-10-06T10:22:18.487Z",
+        "history_change_reason": null,
+        "history_type": "~",
+        "history_user": [
+            "aditya1"
+        ]
+    }
+},
+{
+    "model": "projects.historicalproject",
+    "pk": 20,
+    "fields": {
+        "id": 5,
+        "title": "MITCHELL MARKS hybrid Project",
+        "project_id": "KG-UP-2026-00006",
+        "project_type": "hybrid",
+        "description": "",
+        "start_date": "2026-10-06",
+        "end_date": null,
+        "location": "SITAPUR",
+        "status": "structure",
+        "created_at": "2026-10-06T09:31:41.840Z",
+        "updated_at": "2026-10-06T10:22:18.512Z",
+        "lead": 7,
+        "engineer": 4,
+        "history_date": "2026-10-06T10:22:18.513Z",
+        "history_change_reason": null,
+        "history_type": "~",
+        "history_user": [
+            "aditya1"
+        ]
+    }
+},
+{
+    "model": "projects.historicalproject",
+    "pk": 21,
+    "fields": {
+        "id": 5,
+        "title": "MITCHELL MARKS hybrid Project",
+        "project_id": "KG-UP-2026-00006",
+        "project_type": "hybrid",
+        "description": "",
+        "start_date": "2026-10-06",
+        "end_date": null,
+        "location": "SITAPUR",
+        "status": "structure",
+        "created_at": "2026-10-06T09:31:41.840Z",
+        "updated_at": "2026-10-06T10:22:18.538Z",
+        "lead": 7,
+        "engineer": 4,
+        "history_date": "2026-10-06T10:22:18.539Z",
+        "history_change_reason": null,
+        "history_type": "~",
+        "history_user": [
+            "aditya1"
+        ]
+    }
+},
+{
+    "model": "projects.historicalproject",
+    "pk": 22,
+    "fields": {
+        "id": 5,
+        "title": "MITCHELL MARKS hybrid Project",
+        "project_id": "KG-UP-2026-00006",
+        "project_type": "hybrid",
+        "description": "",
+        "start_date": "2026-10-06",
+        "end_date": null,
+        "location": "SITAPUR",
+        "status": "structure",
+        "created_at": "2026-10-06T09:31:41.840Z",
+        "updated_at": "2026-10-06T10:22:18.571Z",
+        "lead": 7,
+        "engineer": 4,
+        "history_date": "2026-10-06T10:22:18.572Z",
+        "history_change_reason": null,
+        "history_type": "~",
+        "history_user": [
+            "aditya1"
+        ]
+    }
+},
+{
+    "model": "projects.historicalproject",
+    "pk": 23,
+    "fields": {
+        "id": 5,
+        "title": "MITCHELL MARKS hybrid Project",
+        "project_id": "KG-UP-2026-00006",
+        "project_type": "hybrid",
+        "description": "",
+        "start_date": "2026-10-06",
+        "end_date": null,
+        "location": "SITAPUR",
+        "status": "structure",
+        "created_at": "2026-10-06T09:31:41.840Z",
+        "updated_at": "2026-10-06T10:22:18.596Z",
+        "lead": 7,
+        "engineer": 4,
+        "history_date": "2026-10-06T10:22:18.597Z",
+        "history_change_reason": null,
+        "history_type": "~",
+        "history_user": [
+            "aditya1"
+        ]
+    }
+},
+{
+    "model": "projects.historicalproject",
+    "pk": 24,
+    "fields": {
+        "id": 5,
+        "title": "MITCHELL MARKS hybrid Project",
+        "project_id": "KG-UP-2026-00006",
+        "project_type": "hybrid",
+        "description": "",
+        "start_date": "2026-10-06",
+        "end_date": null,
+        "location": "SITAPUR",
+        "status": "licensing",
+        "created_at": "2026-10-06T09:31:41.840Z",
+        "updated_at": "2026-10-06T10:28:34.688Z",
+        "lead": 7,
+        "engineer": 4,
+        "history_date": "2026-10-06T10:28:34.708Z",
+        "history_change_reason": null,
+        "history_type": "~",
+        "history_user": [
+            "aditya1"
+        ]
+    }
+},
+{
+    "model": "projects.historicalproject",
+    "pk": 25,
+    "fields": {
+        "id": 5,
+        "title": "MITCHELL MARKS hybrid Project",
+        "project_id": "KG-UP-2026-00006",
+        "project_type": "hybrid",
+        "description": "",
+        "start_date": "2026-10-06",
+        "end_date": null,
+        "location": "SITAPUR",
+        "status": "electrical",
+        "created_at": "2026-10-06T09:31:41.840Z",
+        "updated_at": "2026-10-06T10:43:59.864Z",
+        "lead": 7,
+        "engineer": 4,
+        "history_date": "2026-10-06T10:43:59.876Z",
+        "history_change_reason": null,
+        "history_type": "~",
+        "history_user": [
+            "aditya1"
+        ]
+    }
+},
+{
+    "model": "projects.historicalproject",
+    "pk": 26,
+    "fields": {
+        "id": 5,
+        "title": "MITCHELL MARKS hybrid Project",
+        "project_id": "KG-UP-2026-00006",
+        "project_type": "hybrid",
+        "description": "",
+        "start_date": "2026-10-06",
+        "end_date": null,
+        "location": "SITAPUR",
+        "status": "electrical",
+        "created_at": "2026-10-06T09:31:41.840Z",
+        "updated_at": "2026-10-06T10:44:47.594Z",
+        "lead": 7,
+        "engineer": 4,
+        "history_date": "2026-10-06T10:44:47.607Z",
+        "history_change_reason": null,
+        "history_type": "~",
+        "history_user": [
+            "aditya1"
+        ]
+    }
+},
+{
+    "model": "projects.historicalproject",
+    "pk": 27,
+    "fields": {
+        "id": 5,
+        "title": "MITCHELL MARKS hybrid Project",
+        "project_id": "KG-UP-2026-00006",
+        "project_type": "hybrid",
+        "description": "",
+        "start_date": "2026-10-06",
+        "end_date": null,
+        "location": "SITAPUR",
+        "status": "electrical",
+        "created_at": "2026-10-06T09:31:41.840Z",
+        "updated_at": "2026-10-06T10:45:20.894Z",
+        "lead": 7,
+        "engineer": 4,
+        "history_date": "2026-10-06T10:45:20.907Z",
+        "history_change_reason": null,
+        "history_type": "~",
+        "history_user": [
+            "aditya1"
+        ]
+    }
+},
+{
+    "model": "projects.historicalproject",
+    "pk": 28,
+    "fields": {
+        "id": 5,
+        "title": "MITCHELL MARKS hybrid Project",
+        "project_id": "KG-UP-2026-00006",
+        "project_type": "hybrid",
+        "description": "",
+        "start_date": "2026-10-06",
+        "end_date": null,
+        "location": "SITAPUR",
+        "status": "electrical",
+        "created_at": "2026-10-06T09:31:41.840Z",
+        "updated_at": "2026-10-06T10:45:28.362Z",
+        "lead": 7,
+        "engineer": 4,
+        "history_date": "2026-10-06T10:45:28.374Z",
+        "history_change_reason": null,
+        "history_type": "~",
+        "history_user": [
+            "aditya1"
+        ]
+    }
+},
+{
+    "model": "projects.historicalproject",
+    "pk": 29,
+    "fields": {
+        "id": 5,
+        "title": "MITCHELL MARKS hybrid Project",
+        "project_id": "KG-UP-2026-00006",
+        "project_type": "hybrid",
+        "description": "",
+        "start_date": "2026-10-06",
+        "end_date": null,
+        "location": "SITAPUR",
+        "status": "electrical",
+        "created_at": "2026-10-06T09:31:41.840Z",
+        "updated_at": "2026-10-06T10:45:34.899Z",
+        "lead": 7,
+        "engineer": 4,
+        "history_date": "2026-10-06T10:45:34.911Z",
+        "history_change_reason": null,
+        "history_type": "~",
+        "history_user": [
+            "aditya1"
+        ]
+    }
+},
+{
+    "model": "projects.historicalproject",
+    "pk": 30,
+    "fields": {
+        "id": 5,
+        "title": "MITCHELL MARKS hybrid Project",
+        "project_id": "KG-UP-2026-00006",
+        "project_type": "hybrid",
+        "description": "",
+        "start_date": "2026-10-06",
+        "end_date": null,
+        "location": "SITAPUR",
+        "status": "electrical",
+        "created_at": "2026-10-06T09:31:41.840Z",
+        "updated_at": "2026-10-06T10:46:35.039Z",
+        "lead": 7,
+        "engineer": 4,
+        "history_date": "2026-10-06T10:46:35.053Z",
+        "history_change_reason": null,
+        "history_type": "~",
+        "history_user": [
+            "aditya1"
+        ]
+    }
+},
+{
+    "model": "projects.historicalproject",
+    "pk": 31,
+    "fields": {
+        "id": 5,
+        "title": "MITCHELL MARKS hybrid Project",
+        "project_id": "KG-UP-2026-00006",
+        "project_type": "hybrid",
+        "description": "",
+        "start_date": "2026-10-06",
+        "end_date": null,
+        "location": "SITAPUR",
+        "status": "electrical",
+        "created_at": "2026-10-06T09:31:41.840Z",
+        "updated_at": "2026-10-06T10:46:56.956Z",
+        "lead": 7,
+        "engineer": 4,
+        "history_date": "2026-10-06T10:46:56.968Z",
+        "history_change_reason": null,
+        "history_type": "~",
+        "history_user": [
+            "aditya1"
+        ]
+    }
+},
+{
+    "model": "projects.historicalproject",
+    "pk": 32,
+    "fields": {
+        "id": 5,
+        "title": "MITCHELL MARKS hybrid Project",
+        "project_id": "KG-UP-2026-00006",
+        "project_type": "hybrid",
+        "description": "",
+        "start_date": "2026-10-06",
+        "end_date": null,
+        "location": "SITAPUR",
+        "status": "electrical",
+        "created_at": "2026-10-06T09:31:41.840Z",
+        "updated_at": "2026-10-06T10:47:03.539Z",
+        "lead": 7,
+        "engineer": 4,
+        "history_date": "2026-10-06T10:47:03.551Z",
+        "history_change_reason": null,
+        "history_type": "~",
+        "history_user": [
+            "aditya1"
+        ]
+    }
+},
+{
+    "model": "projects.historicalproject",
+    "pk": 33,
+    "fields": {
+        "id": 5,
+        "title": "MITCHELL MARKS hybrid Project",
+        "project_id": "KG-UP-2026-00006",
+        "project_type": "hybrid",
+        "description": "",
+        "start_date": "2026-10-06",
+        "end_date": null,
+        "location": "SITAPUR",
+        "status": "electrical",
+        "created_at": "2026-10-06T09:31:41.840Z",
+        "updated_at": "2026-10-06T10:47:19.312Z",
+        "lead": 7,
+        "engineer": 4,
+        "history_date": "2026-10-06T10:47:19.325Z",
+        "history_change_reason": null,
+        "history_type": "~",
+        "history_user": [
+            "aditya1"
+        ]
+    }
+},
+{
+    "model": "projects.historicalproject",
+    "pk": 34,
+    "fields": {
+        "id": 5,
+        "title": "MITCHELL MARKS hybrid Project",
+        "project_id": "KG-UP-2026-00006",
+        "project_type": "hybrid",
+        "description": "",
+        "start_date": "2026-10-06",
+        "end_date": null,
+        "location": "SITAPUR",
+        "status": "electrical",
+        "created_at": "2026-10-06T09:31:41.840Z",
+        "updated_at": "2026-10-06T10:47:25.772Z",
+        "lead": 7,
+        "engineer": 4,
+        "history_date": "2026-10-06T10:47:25.784Z",
+        "history_change_reason": null,
+        "history_type": "~",
+        "history_user": [
+            "aditya1"
+        ]
+    }
+},
+{
+    "model": "projects.historicalproject",
+    "pk": 35,
+    "fields": {
+        "id": 5,
+        "title": "MITCHELL MARKS hybrid Project",
+        "project_id": "KG-UP-2026-00006",
+        "project_type": "hybrid",
+        "description": "",
+        "start_date": "2026-10-06",
+        "end_date": null,
+        "location": "SITAPUR",
+        "status": "electrical",
+        "created_at": "2026-10-06T09:31:41.840Z",
+        "updated_at": "2026-10-06T10:47:51.929Z",
+        "lead": 7,
+        "engineer": 4,
+        "history_date": "2026-10-06T10:47:51.943Z",
+        "history_change_reason": null,
+        "history_type": "~",
+        "history_user": [
+            "aditya1"
+        ]
+    }
+},
+{
+    "model": "projects.historicalproject",
+    "pk": 36,
+    "fields": {
+        "id": 5,
+        "title": "MITCHELL MARKS hybrid Project",
+        "project_id": "KG-UP-2026-00006",
+        "project_type": "hybrid",
+        "description": "",
+        "start_date": "2026-10-06",
+        "end_date": null,
+        "location": "SITAPUR",
+        "status": "electrical",
+        "created_at": "2026-10-06T09:31:41.840Z",
+        "updated_at": "2026-10-06T10:48:07.967Z",
+        "lead": 7,
+        "engineer": 4,
+        "history_date": "2026-10-06T10:48:07.980Z",
+        "history_change_reason": null,
+        "history_type": "~",
+        "history_user": [
+            "aditya1"
+        ]
+    }
+},
+{
+    "model": "projects.historicalproject",
+    "pk": 37,
+    "fields": {
+        "id": 5,
+        "title": "MITCHELL MARKS hybrid Project",
+        "project_id": "KG-UP-2026-00006",
+        "project_type": "hybrid",
+        "description": "",
+        "start_date": "2026-10-06",
+        "end_date": null,
+        "location": "SITAPUR",
+        "status": "licensing",
+        "created_at": "2026-10-06T09:31:41.840Z",
+        "updated_at": "2026-10-06T10:48:27.206Z",
+        "lead": 7,
+        "engineer": 4,
+        "history_date": "2026-10-06T10:48:27.226Z",
+        "history_change_reason": null,
+        "history_type": "~",
+        "history_user": [
+            "aditya1"
+        ]
+    }
+},
+{
+    "model": "projects.historicalproject",
+    "pk": 38,
+    "fields": {
+        "id": 5,
+        "title": "MITCHELL MARKS hybrid Project",
+        "project_id": "KG-UP-2026-00006",
+        "project_type": "hybrid",
+        "description": "",
+        "start_date": "2026-10-06",
+        "end_date": null,
+        "location": "SITAPUR",
+        "status": "amc",
+        "created_at": "2026-10-06T09:31:41.840Z",
+        "updated_at": "2026-10-06T11:02:24.497Z",
+        "lead": 7,
+        "engineer": 4,
+        "history_date": "2026-10-06T11:02:24.512Z",
+        "history_change_reason": null,
+        "history_type": "~",
+        "history_user": [
+            "aditya1"
+        ]
+    }
+},
+{
+    "model": "projects.historicalproject",
+    "pk": 39,
+    "fields": {
+        "id": 5,
+        "title": "MITCHELL MARKS hybrid Project",
+        "project_id": "KG-UP-2026-00006",
+        "project_type": "hybrid",
+        "description": "",
+        "start_date": "2026-10-06",
+        "end_date": null,
+        "location": "SITAPUR",
+        "status": "energisation",
+        "created_at": "2026-10-06T09:31:41.840Z",
+        "updated_at": "2026-10-06T11:16:08.250Z",
+        "lead": 7,
+        "engineer": 4,
+        "history_date": "2026-10-06T11:16:08.263Z",
+        "history_change_reason": null,
+        "history_type": "~",
+        "history_user": null
+    }
+},
+{
+    "model": "projects.historicalproject",
+    "pk": 40,
+    "fields": {
+        "id": 5,
+        "title": "MITCHELL MARKS hybrid Project",
+        "project_id": "KG-UP-2026-00006",
+        "project_type": "hybrid",
+        "description": "",
+        "start_date": "2026-10-06",
+        "end_date": null,
+        "location": "SITAPUR",
+        "status": "completed",
+        "created_at": "2026-10-06T09:31:41.840Z",
+        "updated_at": "2026-10-06T11:16:48.818Z",
+        "lead": 7,
+        "engineer": 4,
+        "history_date": "2026-10-06T11:16:48.834Z",
+        "history_change_reason": null,
+        "history_type": "~",
+        "history_user": [
+            "aditya1"
+        ]
+    }
+},
+{
+    "model": "projects.historicalproject",
+    "pk": 41,
+    "fields": {
+        "id": 5,
+        "title": "MITCHELL MARKS hybrid Project",
+        "project_id": "KG-UP-2026-00006",
+        "project_type": "hybrid",
+        "description": "",
+        "start_date": "2026-10-06",
+        "end_date": null,
+        "location": "SITAPUR",
+        "status": "energisation",
+        "created_at": "2026-10-06T09:31:41.840Z",
+        "updated_at": "2026-10-06T11:17:34.936Z",
+        "lead": 7,
+        "engineer": 4,
+        "history_date": "2026-10-06T11:17:34.948Z",
+        "history_change_reason": null,
+        "history_type": "~",
+        "history_user": null
+    }
+},
+{
+    "model": "projects.historicalproject",
+    "pk": 42,
+    "fields": {
+        "id": 5,
+        "title": "MITCHELL MARKS hybrid Project",
+        "project_id": "KG-UP-2026-00006",
+        "project_type": "hybrid",
+        "description": "",
+        "start_date": "2026-10-06",
+        "end_date": null,
+        "location": "SITAPUR",
+        "status": "completed",
+        "created_at": "2026-10-06T09:31:41.840Z",
+        "updated_at": "2026-10-06T11:18:38.102Z",
+        "lead": 7,
+        "engineer": 4,
+        "history_date": "2026-10-06T11:18:38.122Z",
+        "history_change_reason": null,
+        "history_type": "~",
+        "history_user": [
+            "aditya1"
+        ]
+    }
+},
+{
+    "model": "projects.project",
+    "pk": 1,
+    "fields": {
+        "title": "PDF Tester Lead ongrid Project",
+        "project_id": "KG-UP-2026-00001",
+        "project_type": "ongrid",
+        "description": null,
+        "lead": 3,
+        "engineer": null,
+        "start_date": null,
+        "end_date": null,
+        "location": null,
+        "status": "lead",
+        "created_at": "2026-10-06T04:24:28.254Z",
+        "updated_at": "2026-10-06T04:24:28.254Z"
+    }
+},
+{
+    "model": "projects.project",
+    "pk": 2,
+    "fields": {
+        "title": "Completed Project Lead ongrid Project",
+        "project_id": "KG-UP-2026-00002",
+        "project_type": "ongrid",
+        "description": null,
+        "lead": 4,
+        "engineer": 2,
+        "start_date": null,
+        "end_date": null,
+        "location": null,
+        "status": "completed",
+        "created_at": "2026-10-06T05:40:51.146Z",
+        "updated_at": "2026-10-06T05:40:51.194Z"
+    }
+},
+{
+    "model": "projects.project",
+    "pk": 3,
+    "fields": {
+        "title": "Ongoing Installation Lead offgrid Project",
+        "project_id": "KG-UP-2026-00003",
+        "project_type": "offgrid",
+        "description": null,
+        "lead": 5,
+        "engineer": null,
+        "start_date": null,
+        "end_date": null,
+        "location": null,
+        "status": "lead",
+        "created_at": "2026-10-06T06:19:08.205Z",
+        "updated_at": "2026-10-06T06:19:08.205Z"
+    }
+},
+{
+    "model": "projects.project",
+    "pk": 4,
+    "fields": {
+        "title": "Ongoing Offgrid Installation",
+        "project_id": "KG-UP-2026-00004",
+        "project_type": "offgrid",
+        "description": null,
+        "lead": 5,
+        "engineer": 2,
+        "start_date": null,
+        "end_date": null,
+        "location": null,
+        "status": "electrical",
+        "created_at": "2026-10-06T06:19:08.231Z",
+        "updated_at": "2026-10-06T07:54:43.085Z"
+    }
+},
+{
+    "model": "projects.project",
+    "pk": 5,
+    "fields": {
+        "title": "MITCHELL MARKS hybrid Project",
+        "project_id": "KG-UP-2026-00006",
+        "project_type": "hybrid",
+        "description": "",
+        "lead": 7,
+        "engineer": 4,
+        "start_date": "2026-10-06",
+        "end_date": null,
+        "location": "SITAPUR",
+        "status": "completed",
+        "created_at": "2026-10-06T09:31:41.840Z",
+        "updated_at": "2026-10-06T11:18:38.102Z"
+    }
+},
+{
+    "model": "projects.projectmedia",
+    "pk": 1,
+    "fields": {
+        "project": 2,
+        "uploaded_by": [
+            "eng_test"
+        ],
+        "file": "project_media/before.png",
+        "caption": "Site before installation",
+        "category": "before_photo",
+        "site_photo": null,
+        "work_report": null,
+        "service_report": null,
+        "issue": null,
+        "installation_task": null,
+        "uploaded_at": "2026-10-06T05:57:04.819Z"
+    }
+},
+{
+    "model": "projects.projectmedia",
+    "pk": 2,
+    "fields": {
+        "project": 2,
+        "uploaded_by": [
+            "eng_test"
+        ],
+        "file": "project_media/after_zysuapN.png",
+        "caption": "Finished solar setup",
+        "category": "after_photo",
+        "site_photo": null,
+        "work_report": null,
+        "service_report": null,
+        "issue": null,
+        "installation_task": null,
+        "uploaded_at": "2026-10-06T05:57:04.867Z"
+    }
+},
+{
+    "model": "projects.projectmedia",
+    "pk": 3,
+    "fields": {
+        "project": 2,
+        "uploaded_by": [
+            "eng_test"
+        ],
+        "file": "project_media/on-grid.jpg",
+        "caption": "Panel mounting process",
+        "category": "installation_photo",
+        "site_photo": null,
+        "work_report": null,
+        "service_report": null,
+        "issue": null,
+        "installation_task": null,
+        "uploaded_at": "2026-10-06T05:57:04.983Z"
+    }
+},
+{
+    "model": "projects.projectmedia",
+    "pk": 4,
+    "fields": {
+        "project": 5,
+        "uploaded_by": [
+            "ACHARYA"
+        ],
+        "file": "designs/feasibility_1_2026-10-06.pdf",
+        "caption": "Design Document",
+        "category": "design_document",
+        "site_photo": null,
+        "work_report": null,
+        "service_report": null,
+        "issue": null,
+        "installation_task": null,
+        "uploaded_at": "2026-10-06T10:17:05.676Z"
+    }
+},
+{
+    "model": "projects.projectactivity",
+    "pk": 1,
+    "fields": {
+        "project": 1,
+        "title": "New Project Update",
+        "description": "Project created from the lead",
+        "created_at": "2026-10-06T04:24:28.294Z",
+        "created_by": null
+    }
+},
+{
+    "model": "projects.projectactivity",
+    "pk": 2,
+    "fields": {
+        "project": 2,
+        "title": "New Project Update",
+        "description": "Project created from the lead",
+        "created_at": "2026-10-06T05:40:51.177Z",
+        "created_by": null
+    }
+},
+{
+    "model": "projects.projectactivity",
+    "pk": 3,
+    "fields": {
+        "project": 2,
+        "title": "Status updated : Completed",
+        "description": "Project moved from lead to completed",
+        "created_at": "2026-10-06T05:40:51.222Z",
+        "created_by": null
+    }
+},
+{
+    "model": "projects.projectactivity",
+    "pk": 4,
+    "fields": {
+        "project": 2,
+        "title": "helo",
+        "description": "hm",
+        "created_at": "2026-10-06T05:55:30.310Z",
+        "created_by": [
+            "aditya1"
+        ]
+    }
+},
+{
+    "model": "projects.projectactivity",
+    "pk": 5,
+    "fields": {
+        "project": 3,
+        "title": "New Project Update",
+        "description": "Project created from the lead",
+        "created_at": "2026-10-06T06:19:08.212Z",
+        "created_by": null
+    }
+},
+{
+    "model": "projects.projectactivity",
+    "pk": 6,
+    "fields": {
+        "project": 4,
+        "title": "Status updated : Structure Installation",
+        "description": "Project created from the lead",
+        "created_at": "2026-10-06T06:19:08.235Z",
+        "created_by": null
+    }
+},
+{
+    "model": "projects.projectactivity",
+    "pk": 7,
+    "fields": {
+        "project": 4,
+        "title": "Status updated : Electrical Work",
+        "description": "Project moved from structure to electrical",
+        "created_at": "2026-10-06T07:54:43.131Z",
+        "created_by": null
+    }
+},
+{
+    "model": "projects.projectactivity",
+    "pk": 8,
+    "fields": {
+        "project": 5,
+        "title": "New Project Update",
+        "description": "Project created from the lead",
+        "created_at": "2026-10-06T09:31:41.845Z",
+        "created_by": null
+    }
+},
+{
+    "model": "projects.projectactivity",
+    "pk": 9,
+    "fields": {
+        "project": 5,
+        "title": "Status updated : Design Preparation",
+        "description": "Project moved from lead to design_prep",
+        "created_at": "2026-10-06T09:50:34.284Z",
+        "created_by": null
+    }
+},
+{
+    "model": "projects.projectactivity",
+    "pk": 10,
+    "fields": {
+        "project": 5,
+        "title": "Engineer Added",
+        "description": "Engineer set to Aditya Verma",
+        "created_at": "2026-10-06T10:04:47.137Z",
+        "created_by": [
+            "aditya1"
+        ]
+    }
+},
+{
+    "model": "projects.projectactivity",
+    "pk": 11,
+    "fields": {
+        "project": 5,
+        "title": "Status updated : Design Approval",
+        "description": "Project moved from design_prep to design_approval",
+        "created_at": "2026-10-06T10:17:05.646Z",
+        "created_by": null
+    }
+},
+{
+    "model": "projects.projectactivity",
+    "pk": 12,
+    "fields": {
+        "project": 5,
+        "title": "Status updated : Design Costing",
+        "description": "Project moved from design_approval to design_costing",
+        "created_at": "2026-10-06T10:21:21.069Z",
+        "created_by": null
+    }
+},
+{
+    "model": "projects.projectactivity",
+    "pk": 13,
+    "fields": {
+        "project": 5,
+        "title": "Status updated : Costing Approval",
+        "description": "Project moved from design_costing to costing_approval",
+        "created_at": "2026-10-06T10:21:49.827Z",
+        "created_by": null
+    }
+},
+{
+    "model": "projects.projectactivity",
+    "pk": 14,
+    "fields": {
+        "project": 5,
+        "title": "Status updated : Structure Installation",
+        "description": "Project moved from costing_approval to structure",
+        "created_at": "2026-10-06T10:22:18.248Z",
+        "created_by": null
+    }
+},
+{
+    "model": "projects.projectactivity",
+    "pk": 15,
+    "fields": {
+        "project": 5,
+        "title": "Status updated : Licensing",
+        "description": "Project moved from structure to licensing",
+        "created_at": "2026-10-06T10:28:34.735Z",
+        "created_by": null
+    }
+},
+{
+    "model": "projects.projectactivity",
+    "pk": 16,
+    "fields": {
+        "project": 5,
+        "title": "Status updated : Electrical Work",
+        "description": "Project moved from licensing to electrical",
+        "created_at": "2026-10-06T10:43:59.896Z",
+        "created_by": null
+    }
+},
+{
+    "model": "projects.projectactivity",
+    "pk": 17,
+    "fields": {
+        "project": 5,
+        "title": "Status updated : Licensing",
+        "description": "Project moved from electrical to licensing",
+        "created_at": "2026-10-06T10:48:27.243Z",
+        "created_by": null
+    }
+},
+{
+    "model": "projects.projectactivity",
+    "pk": 18,
+    "fields": {
+        "project": 5,
+        "title": "Status updated : AMC / O&M",
+        "description": "Project moved from licensing to amc",
+        "created_at": "2026-10-06T11:02:24.537Z",
+        "created_by": null
+    }
+},
+{
+    "model": "projects.projectactivity",
+    "pk": 19,
+    "fields": {
+        "project": 5,
+        "title": "Status updated : Energisation & Commissioning",
+        "description": "Project moved from amc to energisation",
+        "created_at": "2026-10-06T11:16:08.281Z",
+        "created_by": null
+    }
+},
+{
+    "model": "projects.projectactivity",
+    "pk": 20,
+    "fields": {
+        "project": 5,
+        "title": "Status updated : Completed",
+        "description": "Project moved from energisation to completed",
+        "created_at": "2026-10-06T11:16:48.851Z",
+        "created_by": null
+    }
+},
+{
+    "model": "projects.projectactivity",
+    "pk": 21,
+    "fields": {
+        "project": 5,
+        "title": "Status updated : Energisation & Commissioning",
+        "description": "Project moved from completed to energisation",
+        "created_at": "2026-10-06T11:17:34.967Z",
+        "created_by": null
+    }
+},
+{
+    "model": "projects.projectactivity",
+    "pk": 22,
+    "fields": {
+        "project": 5,
+        "title": "Status updated : Completed",
+        "description": "Project moved from energisation to completed",
+        "created_at": "2026-10-06T11:18:38.144Z",
+        "created_by": null
+    }
+},
+{
+    "model": "projects.feasibilityreport",
+    "pk": 1,
+    "fields": {
+        "project": 1,
+        "site_type": "residential",
+        "roof_type": "rcc",
+        "roof_area": 1500.0,
+        "structure_feasibility": true,
+        "accessibility_for_maintenance": true,
+        "shadow_analysis": "none",
+        "orientation": "south",
+        "connection_type": "three_phase",
+        "monthly_consumption": null,
+        "suggested_capacity": 5.0,
+        "system_type": "on_grid",
+        "inverter_type": "",
+        "remarks": "",
+        "submitted_by": null,
+        "approved_by": null,
+        "is_approved": true,
+        "approval_notes": "",
+        "created_at": "2026-10-06T04:24:28.337Z"
+    }
+},
+{
+    "model": "projects.feasibilityreport",
+    "pk": 2,
+    "fields": {
+        "project": 2,
+        "site_type": "residential",
+        "roof_type": "rcc",
+        "roof_area": 2000.0,
+        "structure_feasibility": true,
+        "accessibility_for_maintenance": true,
+        "shadow_analysis": "none",
+        "orientation": "south",
+        "connection_type": "three_phase",
+        "monthly_consumption": null,
+        "suggested_capacity": 10.0,
+        "system_type": "on_grid",
+        "inverter_type": "",
+        "remarks": "",
+        "submitted_by": null,
+        "approved_by": null,
+        "is_approved": true,
+        "approval_notes": "",
+        "created_at": "2026-10-06T05:40:51.407Z"
+    }
+},
+{
+    "model": "projects.feasibilityreport",
+    "pk": 3,
+    "fields": {
+        "project": 5,
+        "site_type": "commercial",
+        "roof_type": "metal",
+        "roof_area": 120000.0,
+        "structure_feasibility": true,
+        "accessibility_for_maintenance": true,
+        "shadow_analysis": "partial",
+        "orientation": "south",
+        "connection_type": "three_phase",
+        "monthly_consumption": 12,
+        "suggested_capacity": 8.0,
+        "system_type": "hybrid",
+        "inverter_type": "",
+        "remarks": "no mark\r\n",
+        "submitted_by": null,
+        "approved_by": null,
+        "is_approved": true,
+        "approval_notes": "",
+        "created_at": "2026-10-06T09:49:00.511Z"
+    }
+},
+{
+    "model": "projects.projectdesigndocument",
+    "pk": 1,
+    "fields": {
+        "project": 5,
+        "file": "designs/feasibility_1_2026-10-06.pdf",
+        "caption": "",
+        "uploaded_by": [
+            "ACHARYA"
+        ],
+        "discussion_date": "2026-10-06",
+        "notes": "approoved",
+        "approved": true,
+        "needs_correction": false,
+        "uploaded_at": "2026-10-06T10:14:51.039Z"
+    }
+},
+{
+    "model": "projects.installationtask",
+    "pk": 1,
+    "fields": {
+        "project": 2,
+        "assigned_to": [
+            "eng_test"
+        ],
+        "step": "site_inspection",
+        "status": "completed",
+        "notes": null,
+        "due_date": null,
+        "created_at": "2026-10-06T05:40:51.241Z",
+        "completed_at": "2026-10-06T05:40:51.256Z"
+    }
+},
+{
+    "model": "projects.installationtask",
+    "pk": 2,
+    "fields": {
+        "project": 2,
+        "assigned_to": [
+            "eng_test"
+        ],
+        "step": "structure_fixing",
+        "status": "completed",
+        "notes": null,
+        "due_date": null,
+        "created_at": "2026-10-06T05:40:51.272Z",
+        "completed_at": "2026-10-06T05:40:51.285Z"
+    }
+},
+{
+    "model": "projects.installationtask",
+    "pk": 3,
+    "fields": {
+        "project": 2,
+        "assigned_to": [
+            "eng_test"
+        ],
+        "step": "panel_mounting",
+        "status": "completed",
+        "notes": null,
+        "due_date": null,
+        "created_at": "2026-10-06T05:40:51.310Z",
+        "completed_at": "2026-10-06T05:40:51.323Z"
+    }
+},
+{
+    "model": "projects.installationtask",
+    "pk": 4,
+    "fields": {
+        "project": 2,
+        "assigned_to": [
+            "eng_test"
+        ],
+        "step": "wiring",
+        "status": "completed",
+        "notes": null,
+        "due_date": null,
+        "created_at": "2026-10-06T05:40:51.340Z",
+        "completed_at": "2026-10-06T05:40:51.362Z"
+    }
+},
+{
+    "model": "projects.installationtask",
+    "pk": 5,
+    "fields": {
+        "project": 2,
+        "assigned_to": [
+            "eng_test"
+        ],
+        "step": "testing",
+        "status": "completed",
+        "notes": null,
+        "due_date": null,
+        "created_at": "2026-10-06T05:40:51.376Z",
+        "completed_at": "2026-10-06T05:40:51.389Z"
+    }
+},
+{
+    "model": "projects.installationtask",
+    "pk": 6,
+    "fields": {
+        "project": 4,
+        "assigned_to": [
+            "eng_test"
+        ],
+        "step": "site_inspection",
+        "status": "completed",
+        "notes": null,
+        "due_date": null,
+        "created_at": "2026-10-06T06:19:08.283Z",
+        "completed_at": null
+    }
+},
+{
+    "model": "projects.installationtask",
+    "pk": 7,
+    "fields": {
+        "project": 4,
+        "assigned_to": [
+            "eng_test"
+        ],
+        "step": "structure_fixing",
+        "status": "completed",
+        "notes": "\nMarked completed by aditya1",
+        "due_date": null,
+        "created_at": "2026-10-06T06:19:08.300Z",
+        "completed_at": null
+    }
+},
+{
+    "model": "projects.installationtask",
+    "pk": 8,
+    "fields": {
+        "project": 4,
+        "assigned_to": [
+            "eng_test"
+        ],
+        "step": "panel_mounting",
+        "status": "new",
+        "notes": null,
+        "due_date": null,
+        "created_at": "2026-10-06T06:19:08.315Z",
+        "completed_at": null
+    }
+},
+{
+    "model": "projects.installationtask",
+    "pk": 9,
+    "fields": {
+        "project": 4,
+        "assigned_to": [
+            "eng_test"
+        ],
+        "step": "wiring",
+        "status": "new",
+        "notes": null,
+        "due_date": null,
+        "created_at": "2026-10-06T06:19:08.331Z",
+        "completed_at": null
+    }
+},
+{
+    "model": "projects.installationtask",
+    "pk": 10,
+    "fields": {
+        "project": 5,
+        "assigned_to": [
+            "aditya2"
+        ],
+        "step": "site_inspection",
+        "status": "completed",
+        "notes": "\nAssigned by aditya1\nMarked completed by aditya1\nAssigned by aditya1\nAssigned by aditya1",
+        "due_date": null,
+        "created_at": "2026-10-06T10:22:18.269Z",
+        "completed_at": null
+    }
+},
+{
+    "model": "projects.installationtask",
+    "pk": 11,
+    "fields": {
+        "project": 5,
+        "assigned_to": [
+            "ACHARYA"
+        ],
+        "step": "structure_fixing",
+        "status": "completed",
+        "notes": "\nMarked completed by aditya1\nAssigned by aditya1",
+        "due_date": null,
+        "created_at": "2026-10-06T10:22:18.287Z",
+        "completed_at": null
+    }
+},
+{
+    "model": "projects.installationtask",
+    "pk": 12,
+    "fields": {
+        "project": 5,
+        "assigned_to": [
+            "aditya2"
+        ],
+        "step": "panel_mounting",
+        "status": "completed",
+        "notes": "\nAssigned by aditya1\nMarked completed by aditya1",
+        "due_date": null,
+        "created_at": "2026-10-06T10:22:18.301Z",
+        "completed_at": null
+    }
+},
+{
+    "model": "projects.installationtask",
+    "pk": 13,
+    "fields": {
+        "project": 5,
+        "assigned_to": [
+            "ACHARYA"
+        ],
+        "step": "wiring",
+        "status": "completed",
+        "notes": "\nAssigned by aditya1\nMarked completed by aditya1",
+        "due_date": null,
+        "created_at": "2026-10-06T10:22:18.314Z",
+        "completed_at": null
+    }
+},
+{
+    "model": "projects.installationtask",
+    "pk": 14,
+    "fields": {
+        "project": 5,
+        "assigned_to": [
+            "ACHARYA"
+        ],
+        "step": "testing",
+        "status": "completed",
+        "notes": "\nAssigned by aditya1\nMarked completed by aditya1",
+        "due_date": null,
+        "created_at": "2026-10-06T10:22:18.327Z",
+        "completed_at": null
+    }
+},
+{
+    "model": "projects.licensingtask",
+    "pk": 1,
+    "fields": {
+        "project": 5,
+        "phase": "preparation",
+        "step": "customer_info",
+        "assigned_to": null,
+        "status": "completed",
+        "notes": null,
+        "due_date": "2026-10-08",
+        "completed_at": "2026-10-06T10:44:47.549Z",
+        "created_at": "2026-10-06T10:22:18.349Z"
+    }
+},
+{
+    "model": "projects.licensingtask",
+    "pk": 2,
+    "fields": {
+        "project": 5,
+        "phase": "mnre",
+        "step": "mnre_registration",
+        "assigned_to": null,
+        "status": "completed",
+        "notes": null,
+        "due_date": null,
+        "completed_at": "2026-10-06T10:47:51.875Z",
+        "created_at": "2026-10-06T10:22:18.390Z"
+    }
+},
+{
+    "model": "projects.licensingtask",
+    "pk": 3,
+    "fields": {
+        "project": 5,
+        "phase": "kseb",
+        "step": "annex1",
+        "assigned_to": null,
+        "status": "completed",
+        "notes": null,
+        "due_date": null,
+        "completed_at": "2026-10-06T10:46:34.994Z",
+        "created_at": "2026-10-06T10:22:18.420Z"
+    }
+},
+{
+    "model": "projects.licensingtask",
+    "pk": 4,
+    "fields": {
+        "project": 5,
+        "phase": "preparation",
+        "step": "equipment_info",
+        "assigned_to": null,
+        "status": "completed",
+        "notes": null,
+        "due_date": "2026-10-12",
+        "completed_at": "2026-10-06T10:45:28.319Z",
+        "created_at": "2026-10-06T10:22:18.452Z"
+    }
+},
+{
+    "model": "projects.licensingtask",
+    "pk": 5,
+    "fields": {
+        "project": 5,
+        "phase": "preparation",
+        "step": "agreement",
+        "assigned_to": null,
+        "status": "completed",
+        "notes": null,
+        "due_date": null,
+        "completed_at": "2026-10-06T10:45:34.854Z",
+        "created_at": "2026-10-06T10:22:18.479Z"
+    }
+},
+{
+    "model": "projects.licensingtask",
+    "pk": 6,
+    "fields": {
+        "project": 5,
+        "phase": "kseb",
+        "step": "annex2",
+        "assigned_to": null,
+        "status": "completed",
+        "notes": null,
+        "due_date": null,
+        "completed_at": "2026-10-06T10:47:03.494Z",
+        "created_at": "2026-10-06T10:22:18.504Z"
+    }
+},
+{
+    "model": "projects.licensingtask",
+    "pk": 7,
+    "fields": {
+        "project": 5,
+        "phase": "kseb",
+        "step": "annex3",
+        "assigned_to": null,
+        "status": "completed",
+        "notes": null,
+        "due_date": null,
+        "completed_at": "2026-10-06T10:47:25.734Z",
+        "created_at": "2026-10-06T10:22:18.530Z"
+    }
+},
+{
+    "model": "projects.licensingtask",
+    "pk": 8,
+    "fields": {
+        "project": 5,
+        "phase": "mnre",
+        "step": "mnre_final",
+        "assigned_to": null,
+        "status": "completed",
+        "notes": null,
+        "due_date": null,
+        "completed_at": "2026-10-06T10:48:07.923Z",
+        "created_at": "2026-10-06T10:22:18.563Z"
+    }
+},
+{
+    "model": "projects.licensingtask",
+    "pk": 9,
+    "fields": {
+        "project": 5,
+        "phase": "subsidy",
+        "step": "subsidy",
+        "assigned_to": null,
+        "status": "completed",
+        "notes": null,
+        "due_date": null,
+        "completed_at": "2026-10-06T10:48:27.149Z",
+        "created_at": "2026-10-06T10:22:18.589Z"
+    }
+},
+{
+    "model": "projects.licensingdocument",
+    "pk": 1,
+    "fields": {
+        "task": 1,
+        "uploaded_by": [
+            "aditya1"
+        ],
+        "file": "licensing_docs/feasibility_1_2026-10-06.pdf",
+        "document_type": "other",
+        "caption": "",
+        "is_verified": false,
+        "uploaded_at": "2026-10-06T10:43:43.159Z"
+    }
+},
+{
+    "model": "projects.licensingdocument",
+    "pk": 2,
+    "fields": {
+        "task": 6,
+        "uploaded_by": [
+            "aditya1"
+        ],
+        "file": "licensing_docs/feasibility_3_2026-10-06.pdf",
+        "document_type": "other",
+        "caption": "",
+        "is_verified": false,
+        "uploaded_at": "2026-10-06T10:46:48.651Z"
+    }
+},
+{
+    "model": "projects.licensingdocument",
+    "pk": 3,
+    "fields": {
+        "task": 7,
+        "uploaded_by": [
+            "aditya1"
+        ],
+        "file": "licensing_docs/feasibility_1_2026-10-06_AWgK2AG.pdf",
+        "document_type": "other",
+        "caption": "",
+        "is_verified": false,
+        "uploaded_at": "2026-10-06T10:47:17.130Z"
+    }
+},
+{
+    "model": "projects.licensingdocument",
+    "pk": 4,
+    "fields": {
+        "task": 8,
+        "uploaded_by": [
+            "aditya1"
+        ],
+        "file": "licensing_docs/feasibility_1_2026-10-06_FWt3nZU.pdf",
+        "document_type": "other",
+        "caption": "",
+        "is_verified": false,
+        "uploaded_at": "2026-10-06T10:48:03.882Z"
+    }
+},
+{
+    "model": "projects.licensingdocument",
+    "pk": 5,
+    "fields": {
+        "task": 9,
+        "uploaded_by": [
+            "aditya1"
+        ],
+        "file": "licensing_docs/feasibility_3_2026-10-06_8isFlbG.pdf",
+        "document_type": "other",
+        "caption": "",
+        "is_verified": false,
+        "uploaded_at": "2026-10-06T10:48:22.069Z"
+    }
+},
+{
+    "model": "procurement.material",
+    "pk": 1,
+    "fields": {
+        "name": "Mono PERC 540W Solar Panel",
+        "category": "panel",
+        "brand": "Waaree",
+        "unit": "Nos",
+        "unit_price": "14500.00",
+        "description": "",
+        "minimum_stock": 50,
+        "created_at": "2026-10-06T06:22:54.019Z"
+    }
+},
+{
+    "model": "procurement.material",
+    "pk": 2,
+    "fields": {
+        "name": "5kW String Inverter",
+        "category": "inverter",
+        "brand": "Growatt",
+        "unit": "Nos",
+        "unit_price": "45000.00",
+        "description": "",
+        "minimum_stock": 10,
+        "created_at": "2026-10-06T06:22:54.035Z"
+    }
+},
+{
+    "model": "procurement.material",
+    "pk": 3,
+    "fields": {
+        "name": "4 sqmm DC Cable (Red/Black)",
+        "category": "cable",
+        "brand": "Polycab",
+        "unit": "Meters",
+        "unit_price": "55.00",
+        "description": "",
+        "minimum_stock": 500,
+        "created_at": "2026-10-06T06:22:54.064Z"
+    }
+},
+{
+    "model": "procurement.material",
+    "pk": 4,
+    "fields": {
+        "name": "Galvanized Iron (GI) Structure for 5kW",
+        "category": "structure",
+        "brand": "Generic",
+        "unit": "Kit",
+        "unit_price": "12000.00",
+        "description": "",
+        "minimum_stock": 5,
+        "created_at": "2026-10-06T06:22:54.080Z"
+    }
+},
+{
+    "model": "procurement.vendor",
+    "pk": 1,
+    "fields": {
+        "name": "SunPower Suppliers Ltd",
+        "phone": "9988771122",
+        "email": "sales@sunpowersuppliers.com",
+        "address": "Industrial Area, Delhi",
+        "gst_number": "07AACCS8823K1Z9",
+        "created_at": "2026-10-06T06:22:53.989Z"
+    }
+},
+{
+    "model": "procurement.vendor",
+    "pk": 2,
+    "fields": {
+        "name": "Luminous Power Infra",
+        "phone": "8877665544",
+        "email": "contact@luminouspower.com",
+        "address": "Sector 62, Noida",
+        "gst_number": "09AABCD1234E1Z7",
+        "created_at": "2026-10-06T06:22:54.003Z"
+    }
+},
+{
+    "model": "procurement.purchaseorder",
+    "pk": 1,
+    "fields": {
+        "vendor": 1,
+        "order_date": "2026-10-04",
+        "expected_delivery": "2026-10-09",
+        "status": "ordered",
+        "total_amount": "925000.00",
+        "created_at": "2026-10-06T06:22:54.221Z"
+    }
+},
+{
+    "model": "procurement.purchaseorder",
+    "pk": 2,
+    "fields": {
+        "vendor": 2,
+        "order_date": "2026-09-26",
+        "expected_delivery": "2026-10-04",
+        "status": "received",
+        "total_amount": "50000.00",
+        "created_at": "2026-10-06T06:22:54.281Z"
+    }
+},
+{
+    "model": "procurement.purchaseorderitem",
+    "pk": 1,
+    "fields": {
+        "purchase_order": 1,
+        "material": 1,
+        "quantity": 50,
+        "unit_price": "14200.00"
+    }
+},
+{
+    "model": "procurement.purchaseorderitem",
+    "pk": 2,
+    "fields": {
+        "purchase_order": 1,
+        "material": 2,
+        "quantity": 5,
+        "unit_price": "43000.00"
+    }
+},
+{
+    "model": "procurement.purchaseorderitem",
+    "pk": 3,
+    "fields": {
+        "purchase_order": 2,
+        "material": 3,
+        "quantity": 1000,
+        "unit_price": "50.00"
+    }
+},
+{
+    "model": "procurement.stock",
+    "pk": 1,
+    "fields": {
+        "material": 1,
+        "quantity": 0,
+        "last_updated": "2026-10-06T06:22:54.020Z"
+    }
+},
+{
+    "model": "procurement.stock",
+    "pk": 2,
+    "fields": {
+        "material": 2,
+        "quantity": 0,
+        "last_updated": "2026-10-06T06:22:54.037Z"
+    }
+},
+{
+    "model": "procurement.stock",
+    "pk": 3,
+    "fields": {
+        "material": 3,
+        "quantity": 1000,
+        "last_updated": "2026-10-06T06:22:54.328Z"
+    }
+},
+{
+    "model": "procurement.stock",
+    "pk": 4,
+    "fields": {
+        "material": 4,
+        "quantity": 0,
+        "last_updated": "2026-10-06T06:22:54.081Z"
+    }
+},
+{
+    "model": "procurement.goodsreceived",
+    "pk": 1,
+    "fields": {
+        "purchase_order": 2,
+        "received_date": "2026-10-04",
+        "received_by": null,
+        "notes": "All cables received in good condition",
+        "created_at": "2026-10-06T06:22:54.323Z"
+    }
+},
+{
+    "model": "procurement.kitconfiguration",
+    "pk": 1,
+    "fields": {
+        "name": "Standard 5kW On-Grid Kit",
+        "system_size_kw": 5.0,
+        "description": "Complete package for residential 5kW setup",
+        "version": "1.0",
+        "is_active": true,
+        "created_at": "2026-10-06T06:22:54.096Z"
+    }
+},
+{
+    "model": "procurement.kitmaterial",
+    "pk": 1,
+    "fields": {
+        "kit": 1,
+        "material": 1,
+        "quantity": 10
+    }
+},
+{
+    "model": "procurement.kitmaterial",
+    "pk": 2,
+    "fields": {
+        "kit": 1,
+        "material": 2,
+        "quantity": 1
+    }
+},
+{
+    "model": "procurement.kitmaterial",
+    "pk": 3,
+    "fields": {
+        "kit": 1,
+        "material": 3,
+        "quantity": 100
+    }
+},
+{
+    "model": "procurement.kitmaterial",
+    "pk": 4,
+    "fields": {
+        "kit": 1,
+        "material": 4,
+        "quantity": 1
+    }
+},
+{
+    "model": "procurement.requestforquotation",
+    "pk": 1,
+    "fields": {
+        "title": "Urgent requirement for 540W Panels (100 Nos)",
+        "material": 1,
+        "quantity_required": 100,
+        "deadline": "2026-10-13",
+        "status": "published",
+        "created_at": "2026-10-06T06:22:54.171Z"
+    }
+},
+{
+    "model": "procurement.vendorquotation",
+    "pk": 1,
+    "fields": {
+        "rfq": 1,
+        "vendor": 1,
+        "quoted_price_per_unit": "14200.00",
+        "lead_time_days": 5,
+        "is_selected": true,
+        "created_at": "2026-10-06T06:22:54.189Z"
+    }
+},
+{
+    "model": "procurement.vendorquotation",
+    "pk": 2,
+    "fields": {
+        "rfq": 1,
+        "vendor": 2,
+        "quoted_price_per_unit": "14600.00",
+        "lead_time_days": 2,
+        "is_selected": false,
+        "created_at": "2026-10-06T06:22:54.205Z"
+    }
+},
+{
+    "model": "finance.invoice",
+    "pk": 1,
+    "fields": {
+        "project": 1,
+        "invoice_number": "INV-TEST-1",
+        "issue_date": "2026-10-06",
+        "due_date": "2026-10-21",
+        "total_amount": "165000.00",
+        "status": "sent",
+        "notes": "",
+        "created_at": "2026-10-06T04:24:28.404Z"
+    }
+},
+{
+    "model": "finance.expensereport",
+    "pk": 1,
+    "fields": {
+        "project": 1,
+        "expense_date": "2026-10-06",
+        "category": "materials",
+        "submitted_by": null,
+        "notes": "",
+        "status": "approved",
+        "created_at": "2026-10-06T04:24:28.426Z",
+        "updated_at": "2026-10-06T04:24:28.426Z"
+    }
+},
+{
+    "model": "finance.expenseitem",
+    "pk": 1,
+    "fields": {
+        "report": 1,
+        "description": "Solar Panels 5kW",
+        "amount": "75000.00"
+    }
+},
+{
+    "model": "finance.expenseitem",
+    "pk": 2,
+    "fields": {
+        "report": 1,
+        "description": "Inverter",
+        "amount": "40000.00"
+    }
+},
+{
+    "model": "finance.designcosting",
+    "pk": 1,
+    "fields": {
+        "project": 1,
+        "cost": "5000.00",
+        "design_file": "",
+        "entered_by": null,
+        "status": "approved",
+        "last_updated": "2026-10-06T04:24:28.359Z"
+    }
+},
+{
+    "model": "finance.designcosting",
+    "pk": 2,
+    "fields": {
+        "project": 2,
+        "cost": "8000.00",
+        "design_file": "",
+        "entered_by": null,
+        "status": "approved",
+        "last_updated": "2026-10-06T05:40:51.424Z"
+    }
+},
+{
+    "model": "finance.designcosting",
+    "pk": 3,
+    "fields": {
+        "project": 5,
+        "cost": "400000.00",
+        "design_file": "design_costs/InstallationLog.txt",
+        "entered_by": [
+            "ACHARYA"
+        ],
+        "status": "approved",
+        "last_updated": "2026-10-06T10:21:21.015Z"
+    }
+},
+{
+    "model": "finance.projectcosting",
+    "pk": 1,
+    "fields": {
+        "project": 1,
+        "design_costing": 1,
+        "system_costing": "150000.00",
+        "kseb_cost": "10000.00",
+        "entered_by": null,
+        "proposal_sent": true,
+        "client_approved": true,
+        "approved_at": null,
+        "last_updated": "2026-10-06T04:24:28.381Z"
+    }
+},
+{
+    "model": "finance.projectcosting",
+    "pk": 2,
+    "fields": {
+        "project": 2,
+        "design_costing": 2,
+        "system_costing": "300000.00",
+        "kseb_cost": "15000.00",
+        "entered_by": null,
+        "proposal_sent": true,
+        "client_approved": true,
+        "approved_at": null,
+        "last_updated": "2026-10-06T05:40:51.441Z"
+    }
+},
+{
+    "model": "finance.projectcosting",
+    "pk": 3,
+    "fields": {
+        "project": 5,
+        "design_costing": 3,
+        "system_costing": "-37.00",
+        "kseb_cost": "83.00",
+        "entered_by": [
+            "aditya1"
+        ],
+        "proposal_sent": true,
+        "client_approved": true,
+        "approved_at": "2026-10-06T10:22:18.187Z",
+        "last_updated": "2026-10-06T10:22:18.187Z"
+    }
+},
+{
+    "model": "finance.projectcosting",
+    "pk": 4,
+    "fields": {
+        "project": 4,
+        "design_costing": null,
+        "system_costing": "0.00",
+        "kseb_cost": "0.00",
+        "entered_by": null,
+        "proposal_sent": false,
+        "client_approved": false,
+        "approved_at": null,
+        "last_updated": "2026-10-06T12:09:48.305Z"
+    }
+},
+{
+    "model": "finance.projectcosting",
+    "pk": 5,
+    "fields": {
+        "project": 3,
+        "design_costing": null,
+        "system_costing": "0.00",
+        "kseb_cost": "0.00",
+        "entered_by": null,
+        "proposal_sent": false,
+        "client_approved": false,
+        "approved_at": null,
+        "last_updated": "2026-10-06T12:09:48.346Z"
+    }
+},
+{
+    "model": "finance.paymentmilestone",
+    "pk": 1,
+    "fields": {
+        "project": 2,
+        "milestone_type": "booking",
+        "percentage": "20.00",
+        "amount_due": "60000.00",
+        "due_date": "2026-09-06",
+        "status": "paid",
+        "payment_received": null
+    }
+},
+{
+    "model": "finance.paymentmilestone",
+    "pk": 2,
+    "fields": {
+        "project": 2,
+        "milestone_type": "final",
+        "percentage": "10.00",
+        "amount_due": "30000.00",
+        "due_date": "2026-10-06",
+        "status": "pending",
+        "payment_received": null
+    }
+},
+{
+    "model": "crm.review",
+    "pk": 1,
+    "fields": {
+        "name": "Ramesh Gupta",
+        "email": "ramesh@example.com",
+        "location": "New Delhi",
+        "rating": 5,
+        "review": "Excellent service and very professional installation team. The 5kW system is working perfectly and my electricity bill has significantly reduced!",
+        "created_at": "2026-10-06T05:54:33.450Z"
+    }
+},
+{
+    "model": "crm.review",
+    "pk": 2,
+    "fields": {
+        "name": "Anjali Sharma",
+        "email": "anjali.s@example.com",
+        "location": "Gurugram",
+        "rating": 4,
+        "review": "Good experience overall. The sales team was very helpful in explaining the subsidy process. Installation took a day longer than expected, but the quality of work is great.",
+        "created_at": "2026-10-06T05:54:33.466Z"
+    }
+},
+{
+    "model": "crm.review",
+    "pk": 3,
+    "fields": {
+        "name": "Vikram Singh",
+        "email": "vikram.singh@example.com",
+        "location": "Noida",
+        "rating": 5,
+        "review": "Highly recommend them! They handled everything from site survey to net-metering. The KSEB approval was smooth and fast. Great job.",
+        "created_at": "2026-10-06T05:54:33.480Z"
+    }
+},
+{
+    "model": "crm.review",
+    "pk": 4,
+    "fields": {
+        "name": "Sunita Verma",
+        "email": "sunitav@example.com",
+        "location": "Faridabad",
+        "rating": 5,
+        "review": "We opted for the Leakproof Solar Roof, and it looks beautiful on our house. The team was very polite and cleaned up everything after installation.",
+        "created_at": "2026-10-06T05:54:33.493Z"
+    }
+},
+{
+    "model": "crm.review",
+    "pk": 5,
+    "fields": {
+        "name": "Amit Patel",
+        "email": "amit.patel@example.com",
+        "location": "Ghaziabad",
+        "rating": 3,
+        "review": "The solar panels are generating good power, but the initial communication regarding the delivery date was a bit confusing. Overall satisfactory.",
+        "created_at": "2026-10-06T05:54:33.510Z"
+    }
+},
+{
+    "model": "crm.review",
+    "pk": 6,
+    "fields": {
+        "name": "aditya verma",
+        "email": "Uv583888@gmail.com",
+        "location": "lucknow",
+        "rating": 5,
+        "review": "this is good",
+        "created_at": "2026-10-07T08:44:35.101Z"
+    }
+},
+{
+    "model": "crm.review",
+    "pk": 7,
+    "fields": {
+        "name": "aditya verma",
+        "email": "Uv583888@gmail.com",
+        "location": "lucknow",
+        "rating": 5,
+        "review": "this is good",
+        "created_at": "2026-10-07T08:45:37.399Z"
+    }
+},
+{
+    "model": "crm.review",
+    "pk": 8,
+    "fields": {
+        "name": "aditya verma",
+        "email": "Uv583888@gmail.com",
+        "location": "lucknow",
+        "rating": 5,
+        "review": "this is good",
+        "created_at": "2026-10-07T08:48:26.881Z"
+    }
+},
+{
+    "model": "crm.review",
+    "pk": 9,
+    "fields": {
+        "name": "mohan",
+        "email": "roha123@gmail.com",
+        "location": "lucknow",
+        "rating": 5,
+        "review": "good",
+        "created_at": "2026-10-07T08:48:59.789Z"
+    }
+},
+{
+    "model": "crm.lead",
+    "pk": 1,
+    "fields": {
+        "name": "aditya vermqa",
+        "phone": "08810842864",
+        "email": "Uv583888@gmail.com",
+        "location": "Barabanki",
+        "service": "ongrid",
+        "message": "hello",
+        "notes": null,
+        "status": "new",
+        "priority": "medium",
+        "assigned_to": null,
+        "created_at": "2026-10-05T08:48:42.876Z",
+        "updated_at": "2026-10-05T08:48:42.876Z",
+        "score": 70
+    }
+},
+{
+    "model": "crm.lead",
+    "pk": 2,
+    "fields": {
+        "name": "rohan",
+        "phone": "9956665489",
+        "email": "it.support@viamodsolution.com",
+        "location": "Barabanki",
+        "service": "hybrid",
+        "message": "hello",
+        "notes": null,
+        "status": "new",
+        "priority": "medium",
+        "assigned_to": null,
+        "created_at": "2026-10-05T11:36:07.724Z",
+        "updated_at": "2026-10-05T11:36:07.724Z",
+        "score": 70
+    }
+},
+{
+    "model": "crm.lead",
+    "pk": 3,
+    "fields": {
+        "name": "PDF Tester Lead",
+        "phone": "9998887776",
+        "email": null,
+        "location": null,
+        "service": "ongrid",
+        "message": null,
+        "notes": null,
+        "status": "converted",
+        "priority": "medium",
+        "assigned_to": null,
+        "created_at": "2026-10-06T04:24:28.192Z",
+        "updated_at": "2026-10-06T04:24:28.231Z",
+        "score": 50
+    }
+},
+{
+    "model": "crm.lead",
+    "pk": 4,
+    "fields": {
+        "name": "Completed Project Lead",
+        "phone": "8887776665",
+        "email": null,
+        "location": null,
+        "service": "ongrid",
+        "message": null,
+        "notes": "",
+        "status": "converted",
+        "priority": "medium",
+        "assigned_to": [
+            "sales_test"
+        ],
+        "created_at": "2026-10-06T05:40:51.111Z",
+        "updated_at": "2026-10-06T09:32:16.997Z",
+        "score": 50
+    }
+},
+{
+    "model": "crm.lead",
+    "pk": 5,
+    "fields": {
+        "name": "Ongoing Installation Lead",
+        "phone": "9988776655",
+        "email": null,
+        "location": null,
+        "service": "offgrid",
+        "message": null,
+        "notes": "",
+        "status": "converted",
+        "priority": "medium",
+        "assigned_to": [
+            "eng_test"
+        ],
+        "created_at": "2026-10-06T06:19:08.193Z",
+        "updated_at": "2026-10-06T07:58:31.070Z",
+        "score": 50
+    }
+},
+{
+    "model": "crm.lead",
+    "pk": 7,
+    "fields": {
+        "name": "MITCHELL MARKS",
+        "phone": "9999999999",
+        "email": "developeral2312@gmail.com",
+        "location": "SITAPUR",
+        "service": "hybrid",
+        "message": "",
+        "notes": "YES....................................................................................................................................................",
+        "status": "converted",
+        "priority": "medium",
+        "assigned_to": [
+            "sales_test"
+        ],
+        "created_at": "2026-10-06T09:07:15.548Z",
+        "updated_at": "2026-10-06T09:31:41.827Z",
+        "score": 90
+    }
+},
+{
+    "model": "crm.lead",
+    "pk": 10,
+    "fields": {
+        "name": "luckey",
+        "phone": "8888888888",
+        "email": null,
+        "location": "Barabanki",
+        "service": "ongrid",
+        "message": null,
+        "notes": "Average Monthly Bill: Above ₹10,000",
+        "status": "new",
+        "priority": "medium",
+        "assigned_to": null,
+        "created_at": "2026-10-07T08:35:27.722Z",
+        "updated_at": "2026-10-07T08:35:27.722Z",
+        "score": 70
+    }
+},
+{
+    "model": "crm.lead",
+    "pk": 12,
+    "fields": {
+        "name": "rohit",
+        "phone": "7777777777",
+        "email": "luck@gmail.com",
+        "location": "Barabanki",
+        "service": "hybrid",
+        "message": "hello\r\n\\",
+        "notes": null,
+        "status": "new",
+        "priority": "medium",
+        "assigned_to": null,
+        "created_at": "2026-10-07T08:50:06.397Z",
+        "updated_at": "2026-10-07T08:50:06.397Z",
+        "score": 70
+    }
+},
+{
+    "model": "crm.followup",
+    "pk": 1,
+    "fields": {
+        "lead": 1,
+        "scheduled_date": "2027-01-12",
+        "completed_date": "2026-10-05",
+        "status": "done",
+        "note": "",
+        "added_by": [
+            "aditya1"
+        ],
+        "created_at": "2026-10-05T08:52:23.352Z",
+        "updated_at": "2026-10-05T08:52:29.777Z"
+    }
+},
+{
+    "model": "crm.followup",
+    "pk": 2,
+    "fields": {
+        "lead": 7,
+        "scheduled_date": "2026-10-07",
+        "completed_date": "2026-10-06",
+        "status": "done",
+        "note": "FOOLOW",
+        "added_by": [
+            "sales_test"
+        ],
+        "created_at": "2026-10-06T09:25:41.975Z",
+        "updated_at": "2026-10-06T09:31:23.402Z"
+    }
+},
+{
+    "model": "crm.sitevisit",
+    "pk": 1,
+    "fields": {
+        "lead": 1,
+        "project": null,
+        "engineer": [
+            "eng_test"
+        ],
+        "scheduled_date": "2027-01-12",
+        "completed_date": null,
+        "status": "pending",
+        "notes": "",
+        "added_by": [
+            "aditya1"
+        ],
+        "created_at": "2026-10-05T08:52:49.740Z",
+        "updated_at": "2026-10-06T08:32:31.222Z"
+    }
+},
+{
+    "model": "crm.leadactivity",
+    "pk": 1,
+    "fields": {
+        "lead": 1,
+        "title": "Lead Created",
+        "description": "Lead submitted from website contact form",
+        "created_by": null,
+        "created_at": "2026-10-05T08:48:42.907Z"
+    }
+},
+{
+    "model": "crm.leadactivity",
+    "pk": 2,
+    "fields": {
+        "lead": 1,
+        "title": "Follow-up Scheduled",
+        "description": "Follow-up scheduled on 2027-01-12",
+        "created_by": [
+            "aditya1"
+        ],
+        "created_at": "2026-10-05T08:52:23.355Z"
+    }
+},
+{
+    "model": "crm.leadactivity",
+    "pk": 3,
+    "fields": {
+        "lead": 1,
+        "title": "Follow-up Completed",
+        "description": "Follow-up on 2027-01-12 marked as done",
+        "created_by": [
+            "aditya1"
+        ],
+        "created_at": "2026-10-05T08:52:29.793Z"
+    }
+},
+{
+    "model": "crm.leadactivity",
+    "pk": 4,
+    "fields": {
+        "lead": 1,
+        "title": "Site Visit Scheduled",
+        "description": "Site visit scheduled on 2027-01-12",
+        "created_by": [
+            "aditya1"
+        ],
+        "created_at": "2026-10-05T08:52:49.743Z"
+    }
+},
+{
+    "model": "crm.leadactivity",
+    "pk": 5,
+    "fields": {
+        "lead": 2,
+        "title": "Lead Created",
+        "description": "Lead submitted from website contact form",
+        "created_by": null,
+        "created_at": "2026-10-05T11:36:08.173Z"
+    }
+},
+{
+    "model": "crm.leadactivity",
+    "pk": 6,
+    "fields": {
+        "lead": 5,
+        "title": "Lead Assigned",
+        "description": "Assigned to eng_test",
+        "created_by": [
+            "aditya1"
+        ],
+        "created_at": "2026-10-06T07:58:27.497Z"
+    }
+},
+{
+    "model": "crm.leadactivity",
+    "pk": 8,
+    "fields": {
+        "lead": 7,
+        "title": "Lead Created",
+        "description": "Lead added manually by {request.user.username}",
+        "created_by": [
+            "aditya1"
+        ],
+        "created_at": "2026-10-06T09:07:15.634Z"
+    }
+},
+{
+    "model": "crm.leadactivity",
+    "pk": 9,
+    "fields": {
+        "lead": 7,
+        "title": "Follow-up Scheduled",
+        "description": "Follow-up scheduled on 2026-10-07",
+        "created_by": [
+            "aditya1"
+        ],
+        "created_at": "2026-10-06T09:25:41.983Z"
+    }
+},
+{
+    "model": "crm.leadactivity",
+    "pk": 10,
+    "fields": {
+        "lead": 7,
+        "title": "Lead Assigned",
+        "description": "Assigned to sales_test",
+        "created_by": [
+            "aditya1"
+        ],
+        "created_at": "2026-10-06T09:26:21.868Z"
+    }
+},
+{
+    "model": "crm.leadactivity",
+    "pk": 11,
+    "fields": {
+        "lead": 7,
+        "title": "Follow-up Completed",
+        "description": "Follow-up on 2026-10-07 marked as done",
+        "created_by": [
+            "sales_test"
+        ],
+        "created_at": "2026-10-06T09:31:23.433Z"
+    }
+},
+{
+    "model": "crm.leadactivity",
+    "pk": 12,
+    "fields": {
+        "lead": 7,
+        "title": "Status Updated",
+        "description": "Status changed to Converted to Project",
+        "created_by": [
+            "sales_test"
+        ],
+        "created_at": "2026-10-06T09:31:41.847Z"
+    }
+},
+{
+    "model": "crm.leadactivity",
+    "pk": 15,
+    "fields": {
+        "lead": 10,
+        "title": "Lead Created",
+        "description": "Lead submitted from home page quote form",
+        "created_by": null,
+        "created_at": "2026-10-07T08:35:27.755Z"
+    }
+},
+{
+    "model": "crm.leadactivity",
+    "pk": 17,
+    "fields": {
+        "lead": 12,
+        "title": "Lead Created",
+        "description": "Lead submitted from website contact form",
+        "created_by": null,
+        "created_at": "2026-10-07T08:50:06.438Z"
+    }
+}
+]

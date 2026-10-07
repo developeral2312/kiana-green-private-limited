@@ -9,18 +9,14 @@
 
         <!-- Logo -->
                 <!-- Custom HTML Text Logo -->
-        <div class="sidebar-logo d-flex align-items-center" style="gap: 8px;">
-            <!-- Keeping only the small leaf/sun icon -->
-            <img src="{% static 'images/logo1.png' %}" 
-                 class="img-fluid" 
-                 alt="Icon" 
-                 style="height: 38px; width: 38px; object-fit: contain; mix-blend-mode: multiply;">
-            
-            <div class="sidebar-logo-full d-flex flex-column justify-content-center" style="line-height: 1;">
-                <span style="font-size: 1.3rem; font-weight: 800; color: #1f4e3d; letter-spacing: 0.5px; margin-bottom: 2px;">KIANA</span>
-                <span style="font-size: 0.75rem; font-weight: 600; color: #4ade80; letter-spacing: 2px;">GREEN</span>
-            </div>
-        </div>
+        <div class="sidebar-logo d-flex flex-column align-items-center justify-content-center" style="width: 90px; margin: 0 auto; padding: 5px 0;">
+    <img src="{% static 'images/logo1.png' %}" 
+         class="img-fluid" 
+         alt="Logo" 
+         style="width: 100%; height: auto;">
+    
+    <div style="width: 100%; text-align-last: justify; font-weight: 800; color: #2ecc71; font-size: 0.85rem; letter-spacing: 1px; margin-top: 2px; line-height: 1;">GREEN</div>
+</div>
 
         <!-- Sidebar Toggle: ONLY on desktop. On mobile, hamburger in topnavbar is used. -->
         <label for="sidebarToggleCheckbox" class="toggle-btn d-none d-lg-flex">

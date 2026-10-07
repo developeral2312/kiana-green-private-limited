@@ -2,20 +2,125 @@
 <html>
 <head>
     <style>
-        body { font-family: Arial; font-size: 12px; }
-        .header { text-align: center; border-bottom: 2px solid #000; padding-bottom: 10px; }
-        .company-name { font-size: 18px; font-weight: bold; }
-        .section { margin-top: 20px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th, td { border: 1px solid #000; padding: 8px; }
-        th { background: #f2f2f2; }
-        .footer { position: fixed; bottom: 10px; width: 100%; text-align: center; font-size: 10px; }
-    </style>
+    @page {
+        size: a4 portrait;
+        margin: 2cm;
+    }
+    body {
+        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        font-size: 13px;
+        color: #333;
+        line-height: 1.6;
+        margin: 0;
+        padding: 0;
+    }
+    .header-table {
+        width: 100%;
+        border-bottom: 3px solid #2ecc71;
+        padding-bottom: 15px;
+        margin-bottom: 30px;
+        border-collapse: collapse;
+    }
+    .header-table td {
+        border: none;
+        padding: 0;
+        vertical-align: top;
+    }
+    .company-info {
+        font-size: 12px;
+        color: #7f8c8d;
+        margin-top: 5px;
+        line-height: 1.4;
+    }
+    .company-name {
+        font-size: 22px;
+        font-weight: bold;
+        color: #2c3e50;
+        margin-top: 10px;
+    }
+    h3 {
+        font-size: 24px;
+        font-weight: bold;
+        color: #2ecc71;
+        text-transform: uppercase;
+        margin-bottom: 20px;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 5px;
+    }
+    h4 {
+        color: #2c3e50;
+        background-color: #f8f9fa;
+        padding: 8px 10px;
+        border-left: 4px solid #2ecc71;
+        margin-top: 30px;
+        margin-bottom: 15px;
+    }
+    p {
+        margin: 5px 0;
+    }
+    .section {
+        margin-bottom: 25px;
+    }
+    table.data-table, table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+        margin-bottom: 25px;
+    }
+    th, td {
+        border: 1px solid #e0e0e0;
+        padding: 10px 12px;
+        text-align: left;
+    }
+    th {
+        background-color: #2ecc71;
+        color: #fff;
+        font-weight: bold;
+        text-transform: uppercase;
+        font-size: 11px;
+        letter-spacing: 0.5px;
+    }
+    tr:nth-child(even) {
+        background-color: #fbfbfb;
+    }
+    .total-row td, td.right strong {
+        font-weight: bold;
+        color: #2c3e50;
+    }
+    .right {
+        text-align: right;
+    }
+    .footer {
+        position: fixed;
+        bottom: 10px;
+        left: 0;
+        right: 0;
+        text-align: center;
+        font-size: 10px;
+        color: #95a5a6;
+        border-top: 1px solid #eee;
+        padding-top: 10px;
+    }
+</style>
 </head>
 <body>
 
-<div class="header">
-    <div class="company-name">Kiana Green Private Limited</div>
+<table>
+    <tr>
+        <td style="width: 60%;">
+            <img src="/static/images/logo.png" style="max-height: 60px;">
+            <div class="company-name">Kiana Green Pvt Ltd</div>
+            <div class="company-info">
+                Palakkad, Kerala<br>
+                Phone: +91 XXXXX XXXXX<br>
+                GSTIN: 32XXXXXXXXXXXXX
+            </div>
+        </td>
+        <td style="width: 40%; text-align: right; vertical-align: bottom;">
+            <!-- Document specific title can be placed below if needed -->
+        </td>
+    </tr>
+</table>
 </div>
 
 <h3>Work Report</h3>

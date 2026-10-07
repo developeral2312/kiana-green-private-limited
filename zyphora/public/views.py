@@ -6,7 +6,7 @@ from users.utils import create_notification
 
 from .models import BlogPost 
 
-from crm.models import LeadActivity,Review
+from crm.models import LeadActivity,Review,Lead
 from crm.forms import ReviewForm,LeadForm
 
 from projects.models import Project
@@ -35,12 +35,13 @@ def home_page(request):
             review.rating = rating 
             review.save()  
             messages.success(request,"🎉 Thank you! Your review has been submitted successfully.")
-            admin = CustomUser.objects.get(role='admin')
-            Notification.objects.create(
-                recipient=admin,
-                message=f"New review received from {review.name}",
-                link = reverse('notifications'),
-                category='crm'
+            admins = CustomUser.objects.filter(role='admin')
+            for admin in admins:
+                Notification.objects.create(
+                    recipient=admin,
+                    message=f"New review received from {review.name}",
+                    link = reverse('notifications'),
+                    category='crm'
                 )
     form = ReviewForm()
     return render(request,'public_view/home.html',{'reviews':reviews,'form':form,'project_data':project_data})
@@ -53,6 +54,41 @@ def services_page(request):
 
 def contact_page(request):
     if request.method == "POST":
+        # Handle custom form from home page (has 'bill' instead of 'service')
+        if 'bill' in request.POST:
+            name = request.POST.get('name')
+            phone = request.POST.get('phone')
+            email = request.POST.get('email', '')
+            location = request.POST.get('location')
+            bill = request.POST.get('bill')
+            service = request.POST.get('service', 'ongrid') # Fallback if somehow not submitted
+            
+            lead = Lead.objects.create(
+                name=name,
+                phone=phone,
+                email=email,
+                location=location,
+                service=service,
+                notes=f"Average Monthly Bill: {bill}"
+            )
+            LeadActivity.objects.create(
+                lead=lead,
+                title="Lead Created",
+                description="Lead submitted from home page quote form"
+            )
+            admins = CustomUser.objects.filter(role='admin')
+            for admin in admins:
+                create_notification(
+                    recipient=admin,
+                    title="New Lead Added",
+                    message=f"{lead.name} has been added from website quote form",
+                    link=reverse('notifications'),
+                    category='crm'
+                )
+            messages.success(request, 'Thank you for requesting a free consultation! Our representative will reach out to you shortly to assist you.')
+            return redirect(contact_page)
+            
+        # Handle standard LeadForm from contact page
         form = LeadForm(request.POST)
         if form.is_valid():
             lead = form.save()
@@ -61,17 +97,21 @@ def contact_page(request):
                 title="Lead Created",
                 description="Lead submitted from website contact form"
             )
-            admin = CustomUser.objects.get(role='admin')
-            create_notification(
-                recipient=admin,
-                title="New Lead Added",
-                message=f"{lead.name} has been added from website contact form",
-                link=reverse('notifications'),
-                category='crm'
-            )
-        messages.success(request,'Thank you for requesting a free consultation! Our representative will reach out to you shortly to assist you.')
-        return redirect(contact_page)
-    form = LeadForm()
+            admins = CustomUser.objects.filter(role='admin')
+            for admin in admins:
+                create_notification(
+                    recipient=admin,
+                    title="New Lead Added",
+                    message=f"{lead.name} has been added from website contact form",
+                    link=reverse('notifications'),
+                    category='crm'
+                )
+            messages.success(request, 'Thank you for requesting a free consultation! Our representative will reach out to you shortly to assist you.')
+            return redirect(contact_page)
+        else:
+            messages.error(request, 'Please correct the errors below.')
+    else:
+        form = LeadForm()
     return render(request,'public_view/contact.html',{'form':form})
 
 def projects_page(request):
