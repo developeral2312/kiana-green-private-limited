@@ -48,18 +48,17 @@
         <li class="sidebar-heading mt-3 text-muted small">CRM MANAGEMENT</li>
         <li class="nav-item">
             <a class="nav-link d-flex align-items-center justify-content-between {% if request.resolver_match.url_name in 'lead_list add_lead review' %}active{% endif %}" 
-               data-bs-toggle="collapse" href="#crmMenu" aria-expanded="false">
+               data-bs-toggle="collapse" href="#crmMenu" aria-expanded="{% if request.resolver_match.url_name in 'lead_list add_lead review' %}true{% else %}false{% endif %}">
                 <div class="d-flex align-items-center">
                     <i class="bi bi-person-lines-fill nav-icon text-primary"></i>
                     <span class="link-text ms-2">CRM</span>
                 </div>
-                
             </a>
-            <div class="collapse submenu" id="crmMenu" data-bs-parent="#sidebarMenu">
+            <div class="collapse submenu {% if request.resolver_match.url_name in 'lead_list add_lead review' %}show{% endif %}" id="crmMenu" data-bs-parent="#sidebarMenu">
                 <ul class="nav flex-column ms-4">
-                    <li><a href="{% url 'lead_list' %}" class="nav-link">All Leads</a></li>
-                    <li><a href="{% url 'add_lead' %}" class="nav-link">Add Lead</a></li>
-                    <li><a href="{% url 'review' %}" class="nav-link">User Reviews</a></li>
+                    <li><a href="{% url 'lead_list' %}" class="nav-link {% if request.resolver_match.url_name == 'lead_list' %}text-primary fw-bold{% endif %}">All Leads</a></li>
+                    <li><a href="{% url 'add_lead' %}" class="nav-link {% if request.resolver_match.url_name == 'add_lead' %}text-primary fw-bold{% endif %}">Add Lead</a></li>
+                    <li><a href="{% url 'review' %}" class="nav-link {% if request.resolver_match.url_name == 'review' %}text-primary fw-bold{% endif %}">User Reviews</a></li>
                 </ul>
             </div>
         </li>
@@ -67,15 +66,14 @@
         <!-- PROJECTS -->
         <li class="sidebar-heading mt-3 text-muted small">PROJECT MANAGEMENT</li>
         <li class="nav-item">
-            <a class="nav-link d-flex align-items-center justify-content-between {% if request.resolver_match.url_name in 'project_list recent_activity' %}active{% endif %}" 
-               data-bs-toggle="collapse" href="#projectMenu">
+            <a class="nav-link d-flex align-items-center justify-content-between {% if request.resolver_match.url_name in 'project_list feasibility_list design_list installation_progress licensing_list energisation_projects completed_projects recent_activity gallery_projects' %}active{% endif %}" 
+               data-bs-toggle="collapse" href="#projectMenu" aria-expanded="{% if request.resolver_match.url_name in 'project_list feasibility_list design_list installation_progress licensing_list energisation_projects completed_projects recent_activity gallery_projects' %}true{% else %}false{% endif %}">
                 <div class="d-flex align-items-center">
                     <i class="bi bi-briefcase nav-icon text-warning"></i>
                     <span class="link-text ms-2">Projects</span>
                 </div>
-                
             </a>
-            <div class="collapse submenu" id="projectMenu" data-bs-parent="#sidebarMenu">
+            <div class="collapse submenu {% if request.resolver_match.url_name in 'project_list feasibility_list design_list installation_progress licensing_list energisation_projects completed_projects recent_activity gallery_projects' %}show{% endif %}" id="projectMenu" data-bs-parent="#sidebarMenu">
                 <ul class="nav flex-column ms-4">
                     <li><a href="{% url 'project_list' %}" class="nav-link">All Projects</a></li>
                     <li><a class="nav-link" href="{% url 'feasibility_list' %}">Feasibility Study</a></li>
@@ -86,7 +84,6 @@
                     <li><a href="{% url 'completed_projects' %}" class="nav-link">Completed Projects</a></li>
                     <li><a href="{% url 'recent_activity' %}" class="nav-link">Recent Activity</a></li>
                     <li><a href="{% url 'gallery_projects' %}" class="nav-link">Project Gallery</a></li>
-
                 </ul>
             </div>
         </li>
@@ -94,15 +91,14 @@
         <!-- EMPLOYEES -->
         <li class="sidebar-heading mt-3 text-muted small">EMPLOYEE MANAGEMENT</li>
         <li class="nav-item">
-            <a class="nav-link d-flex align-items-center justify-content-between {% if request.resolver_match.url_name in 'emplist addemp' %}active{% endif %}" 
-               data-bs-toggle="collapse" href="#employeeMenu">
+            <a class="nav-link d-flex align-items-center justify-content-between {% if request.resolver_match.url_name in 'emplist addemp assigned_tasks' %}active{% endif %}" 
+               data-bs-toggle="collapse" href="#employeeMenu" aria-expanded="{% if request.resolver_match.url_name in 'emplist addemp assigned_tasks' %}true{% else %}false{% endif %}">
                 <div class="d-flex align-items-center">
                     <i class="bi bi-people nav-icon text-success"></i>
                     <span class="link-text ms-2">Employees</span>
                 </div>
-                
             </a>
-            <div class="collapse submenu" id="employeeMenu" data-bs-parent="#sidebarMenu">
+            <div class="collapse submenu {% if request.resolver_match.url_name in 'emplist addemp assigned_tasks' %}show{% endif %}" id="employeeMenu" data-bs-parent="#sidebarMenu">
                 <ul class="nav flex-column ms-4">
                     <li><a href="{% url 'emplist' %}" class="nav-link">Employee List</a></li>
                     <li><a href="{% url 'addemp' %}" class="nav-link">New Employee</a></li>
@@ -114,15 +110,14 @@
         <!-- PROCUREMENT -->
         <li class="sidebar-heading mt-3 text-muted small">PROCUREMENT</li>
         <li class="nav-item">
-            <a class="nav-link d-flex align-items-center justify-content-between" 
-               data-bs-toggle="collapse" href="#procurementMenu">
+            <a class="nav-link d-flex align-items-center justify-content-between {% if request.resolver_match.url_name in 'material_list admin_material_requests allocation_list vendor_list purchase_order_list goods_received_list stock_list' %}active{% endif %}" 
+               data-bs-toggle="collapse" href="#procurementMenu" aria-expanded="{% if request.resolver_match.url_name in 'material_list admin_material_requests allocation_list vendor_list purchase_order_list goods_received_list stock_list' %}true{% else %}false{% endif %}">
                 <div class="d-flex align-items-center">
                     <i class="bi bi-box-seam nav-icon text-purple"></i>
                     <span class="link-text ms-2">Procurement</span>
                 </div>
-                
             </a>
-            <div class="collapse submenu" id="procurementMenu" data-bs-parent="#sidebarMenu">
+            <div class="collapse submenu {% if request.resolver_match.url_name in 'material_list admin_material_requests allocation_list vendor_list purchase_order_list goods_received_list stock_list' %}show{% endif %}" id="procurementMenu" data-bs-parent="#sidebarMenu">
                 <ul class="nav flex-column ms-4">
                     <li><a href="{% url 'material_list' %}" class="nav-link">Materials</a></li>
                     <li><a href="{% url 'admin_material_requests' %}" class="nav-link">Material Requests</a></li>
@@ -135,23 +130,17 @@
             </div>
         </li>
 
-
         <!-- ================= FINANCE ================= -->
         <li class="sidebar-heading mt-3 text-muted small text-uppercase">Finance</li>
         <li class="nav-item mt-2">
-            <a class="nav-link d-flex align-items-center justify-content-between"
-            data-bs-toggle="collapse"
-            href="#financeMenu">
-
+            <a class="nav-link d-flex align-items-center justify-content-between {% if request.resolver_match.url_name in 'invoice_list client_payments all_expenses project_costing' %}active{% endif %}"
+               data-bs-toggle="collapse" href="#financeMenu" aria-expanded="{% if request.resolver_match.url_name in 'invoice_list client_payments all_expenses project_costing' %}true{% else %}false{% endif %}">
                 <div class="d-flex align-items-center">
                     <i class="bi bi-cash-coin nav-icon"></i>
                     <span class="link-text ms-2">Finance</span>
                 </div>
-
-                
             </a>
-
-            <div class="collapse submenu" id="financeMenu" data-bs-parent="#sidebarMenu">
+            <div class="collapse submenu {% if request.resolver_match.url_name in 'invoice_list client_payments all_expenses project_costing' %}show{% endif %}" id="financeMenu" data-bs-parent="#sidebarMenu">
                 <ul class="nav flex-column ms-4">
                     <li><a href="{% url 'invoice_list' %}" class="nav-link">Invoices</a></li>
                     <li><a href="{% url 'client_payments' %}" class="nav-link">Payments</a></li>
@@ -164,15 +153,14 @@
         <!-- CONTENT / BLOG -->
         <li class="sidebar-heading mt-3 text-muted small">CONTENT</li>
         <li class="nav-item">
-            <a class="nav-link d-flex align-items-center justify-content-between" 
-               data-bs-toggle="collapse" href="#blogMenu">
+            <a class="nav-link d-flex align-items-center justify-content-between {% if request.resolver_match.url_name in 'blogposts addpost' %}active{% endif %}" 
+               data-bs-toggle="collapse" href="#blogMenu" aria-expanded="{% if request.resolver_match.url_name in 'blogposts addpost' %}true{% else %}false{% endif %}">
                 <div class="d-flex align-items-center">
                     <i class="bi bi-journal-text nav-icon text-danger"></i>
                     <span class="link-text ms-2">Blog</span>
                 </div>
-                
             </a>
-            <div class="collapse submenu" id="blogMenu" data-bs-parent="#sidebarMenu">
+            <div class="collapse submenu {% if request.resolver_match.url_name in 'blogposts addpost' %}show{% endif %}" id="blogMenu" data-bs-parent="#sidebarMenu">
                 <ul class="nav flex-column ms-4">
                     <li><a href="{% url 'blogposts' %}" class="nav-link">All Posts</a></li>
                     <li><a href="{% url 'addpost' %}" class="nav-link">Add Post</a></li>

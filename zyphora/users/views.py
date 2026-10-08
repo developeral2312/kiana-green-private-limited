@@ -52,7 +52,6 @@ def login_page(request):
         username_input = request.POST.get('username')
         password = request.POST.get('password')
 
-        # Check if user entered an email instead of username
         if '@' in username_input:
             try:
                 user_obj = CustomUser.objects.get(email=username_input)

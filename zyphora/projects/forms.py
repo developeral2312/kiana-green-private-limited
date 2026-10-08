@@ -23,6 +23,7 @@ class ProjectForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['engineer'].queryset = Employee.objects.filter(user__role="engineer", is_active=True)
+        self.fields['engineer'].empty_label = 'Select Engineer'
 
 
 class ProjectActivityForm(forms.ModelForm):
@@ -99,6 +100,10 @@ class TaskForm(forms.ModelForm):
                 self.fields.pop('assigned_to')
             else:
                 self.fields['assigned_to'].queryset = CustomUser.objects.all()
+        if 'assigned_to' in self.fields:
+            self.fields['assigned_to'].empty_label = 'Select User'
+        if 'assigned_by' in self.fields:
+            self.fields['assigned_by'].empty_label = 'Select User'
 
 
 # ---------------- Service Forms ----------------
@@ -113,6 +118,15 @@ class ServiceRequestForm(forms.ModelForm):
             'assigned_to': forms.Select(attrs={'class': 'form-select'}),
             'requested_by': forms.Select(attrs={'class': 'form-select'}),
         }
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if 'project' in self.fields:
+            self.fields['project'].empty_label = 'Select Project'
+        if 'assigned_to' in self.fields:
+            self.fields['assigned_to'].empty_label = 'Select User'
+        if 'requested_by' in self.fields:
+            self.fields['requested_by'].empty_label = 'Select User'
 
 
 class ServiceReportForm(forms.ModelForm):

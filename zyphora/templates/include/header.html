@@ -1,11 +1,11 @@
-<nav class="navbar navbar-expand-lg navbar-dark custom-navbar py-2">
+<nav class="navbar navbar-expand-lg navbar-light custom-navbar py-2">
   <div class="container-fluid px-4 px-lg-5">
 
     <a class="navbar-brand" href="{% url 'home' %}" style="padding: 0; margin-right: 15px;">
       <div style="width: 110px; display: flex; flex-direction: column; align-items: center;">
         <img src="/static/images/logo1.png" alt="Logo" style="width: 100%; height: auto;">
         <div
-          style="width: 100%; text-align: right; font-weight: 800; color: #2ecc71; font-size: 1.25rem; letter-spacing: 1.5px; margin-top: 2px; padding-right: 2px;">
+          style="width: 100%; text-align: right; font-weight: 800; color: #f28b00; font-size: 1.25rem; letter-spacing: 1.5px; margin-top: 2px; padding-right: 2px;">
           GREEN</div>
       </div>
     </a>
@@ -14,14 +14,20 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
-      <!-- Centered Links -->
       <ul class="navbar-nav mx-auto">
-        <li class="nav-item"><a class="nav-link active" href="{% url 'home' %}">Home</a></li>
-        <li class="nav-item"><a class="nav-link" href="{% url 'about' %}">About</a></li>
-        <li class="nav-item"><a class="nav-link" href="{% url 'services' %}">Services</a></li>
-        <li class="nav-item"><a class="nav-link" href="{% url 'projects' %}">Projects</a></li>
-        <li class="nav-item"><a class="nav-link" href="{% url 'blog' %}">Blog</a></li>
-        <li class="nav-item"><a class="nav-link" href="{% url 'contact' %}">Contact</a></li>
+        {% url 'home' as url_home %}
+        {% url 'about' as url_about %}
+        {% url 'services' as url_services %}
+        {% url 'projects' as url_projects %}
+        {% url 'blog' as url_blog %}
+        {% url 'contact' as url_contact %}
+        
+        <li class="nav-item"><a class="nav-link {% if request.path == url_home %}active{% endif %}" href="{{ url_home }}">Home</a></li>
+        <li class="nav-item"><a class="nav-link {% if request.path == url_about %}active{% endif %}" href="{{ url_about }}">About</a></li>
+        <li class="nav-item"><a class="nav-link {% if request.path == url_services %}active{% endif %}" href="{{ url_services }}">Services</a></li>
+        <li class="nav-item"><a class="nav-link {% if request.path == url_projects %}active{% endif %}" href="{{ url_projects }}">Projects</a></li>
+        <li class="nav-item"><a class="nav-link {% if request.path == url_blog %}active{% endif %}" href="{{ url_blog }}">Blog</a></li>
+        <li class="nav-item"><a class="nav-link {% if request.path == url_contact %}active{% endif %}" href="{{ url_contact }}">Contact</a></li>
       </ul>
 
       <!-- Right-aligned Team Portal Button -->

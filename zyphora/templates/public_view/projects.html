@@ -25,25 +25,99 @@
         <div class="row g-4">
             {% for item in project_data %}
             <div class="col-md-4">
-                <div class="card project-card shadow-sm border-0">
+                <div class="card project-card shadow-sm border-0 h-100 rounded-4 overflow-hidden">
                     {% if item.photo %}
-                        <img src="{{ item.photo.file.url }}" class="card-img-top">
+                        <img src="{{ item.photo.file.url }}" class="card-img-top" style="height: 250px; object-fit: cover;">
+                    {% else %}
+                        <img src="/static/images/project-hero.png" class="card-img-top" style="height: 250px; object-fit: cover;">
                     {% endif %}
 
-                    <div class="card-body">
-                        <h5 class="card-title">
-                            {{ item.project.feasibility.suggested_capacity|floatformat:0 }}kW {{ item.project.get_project_type_display }} - {{item.project.location}} 
+                    <div class="card-body p-4">
+                        <h5 class="card-title fw-bold mb-3" style="color: #00234b;">
+                            {{ item.project.feasibility.suggested_capacity|floatformat:0 }}kW {{ item.project.get_project_type_display }}
                         </h5>
-                        <p class="card-text text-muted">
-                            Location: {{ item.project.location }}<br>
-                            Type: {{ item.project.get_project_type_display }} <br>
-                            Capacity: {{ item.project.feasibility.suggested_capacity }}kW
-                        </p>
+                        <p class="card-text text-muted small mb-1"><i class="fa-solid fa-location-dot me-2" style="color: #f28b00;"></i> Location: {{ item.project.location }}</p>
+                        <p class="card-text text-muted small mb-1"><i class="fa-solid fa-solar-panel me-2" style="color: #f28b00;"></i> Type: {{ item.project.get_project_type_display }}</p>
+                        <p class="card-text text-muted small mb-0"><i class="fa-solid fa-bolt me-2" style="color: #f28b00;"></i> Capacity: {{ item.project.feasibility.suggested_capacity }}kW</p>
                     </div>
 
                 </div>
             </div>
             {% endfor %}
+
+            <!-- Padding logic -->
+            {% if project_data|length == 0 %}
+            <div class="col-md-4">
+                <div class="card project-card shadow-sm border-0 h-100 rounded-4 overflow-hidden">
+                    <img src="/static/images/home.png" class="card-img-top" style="height: 250px; object-fit: cover;">
+                    <div class="card-body p-4">
+                        <h5 class="card-title fw-bold mb-3" style="color: #00234b;">5kW Residential Solar</h5>
+                        <p class="card-text text-muted small mb-1"><i class="fa-solid fa-location-dot me-2" style="color: #f28b00;"></i> Location: New Delhi</p>
+                        <p class="card-text text-muted small mb-1"><i class="fa-solid fa-solar-panel me-2" style="color: #f28b00;"></i> Type: On-Grid</p>
+                        <p class="card-text text-muted small mb-0"><i class="fa-solid fa-bolt me-2" style="color: #f28b00;"></i> Capacity: 5kW</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card project-card shadow-sm border-0 h-100 rounded-4 overflow-hidden">
+                    <img src="/static/images/com.png" class="card-img-top" style="height: 250px; object-fit: cover;">
+                    <div class="card-body p-4">
+                        <h5 class="card-title fw-bold mb-3" style="color: #00234b;">100kW Commercial Solar</h5>
+                        <p class="card-text text-muted small mb-1"><i class="fa-solid fa-location-dot me-2" style="color: #f28b00;"></i> Location: Gurugram</p>
+                        <p class="card-text text-muted small mb-1"><i class="fa-solid fa-solar-panel me-2" style="color: #f28b00;"></i> Type: Hybrid</p>
+                        <p class="card-text text-muted small mb-0"><i class="fa-solid fa-bolt me-2" style="color: #f28b00;"></i> Capacity: 100kW</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card project-card shadow-sm border-0 h-100 rounded-4 overflow-hidden">
+                    <img src="/static/images/on-grid.jpg" class="card-img-top" style="height: 250px; object-fit: cover;">
+                    <div class="card-body p-4">
+                        <h5 class="card-title fw-bold mb-3" style="color: #00234b;">500kW Industrial Plant</h5>
+                        <p class="card-text text-muted small mb-1"><i class="fa-solid fa-location-dot me-2" style="color: #f28b00;"></i> Location: Noida</p>
+                        <p class="card-text text-muted small mb-1"><i class="fa-solid fa-solar-panel me-2" style="color: #f28b00;"></i> Type: On-Grid</p>
+                        <p class="card-text text-muted small mb-0"><i class="fa-solid fa-bolt me-2" style="color: #f28b00;"></i> Capacity: 500kW</p>
+                    </div>
+                </div>
+            </div>
+            
+            {% elif project_data|length == 1 %}
+            <div class="col-md-4">
+                <div class="card project-card shadow-sm border-0 h-100 rounded-4 overflow-hidden">
+                    <img src="/static/images/com.png" class="card-img-top" style="height: 250px; object-fit: cover;">
+                    <div class="card-body p-4">
+                        <h5 class="card-title fw-bold mb-3" style="color: #00234b;">100kW Commercial Solar</h5>
+                        <p class="card-text text-muted small mb-1"><i class="fa-solid fa-location-dot me-2" style="color: #f28b00;"></i> Location: Gurugram</p>
+                        <p class="card-text text-muted small mb-1"><i class="fa-solid fa-solar-panel me-2" style="color: #f28b00;"></i> Type: Hybrid</p>
+                        <p class="card-text text-muted small mb-0"><i class="fa-solid fa-bolt me-2" style="color: #f28b00;"></i> Capacity: 100kW</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card project-card shadow-sm border-0 h-100 rounded-4 overflow-hidden">
+                    <img src="/static/images/on-grid.jpg" class="card-img-top" style="height: 250px; object-fit: cover;">
+                    <div class="card-body p-4">
+                        <h5 class="card-title fw-bold mb-3" style="color: #00234b;">500kW Industrial Plant</h5>
+                        <p class="card-text text-muted small mb-1"><i class="fa-solid fa-location-dot me-2" style="color: #f28b00;"></i> Location: Noida</p>
+                        <p class="card-text text-muted small mb-1"><i class="fa-solid fa-solar-panel me-2" style="color: #f28b00;"></i> Type: On-Grid</p>
+                        <p class="card-text text-muted small mb-0"><i class="fa-solid fa-bolt me-2" style="color: #f28b00;"></i> Capacity: 500kW</p>
+                    </div>
+                </div>
+            </div>
+            
+            {% elif project_data|length == 2 %}
+            <div class="col-md-4">
+                <div class="card project-card shadow-sm border-0 h-100 rounded-4 overflow-hidden">
+                    <img src="/static/images/on-grid.jpg" class="card-img-top" style="height: 250px; object-fit: cover;">
+                    <div class="card-body p-4">
+                        <h5 class="card-title fw-bold mb-3" style="color: #00234b;">500kW Industrial Plant</h5>
+                        <p class="card-text text-muted small mb-1"><i class="fa-solid fa-location-dot me-2" style="color: #f28b00;"></i> Location: Noida</p>
+                        <p class="card-text text-muted small mb-1"><i class="fa-solid fa-solar-panel me-2" style="color: #f28b00;"></i> Type: On-Grid</p>
+                        <p class="card-text text-muted small mb-0"><i class="fa-solid fa-bolt me-2" style="color: #f28b00;"></i> Capacity: 500kW</p>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
             
         </div>
     </div>
@@ -52,49 +126,48 @@
 <section class="py-5">
     <div class="container">
         <div class="text-center mb-5">
-            <h2 class="fw-bold">Before & After Installation</h2>
+            <h2 class="fw-bold" style="color: #00234b;">Before & After Installation</h2>
             <p class="text-muted">See the Transformation</p>
         </div>
         <div class="row align-items-center">
-            <div class="col-md-6">
-                <img src="{% static 'images/before.png' %}" class="img-fluid rounded shadow">
+            <div class="col-md-6 mb-4 mb-md-0">
+                <img src="{% static 'images/before.png' %}" class="img-fluid rounded-4 shadow-lg border">
             </div>
             <div class="col-md-6">
-                <img src="{% static 'images/after.png' %}" class="img-fluid rounded shadow">
+                <img src="{% static 'images/after.png' %}" class="img-fluid rounded-4 shadow-lg border">
             </div>
         </div>
     </div>
 </section>
 
-
-<section class="py-5 text-white text-center" style="background: linear-gradient(135deg, #0f5132, #198754);">
+<section class="py-5 text-white text-center" style="background: linear-gradient(135deg, #00234b, #001630);">
     <div class="container">
-        <div class="row">
+        <div class="row g-4">
             <div class="col-md-3">
-                <h2 class="fw-bold">{{ count }}+</h2>
-                <p>Projects Completed</p>
+                <h2 class="fw-bold" style="color: #f28b00;">{{ count|default:"10" }}+</h2>
+                <p class="mb-0">Projects Completed</p>
             </div>
             <div class="col-md-3">
-                <h2 class="fw-bold">{{ capacity|floatformat:0 }}{{unit}}+</h2>
-                <p>Installed Capacity</p>
+                <h2 class="fw-bold" style="color: #f28b00;">{{ capacity|floatformat:0|default:"500" }}{{unit|default:"kW"}}+</h2>
+                <p class="mb-0">Installed Capacity</p>
             </div>
             <div class="col-md-3">
-                <h2 class="fw-bold">98%</h2>
-                <p>Customer Satisfaction</p>
+                <h2 class="fw-bold" style="color: #f28b00;">100%</h2>
+                <p class="mb-0">Customer Satisfaction</p>
             </div>
             <div class="col-md-3">
-                <h2 class="fw-bold">25 Years</h2>
-                <p>Performance Warranty</p>
+                <h2 class="fw-bold" style="color: #f28b00;">25 Years</h2>
+                <p class="mb-0">Performance Warranty</p>
             </div>
         </div>
     </div>
 </section>
 
-<section class="py-5 text-center bg-dark text-white">
+<section class="py-5 text-center bg-light">
     <div class="container">
-        <h2 class="fw-bold">Ready to Start Your Solar Project?</h2>
-        <p class="mb-4">Get a free site inspection today.</p>
-        <a href="{% url 'contact' %}" class="btn btn-success btn-lg px-4">Book Free Inspection</a>
+        <h2 class="fw-bold" style="color: #00234b;">Ready to Start Your Solar Project?</h2>
+        <p class="mb-4 text-muted">Get a free site inspection today.</p>
+        <a href="{% url 'contact' %}" class="btn px-5 py-3 fw-bold shadow" style="background-color: #f28b00; color: white; border-radius: 30px;">Book Free Inspection <i class="fa-solid fa-arrow-right ms-2"></i></a>
     </div>
 </section>
 

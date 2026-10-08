@@ -139,18 +139,13 @@ MEDIA_URL = '/media/'
 
 MEDIA_ROOT = BASE_DIR/'media'
 
-
-# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-
 EMAIL_BACKEND = 'users.custom_email_backend.CustomEmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True       # Important: TLS on port 587
 EMAIL_USE_SSL = False 
 EMAIL_HOST_USER = 'sajmiya@gmail.com'
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', 'cfilwejcaspfmbzy')
+EMAIL_HOST_PASSWORD = 'cfilwejcaspfmbzy'
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 
@@ -160,4 +155,5 @@ CELERY_TASK_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'Asia/Kolkata'
 
 
-GROQ_API_KEY = os.environ.get('GROQ_API_KEY', '')
+import os
+GROQ_API_KEY = os.environ.get("GROQ_API_KEY", "")

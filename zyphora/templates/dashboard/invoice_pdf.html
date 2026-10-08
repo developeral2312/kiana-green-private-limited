@@ -134,11 +134,11 @@
 <tr><th>Description</th><th>Amount</th></tr>
 <tr>
 <td>Project Work</td>
-<td>₹{{ invoice.total_amount }}</td>
+<td>Rs. {{ invoice.total_amount }}</td>
 </tr>
 </table>
 
-<h4>Total: ₹{{ invoice.total_amount }}</h4>
+<h4>Total: Rs. {{ invoice.total_amount }}</h4>
 
 <h4>Payments</h4>
 <table>
@@ -147,7 +147,7 @@
 <tr>
 <td>{{ p.payment_date }}</td>
 <td>{{ p.method }}</td>
-<td>₹{{ p.amount }}</td>
+<td>Rs. {{ p.amount }}</td>
 </tr>
 {% endfor %}
 </table>

@@ -3,7 +3,6 @@ from django.utils import timezone
 from .models import Project
 from users.utils import create_notification
 from users.models import CustomUser
-
 @shared_task
 def check_sla_and_escalate():
     """ Escalation Matrix Engine (SLA/TAT) """
@@ -11,8 +10,6 @@ def check_sla_and_escalate():
     
     for project in delayed_projects:
         days_delayed = (timezone.now().date() - project.end_date).days
-        
-        # Escalate if delayed by more than 3 days
         if days_delayed >= 3:
             admins = CustomUser.objects.filter(role='admin')
             for admin in admins:
@@ -22,12 +19,10 @@ def check_sla_and_escalate():
                     message=f"Project {project.project_id or project.title} is delayed by {days_delayed} days! Current Status: {project.get_status_display()}.",
                     category="system"
                 )
-
 import os
 import shutil
 from datetime import datetime
 from django.conf import settings
-
 @shared_task
 def backup_database_and_media():
     """ Enterprise Disaster Recovery Backup Cron """
@@ -37,17 +32,10 @@ def backup_database_and_media():
         
         timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
         
-        # Backup DB
         db_path = os.path.join(settings.BASE_DIR, 'db.sqlite3')
         db_backup_path = os.path.join(backup_dir, f'db_backup_{timestamp}.sqlite3')
         if os.path.exists(db_path):
             shutil.copy2(db_path, db_backup_path)
-            
-        # Backup Media
-        # skipping massive media copies for dev environment speed, but logic is here:
-        # shutil.make_archive(os.path.join(backup_dir, f'media_backup_{timestamp}'), 'zip', settings.MEDIA_ROOT)
-        
-        # Notify Admins
         admins = CustomUser.objects.filter(role='admin')
         for admin in admins:
             create_notification(

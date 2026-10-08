@@ -1,224 +1,89 @@
-/* ULTRA PREMIUM HOME CSS */
-
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
+/* SolarSmiths Inspired Premium CSS */
+@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700;800&display=swap');
 
 body {
-    font-family: 'Outfit', sans-serif;
+    font-family: 'Rubik', sans-serif;
     color: #4b5563;
-    background-color: #f8fafc;
+    background-color: #ffffff;
 }
 
-.text-dark-navy { color: #0f172a !important; }
-.text-gradient-gold {
-    background: linear-gradient(90deg, #fbbf24 0%, #f59e0b 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-.bg-dark-navy { background-color: #0f172a !important; }
+/* Colors based on typical SolarSmiths / Premium Solar designs */
+.ss-text-primary { color: #f28b00 !important; } /* SolarSmiths Orange/Yellowish */
+.ss-bg-primary { background-color: #f28b00 !important; }
+.ss-text-dark { color: #00234b !important; } /* Deep Navy */
+.ss-bg-dark { background-color: #00234b !important; }
+.ss-highlight { color: #f28b00; }
+
 .tracking-wider { letter-spacing: 0.1em; }
-.section-padding { padding: 100px 0; }
+.section-padding { padding: 80px 0; }
 .max-w-700 { max-width: 700px; }
 
-/* Form Resets for Premium Look */
-input.premium-input, select.premium-input, textarea.premium-input {
-    border: 1px solid #e2e8f0;
-    border-radius: 8px;
-    padding: 12px 16px;
-    background: #f8fafc;
-    transition: all 0.3s;
-}
-input.premium-input:focus, select.premium-input:focus {
-    border-color: #22c55e;
-    box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.1);
-    background: white;
-}
-
-/* =======================
-   HERO SECTION
-======================= */
-.premium-hero {
-    min-height: 95vh;
-    background: url('/static/images/hero.png') no-repeat center center/cover;
-    background-attachment: fixed;
-    display: flex;
-    align-items: center;
-}
-.hero-bg-overlay {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(15, 23, 42, 0.7) 100%);
-    z-index: 1;
-}
-.premium-badge {
-    display: inline-flex;
-    align-items: center;
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    padding: 8px 20px;
-    border-radius: 50px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-.icon-circle {
-    width: 45px;
-    height: 45px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.2rem;
-}
-.bg-success-subtle { background-color: #dcfce7 !important; color: #16a34a !important; }
-.bg-warning-subtle { background-color: #fef3c7 !important; color: #d97706 !important; }
-.bg-info-subtle { background-color: #e0f2fe !important; color: #0284c7 !important; }
-.bg-primary-subtle { background-color: #dbeafe !important; color: #2563eb !important; }
-
-/* Lead Form Glass */
-.glass-form-card {
-    background: rgba(15, 23, 42, 0.65); /* Dark Navy glass */
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border-radius: 24px;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-}
-.glass-form-card input.premium-input, .glass-form-card select.premium-input {
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: white;
-}
-.glass-form-card input.premium-input::placeholder {
-    color: rgba(255, 255, 255, 0.5);
-}
-.glass-form-card select.premium-input option {
-    color: #0f172a;
-}
-.glass-form-card input.premium-input:focus, .glass-form-card select.premium-input:focus {
-    background: rgba(255, 255, 255, 0.2);
-}
-.btn-premium-submit {
-    background: linear-gradient(to right, #16a34a, #15803d);
+/* Buttons */
+.ss-btn-primary {
+    background-color: #f28b00;
     color: white;
     border: none;
-    border-radius: 12px;
-    transition: transform 0.3s, box-shadow 0.3s;
-}
-.btn-premium-submit:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 25px rgba(22, 163, 74, 0.4);
-    color: white;
-}
-
-/* =======================
-   TRUSTED TICKER
-======================= */
-.grayscale-hover h4 {
-    transition: all 0.3s;
-    filter: grayscale(100%);
-    opacity: 0.6;
-}
-.grayscale-hover h4:hover {
-    filter: grayscale(0%);
-    opacity: 1;
-}
-
-/* =======================
-   ABOUT OVERVIEW
-======================= */
-.floating-stat-card {
-    position: absolute;
-    bottom: -20px;
-    right: 20px;
-    border: 1px solid rgba(0,0,0,0.05);
-}
-
-/* =======================
-   WHY CHOOSE US
-======================= */
-.premium-feature-card {
-    background: white;
-    padding: 40px 30px;
-    border-radius: 20px;
-    height: 100%;
     transition: all 0.3s ease;
-    border: 1px solid #f1f5f9;
 }
-.premium-feature-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 20px 40px -10px rgba(0,0,0,0.1);
-    border-color: #e2e8f0;
-}
-.feature-icon {
-    width: 65px;
-    height: 65px;
-    border-radius: 16px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.8rem;
-}
-.bg-blue-light { background: #eff6ff; }
-.bg-green-light { background: #f0fdf4; }
-.bg-warning-light { background: #fffbeb; }
-.bg-purple-light { background: #faf5ff; color: #9333ea; }
-.bg-danger-light { background: #fef2f2; }
-.bg-dark-light { background: #f8fafc; }
-
-/* =======================
-   PROCESS
-======================= */
-.process-card {
-    position: relative;
-    padding: 30px 20px;
-    background: rgba(255,255,255,0.03);
-    border-radius: 20px;
-    border: 1px solid rgba(255,255,255,0.05);
-    height: 100%;
-    transition: all 0.3s;
-}
-.process-card:hover {
-    background: rgba(255,255,255,0.08);
-    transform: translateY(-5px);
-}
-.process-number {
-    width: 50px;
-    height: 50px;
-    background: #475569;
+.ss-btn-primary:hover {
+    background-color: #d17800;
     color: white;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.5rem;
-    font-weight: 800;
-    margin: 0 auto;
-    position: relative;
-    z-index: 2;
-    border: 4px solid #0f172a;
-}
-.process-line {
-    position: absolute;
-    top: 55px;
-    left: 10%;
-    right: 10%;
-    height: 2px;
-    background: dashed 2px rgba(255,255,255,0.2);
-    z-index: 0;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(242, 139, 0, 0.3) !important;
 }
 
-/* =======================
-   SERVICES & PROJECTS
-======================= */
-.service-card-premium {
-    transition: all 0.4s ease;
+/* Hero Section */
+.ss-hero-section {
+    min-height: 100vh;
+    position: relative;
+    overflow: hidden;
 }
-.service-card-premium:hover {
+.hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to right, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0.1) 100%);
+    z-index: 1;
+}
+.ss-subtitle {
+    color: #f28b00;
+    font-weight: 600;
+}
+.ss-title {
+    font-size: 4.5rem;
+    line-height: 1.1;
+}
+.ss-desc {
+    font-size: 1.25rem;
+    font-weight: 400;
+}
+
+/* Stats Section */
+.stat-item h2 {
+    font-size: 2.5rem;
+}
+.ss-stats-section {
+    border-radius: 12px;
+}
+
+/* Services Section */
+.ss-service-card {
+    transition: all 0.3s ease;
+}
+.ss-service-card:hover {
     transform: translateY(-10px);
-    box-shadow: 0 25px 50px -12px rgba(0,0,0,0.15) !important;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1) !important;
 }
+.ss-link {
+    color: #f28b00;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+.ss-link:hover {
+    color: #00234b;
+}
+
+/* Projects Section */
 .project-card-premium {
     transition: all 0.4s ease;
 }
@@ -229,7 +94,7 @@ input.premium-input:focus, select.premium-input:focus {
 .project-overlay {
     position: absolute;
     inset: 0;
-    background: linear-gradient(to top, rgba(15, 23, 42, 0.9) 0%, transparent 100%);
+    background: linear-gradient(to top, rgba(0, 35, 75, 0.9) 0%, transparent 100%);
     opacity: 0;
     transition: opacity 0.3s;
 }
@@ -237,35 +102,31 @@ input.premium-input:focus, select.premium-input:focus {
     opacity: 1;
 }
 
-/* =======================
-   REVIEWS
-======================= */
-.review-card-modern {
-    transition: all 0.3s ease;
+/* Forms */
+.ss-input {
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 12px 15px;
+    transition: all 0.3s;
 }
-.review-card-modern:hover {
-    box-shadow: 0 20px 40px -10px rgba(0,0,0,0.1) !important;
-    transform: translateY(-5px);
-}
-
-/* =======================
-   CTA BANNER
-======================= */
-.cta-banner {
-    background: url('/static/images/energy.avif') no-repeat center center/cover;
-    background-attachment: fixed;
-}
-.cta-banner::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: rgba(15, 23, 42, 0.85);
-    z-index: 1;
+.ss-input:focus {
+    border-color: #f28b00;
+    box-shadow: 0 0 0 3px rgba(242, 139, 0, 0.1);
+    background-color: white;
 }
 
 @media (max-width: 991px) {
-    .floating-stat-card {
-        right: 20px;
-        bottom: -20px;
+    .ss-title {
+        font-size: 2.5rem;
+    }
+    .stat-item.border-start {
+        border-left: none !important;
+    }
+    .ss-hero-section {
+        text-align: center;
+    }
+    .hero-overlay {
+        background: rgba(0, 35, 75, 0.7);
     }
 }

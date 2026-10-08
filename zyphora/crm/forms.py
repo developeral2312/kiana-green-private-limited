@@ -89,6 +89,7 @@ class LeadUpdateForm(forms.ModelForm):
 
         # 🔹 Filter sales, engineer, and admin users
         self.fields['assigned_to'].queryset = CustomUser.objects.filter(role__in=['sales', 'engineer', 'admin', 'staff'])
+        self.fields['assigned_to'].empty_label = 'Select User'
 
 
 class SiteVisitForm(forms.ModelForm):
@@ -114,6 +115,7 @@ class SiteVisitForm(forms.ModelForm):
 
         # 🔹 Filter engineer and admin users
         self.fields['engineer'].queryset = CustomUser.objects.filter(role__in=['engineer', 'admin', 'staff'])
+        self.fields['engineer'].empty_label = 'Select Engineer'
 
 class UpdateVisitForm(forms.ModelForm):
     class Meta:

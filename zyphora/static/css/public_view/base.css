@@ -37,25 +37,27 @@ img {
 }
 
 /* ================= GLOBAL FONT ================= */
+@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700;800&display=swap');
+
 body {
-    font-family: 'Outfit', sans-serif;
+    font-family: 'Rubik', sans-serif;
+    background-color: #f8fafc;
+    color: #4b5563;
 }
 
 /* ================= NAVBAR — BASE ================= */
 
 .custom-navbar {
-    position: absolute;
+    position: sticky;
     top: 0;
     left: 0;
     width: 100%;
-    /* Premium Glassmorphism */
-    background: rgba(15, 23, 42, 0.85) !important;
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    z-index: 100;
-    padding: 0.8rem 0;           
+    background: #ffffff !important;
+    border-bottom: 1px solid #e2e8f0;
+    z-index: 1000;
+    padding: 1rem 0;           
     transition: all 0.4s ease;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
 }
 
 /* Brand: keep image + text on one line, never shrink */
@@ -78,14 +80,17 @@ body {
 
 /* Orange "SOLAR" text */
 .text-solar {
-    color: #2ecc71;
+    color: #f28b00; /* Solarsmiths Orange */
 }
 
-/* Toggler: never wraps, always right-aligned */
+/* Toggler */
 .custom-navbar .navbar-toggler {
     flex-shrink: 0;
-    border-color: rgba(255, 255, 255, 0.2);
+    border-color: #e2e8f0;
     padding: 6px 10px;
+}
+.custom-navbar .navbar-toggler-icon {
+    filter: invert(1); /* makes the hamburger icon dark if it was white */
 }
 
 .custom-navbar .navbar-toggler:focus {
@@ -95,16 +100,16 @@ body {
 
 /* Nav links */
 .custom-navbar .nav-link {
-    color: rgba(255, 255, 255, 0.85) !important;
-    font-weight: 500;
+    color: #00234b !important; /* Deep Navy */
+    font-weight: 600;
     font-size: 1.05rem;
-    margin: 0 0.8rem;
+    margin: 0 1rem;
     position: relative;
     transition: color 0.3s ease;
 }
 
 .custom-navbar .nav-link:hover, .custom-navbar .nav-link.active {
-    color: #2ecc71 !important;
+    color: #f28b00 !important;
 }
 
 /* Premium Underline Animation on Hover */
@@ -114,9 +119,9 @@ body {
     width: 0;
     height: 2px;
     display: block;
-    bottom: 2px;
+    bottom: -5px;
     left: 0;
-    background: #2ecc71;
+    background: #f28b00;
     transition: width 0.3s ease;
 }
 
@@ -130,23 +135,22 @@ body {
 }
 
 .custom-navbar .btn-login {
-    background: linear-gradient(135deg, #2ecc71, #27ae60);
+    background-color: #f28b00;
     color: #ffffff !important;
-    padding: 0.5rem 1.5rem;
+    padding: 0.6rem 1.8rem;
     border-radius: 30px;
     font-weight: 600;
     margin-left: 1rem;
     display: inline-flex;
     align-items: center;
-    box-shadow: 0 4px 15px rgba(46, 204, 113, 0.3);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: none;
     transition: all 0.3s ease;
 }
 
 .custom-navbar .btn-login:hover {
-    background: linear-gradient(135deg, #27ae60, #1e8449);
-    transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(46, 204, 113, 0.5);
+    background-color: #d17800;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(242, 139, 0, 0.3) !important;
     color: #ffffff !important;
 }
 

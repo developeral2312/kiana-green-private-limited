@@ -59,6 +59,33 @@ def delete_review(request, rid):
     return redirect(review_list)
 
 
+@login_required(login_url='/users/login')
+def reply_review(request, rid):
+    if request.method == 'POST':
+        review = get_object_or_404(Review, id=rid)
+        subject = request.POST.get('subject')
+        message = request.POST.get('message')
+        
+        if review.email and subject and message:
+            try:
+                from django.core.mail import send_mail
+                from django.conf import settings
+                send_mail(
+                    subject,
+                    message,
+                    settings.DEFAULT_FROM_EMAIL,
+                    [review.email],
+                    fail_silently=False,
+                )
+                messages.success(request, f"Reply sent successfully to {review.email}")
+            except Exception as e:
+                messages.error(request, f"Failed to send email: {str(e)}")
+        else:
+            messages.error(request, "Missing required fields or reviewer email.")
+            
+    return redirect('review')
+
+
 # ======================================================
 # LEAD MANAGEMENT
 # ======================================================

@@ -4,6 +4,7 @@ from .views import *
 
 urlpatterns = [ 
     path('review/',review_list,name='review'),
+    path('reply-review/<int:rid>/',reply_review,name='reply_review'),
     path('delete-review/<int:rid>/',delete_review,name='delete_review'),
 
     path('leads/', lead_list, name='lead_list'),
