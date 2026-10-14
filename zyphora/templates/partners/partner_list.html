@@ -1,0 +1,239 @@
+{% extends 'dashboard/dashboard.html' %}
+{% load static %}
+
+{% block content %}
+<nav aria-label="breadcrumb" class="mb-3">
+  <ol class="breadcrumb mb-0">
+    <li class="breadcrumb-item"><a href="{% url 'admin' %}">Admin Dashboard</a></li>
+    <li class="breadcrumb-item active">Partners & Franchises</li>
+  </ol>
+</nav>
+
+<!-- Executive Hero Card -->
+<div class="executive-hero-card mb-4">
+    <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+        <div class="d-flex align-items-center gap-3">
+            <div class="hero-icon-box">
+                <i class="bi bi-diagram-3-fill"></i>
+            </div>
+            <div>
+                <div class="d-flex align-items-center gap-2">
+                    <h3 class="hero-heading mb-0">Franchise & Dealer Network</h3>
+                    <span class="hero-count-badge">{{ total_count }} Partners</span>
+                </div>
+                <p class="hero-subtext mb-0">Monitor channel partner sales, regional dealer inventories & commission distributions</p>
+            </div>
+        </div>
+
+        <div class="d-flex flex-wrap gap-2">
+            <a href="{% url 'all_partner_leads' %}" class="btn btn-outline-primary px-3 py-2" style="border-radius: 10px; font-weight: 600;">
+                <i class="bi bi-people me-1"></i> Partner Leads
+            </a>
+            <a href="{% url 'all_dealer_stocks' %}" class="btn btn-outline-secondary px-3 py-2" style="border-radius: 10px; font-weight: 600;">
+                <i class="bi bi-box-seam me-1"></i> Dealer Stocks
+            </a>
+            <a href="{% url 'add_partner' %}" class="btn-hero-action">
+                <i class="bi bi-plus-lg"></i> Add Partner
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- KPI Metric Cards -->
+<div class="row g-3 mb-4">
+    <div class="col-sm-6 col-xl-3">
+        <div class="card shadow-sm border-0 p-3 h-100" style="border-left: 4px solid #2563eb !important;">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <span class="text-secondary small fw-bold text-uppercase">Total Network</span>
+                    <h3 class="fw-bold text-dark mb-0 mt-1">{{ total_count }}</h3>
+                </div>
+                <div class="hero-icon-box" style="width: 40px; height: 40px; background: #eff6ff; color: #2563eb; border-color: #bfdbfe;">
+                    <i class="bi bi-diagram-3"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-6 col-xl-3">
+        <div class="card shadow-sm border-0 p-3 h-100" style="border-left: 4px solid #0891b2 !important;">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <span class="text-secondary small fw-bold text-uppercase">Franchises</span>
+                    <h3 class="fw-bold text-dark mb-0 mt-1">{{ franchise_count }}</h3>
+                </div>
+                <div class="hero-icon-box" style="width: 40px; height: 40px; background: #ecfeff; color: #0891b2; border-color: #a5f3fc;">
+                    <i class="bi bi-shop-window"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-6 col-xl-3">
+        <div class="card shadow-sm border-0 p-3 h-100" style="border-left: 4px solid #d97706 !important;">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <span class="text-secondary small fw-bold text-uppercase">Dealers</span>
+                    <h3 class="fw-bold text-dark mb-0 mt-1">{{ dealer_count }}</h3>
+                </div>
+                <div class="hero-icon-box" style="width: 40px; height: 40px; background: #fffbeb; color: #d97706; border-color: #fde68a;">
+                    <i class="bi bi-truck"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-6 col-xl-3">
+        <div class="card shadow-sm border-0 p-3 h-100" style="border-left: 4px solid #059669 !important;">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <span class="text-secondary small fw-bold text-uppercase">Partner Leads</span>
+                    <h3 class="fw-bold text-dark mb-0 mt-1">{{ total_leads }}</h3>
+                </div>
+                <div class="hero-icon-box" style="width: 40px; height: 40px; background: #ecfdf5; color: #059669; border-color: #a7f3d0;">
+                    <i class="bi bi-person-check"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Filters & Search Toolbar -->
+<div class="filter-toolbar-card mb-4">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+        <!-- Category Tabs -->
+        <div class="d-flex gap-2">
+            <a href="?{% if q %}q={{ q }}&{% endif %}" class="btn btn-sm {% if not partner_type %}btn-primary{% else %}btn-outline-secondary{% endif %}" style="border-radius: 8px; font-weight: 600;">
+                All <span class="badge bg-light text-dark ms-1">{{ total_count }}</span>
+            </a>
+            <a href="?type=franchise{% if q %}&q={{ q }}{% endif %}" class="btn btn-sm {% if partner_type == 'franchise' %}btn-primary{% else %}btn-outline-secondary{% endif %}" style="border-radius: 8px; font-weight: 600;">
+                Franchises <span class="badge bg-light text-dark ms-1">{{ franchise_count }}</span>
+            </a>
+            <a href="?type=dealer{% if q %}&q={{ q }}{% endif %}" class="btn btn-sm {% if partner_type == 'dealer' %}btn-primary{% else %}btn-outline-secondary{% endif %}" style="border-radius: 8px; font-weight: 600;">
+                Dealers <span class="badge bg-light text-dark ms-1">{{ dealer_count }}</span>
+            </a>
+        </div>
+
+        <!-- Search form -->
+        <form method="GET" class="d-flex gap-2" style="max-width: 360px; width: 100%;">
+            {% if partner_type %}
+            <input type="hidden" name="type" value="{{ partner_type }}">
+            {% endif %}
+            <div class="search-input-wrap">
+                <i class="bi bi-search search-icon"></i>
+                <input type="text" name="q" value="{{ q }}" class="form-control" placeholder="Search partner, contact, phone...">
+            </div>
+            {% if q %}
+            <a href="?{% if partner_type %}type={{ partner_type }}{% endif %}" class="btn btn-outline-secondary">
+                <i class="bi bi-x"></i>
+            </a>
+            {% endif %}
+            <button class="btn btn-primary px-3" type="submit">Search</button>
+        </form>
+    </div>
+</div>
+
+<!-- Partner Table Card -->
+<div class="card shadow-sm border-0 mb-4 overflow-hidden">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th>Partner / Company</th>
+                        <th>Type</th>
+                        <th>Contact Person</th>
+                        <th>Commission</th>
+                        <th class="text-center">Leads</th>
+                        <th class="text-center">Stock Items</th>
+                        <th>Created</th>
+                        <th class="text-end pe-3">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for p in partners %}
+                    <tr>
+                        <td>
+                            <div class="d-flex align-items-center gap-2">
+                                <div class="hero-icon-box" style="width: 34px; height: 34px; font-size: 0.95rem; border-radius: 8px;">
+                                    <i class="bi bi-building"></i>
+                                </div>
+                                <div>
+                                    <a href="{% url 'partner_detail' p.id %}" class="fw-bold text-decoration-none text-dark">
+                                        {{ p.name }}
+                                    </a>
+                                    {% if p.address %}
+                                    <div class="text-secondary small text-truncate" style="max-width: 200px;" title="{{ p.address }}">
+                                        <i class="bi bi-geo-alt me-1"></i>{{ p.address }}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </td>
+
+                        <td>
+                            {% if p.partner_type == 'franchise' %}
+                                <span class="badge bg-primary"><i class="bi bi-shop me-1"></i>Franchise</span>
+                            {% else %}
+                                <span class="badge bg-info text-dark"><i class="bi bi-truck me-1"></i>Dealer</span>
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            <div class="fw-semibold text-dark small">{{ p.contact_person }}</div>
+                            <div class="small text-secondary">
+                                <a href="tel:{{ p.phone }}" class="text-decoration-none text-secondary">
+                                    <i class="bi bi-telephone me-1"></i>{{ p.phone }}
+                                </a>
+                            </div>
+                        </td>
+
+                        <td>
+                            <span class="badge bg-success fw-bold">
+                                {{ p.commission_rate }}%
+                            </span>
+                        </td>
+
+                        <td class="text-center">
+                            <span class="badge bg-light text-dark border">
+                                <i class="bi bi-people me-1 text-primary"></i>{{ p.leads.count }}
+                            </span>
+                        </td>
+
+                        <td class="text-center">
+                            <span class="badge bg-light text-dark border">
+                                <i class="bi bi-box-seam me-1 text-purple"></i>{{ p.stocks.count }}
+                            </span>
+                        </td>
+
+                        <td>
+                            <span class="text-secondary small">{{ p.created_at|date:"M d, Y" }}</span>
+                        </td>
+
+                        <td class="text-end pe-3">
+                            <a href="{% url 'partner_detail' p.id %}" class="btn btn-sm btn-outline-primary px-3" style="border-radius: 8px;">
+                                Manage <i class="bi bi-arrow-right ms-1"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="8" class="text-center p-5">
+                            <div class="hero-icon-box mx-auto mb-3" style="width: 56px; height: 56px; font-size: 1.6rem;">
+                                <i class="bi bi-diagram-3"></i>
+                            </div>
+                            <h6 class="fw-bold text-dark mt-2">No Partners Found</h6>
+                            <p class="text-muted mb-3 small">Onboard franchises and dealers to expand your solar distribution.</p>
+                            <a href="{% url 'add_partner' %}" class="btn-hero-action">
+                                <i class="bi bi-plus-lg"></i> Add Partner
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -90,18 +90,24 @@ def dashboard(request):
         return redirect(engineer_dashboard)
     elif request.user.role == 'accountant':
         return redirect(accountant_dashboard)
-    elif request.user.role == 'sales':
+    elif request.user.role in ['sales', 'manager']:
         return redirect(sales_dashboard)
     elif request.user.role == 'staff':
         return redirect(staff_dashboard)
     elif request.user.role == 'liaison':
         return redirect(liaison_dashboard)
+    elif request.user.role == 'partner':
+        return redirect('partner_portal_dashboard')
+    elif request.user.role == 'subcontractor':
+        return redirect(subcontractor_dashboard_view)
+    else:
+        return redirect(subcontractor_dashboard_view)
 
 
 
 @login_required(login_url='/users/login')
 def admin_dashboard(request):
-    if request.user.role is None:
+    if request.user.role != 'admin':
         return redirect('dashboard')
 
     # ---- Leads ----
@@ -142,6 +148,26 @@ def admin_dashboard(request):
     status_labels = [choice[1] for choice in Project.STATUS_CHOICES if choice[0] != 'completed']
     status_counts = [Project.objects.filter(status=status).count() for status in statuses]
 
+    # ---- Inventory & Stock Alerts ----
+    low_stock_count = 0
+    try:
+        from procurement.models import Stock
+        stocks = Stock.objects.select_related('material').all()
+        low_stock_count = sum(1 for s in stocks if s.quantity <= (s.material.minimum_stock or 5))
+    except Exception:
+        low_stock_count = 0
+
+    # ---- Pending Approvals ----
+    pending_approvals = 0
+    try:
+        from users.models import ApprovalRequest
+        pending_approvals = ApprovalRequest.objects.filter(status='pending').count()
+    except Exception:
+        pending_approvals = 0
+
+    # ---- Financial Collection Ratio ----
+    collection_rate = round((total_collected / total_revenue * 100), 1) if total_revenue > 0 else 0
+
     # ---- Context ----
     context = {
         "total_leads": total_leads,
@@ -159,6 +185,9 @@ def admin_dashboard(request):
         "pending_net_metering": pending_net_metering,
         "pending_subsidy": pending_subsidy,
         "delayed_projects": delayed_projects,
+        "low_stock_count": low_stock_count,
+        "pending_approvals": pending_approvals,
+        "collection_rate": collection_rate,
         "project_types": project_types,
         "project_counts": project_counts,
         "statuses": status_labels,
@@ -170,7 +199,6 @@ def admin_dashboard(request):
 
 @login_required(login_url='/users/login')
 def engineer_dashboard(request):
-
     if request.user.role != 'engineer':
         return redirect('dashboard')
 
@@ -186,22 +214,24 @@ def engineer_dashboard(request):
     profile = get_object_or_404(Employee, user=request.user)
 
     # ================= KPI =================
-    p_assigned = Project.objects.filter(engineer=profile).count()
-    p_active = Project.objects.filter(engineer=profile).exclude(status='completed').count()
-    p_completed = Project.objects.filter(engineer=profile, status='completed').count()
+    projects_qs = Project.objects.filter(
+        Q(engineer=profile) | Q(installation_tasks__assigned_to=request.user)
+    ).distinct()
 
-    tasks = Task.objects.filter(
-        assigned_to=request.user,
-        status__in=['new', 'in_progress']
-    ).count()
+    p_assigned = projects_qs.count()
+    p_active = projects_qs.exclude(status='completed').count()
+    p_completed = projects_qs.filter(status='completed').count()
 
-    # ================= CHART DATA =================
+    tasks = (
+        Task.objects.filter(assigned_to=request.user, status__in=['new', 'in_progress']).count() +
+        InstallationTask.objects.filter(assigned_to=request.user, status__in=['new', 'in_progress']).count()
+    )
+
     project_status = list(
         Project.objects.filter(engineer=profile)
         .values('status')
         .annotate(count=Count('id'))
     )
-
     project_type = list(
         Project.objects.filter(engineer=profile)
         .values('project_type')
@@ -219,17 +249,12 @@ def engineer_dashboard(request):
         .values('status')
         .annotate(count=Count('id'))
     )
-
-    # ================= TODAY FILTER =================
     today = timezone.localdate()
-
-    # 🔹 Today's Tasks
     todays_tasks = Task.objects.filter(
         assigned_to=request.user,
         due_date=today
     ).order_by('-created_at')[:5]
 
-    # 🔹 Upcoming Site Visits
     site_visits = SiteVisit.objects.filter(
         engineer=request.user,
         scheduled_date__gte=today
@@ -256,8 +281,6 @@ def engineer_dashboard(request):
     }
 
     return render(request, 'dashboard/engineer/engineer.html', context)
-
-
 @login_required(login_url='/users/login')
 def accountant_dashboard(request):
 
@@ -334,10 +357,8 @@ def accountant_dashboard(request):
 
 @login_required(login_url='/users/login')
 def sales_dashboard(request):
-
-    if request.user.role != 'sales':
+    if request.user.role not in ['sales', 'manager']:
         return redirect('dashboard')
-
     # Force password change
     if request.user.must_change_password:
         create_notification(
@@ -350,7 +371,10 @@ def sales_dashboard(request):
 
     profile = get_object_or_404(Employee, user=request.user)
 
-    leads = Lead.objects.filter(assigned_to=request.user)
+    if request.user.role == 'manager':
+        leads = Lead.objects.all()
+    else:
+        leads = Lead.objects.filter(assigned_to=request.user)
 
     # ================= KPIs =================
 
@@ -444,10 +468,10 @@ def staff_dashboard(request):
 
     today = timezone.localdate()
     context = {
-        "task_count": Task.objects.filter(assigned_to=request.user).count(),
-        "todays_tasks": Task.objects.filter(assigned_to=request.user, due_date=date.today()).count(),
-        "pending_tasks": Task.objects.filter(assigned_to=request.user, status='pending').count(),
-        "overdue_tasks": Task.objects.filter(assigned_to=request.user, status='pending', due_date__lt=date.today()).count(),
+        "task_count": Task.objects.filter(assigned_to=request.user).count() + InstallationTask.objects.filter(assigned_to=request.user).count(),
+        "todays_tasks": Task.objects.filter(assigned_to=request.user, due_date=today).count() + InstallationTask.objects.filter(assigned_to=request.user, due_date=today).count(),
+        "pending_tasks": Task.objects.filter(assigned_to=request.user, status='pending').count() + InstallationTask.objects.filter(assigned_to=request.user, status__in=['new', 'in_progress']).count(),
+        "overdue_tasks": Task.objects.filter(assigned_to=request.user, status='pending', due_date__lt=today).count() + InstallationTask.objects.filter(assigned_to=request.user, due_date__lt=today).exclude(status='completed').count(),
         "installation_count": InstallationTask.objects.filter(assigned_to=request.user).count(),
         "project_count": Project.objects.filter(installation_tasks__assigned_to=request.user).distinct().count(),
         'profile': profile,
@@ -467,6 +491,9 @@ def staff_dashboard(request):
 
 @login_required(login_url='/users/login')
 def liaison_dashboard(request):
+    if request.user.role not in ['liaison', 'admin']:
+        return redirect('dashboard')
+
     user = request.user
 
     tasks = LicensingTask.objects.filter(assigned_to=user)
@@ -489,8 +516,8 @@ def liaison_dashboard(request):
         "licensing_completed": tasks.filter(status='completed').count(),
         "pending_tasks": tasks.filter(status='new').count(),
 
-        "todays_tasks": tasks.filter(due_date=now().date()),
-        "upcoming_tasks": tasks.filter(due_date__gt=now().date())[:5],
+        "todays_tasks": tasks.filter(due_date=timezone.localdate()),
+        "upcoming_tasks": tasks.filter(due_date__gt=timezone.localdate())[:5],
 
         # chart data
         "step_labels": step_labels,
@@ -500,6 +527,51 @@ def liaison_dashboard(request):
     }
 
     return render(request, 'dashboard/liaison/liaison.html', context)
+
+
+@login_required(login_url='/users/login')
+def subcontractor_dashboard_view(request):
+    if request.user.role != 'subcontractor' and not request.user.is_superuser:
+        return redirect('dashboard')
+
+    user = request.user
+    today = timezone.localdate()
+
+    from projects.models import Project, SubcontractorTask
+    from procurement.models import MaterialAllocation
+
+    # 1. Assigned projects for this contractor
+    projects = Project.objects.filter(subcontractor_tasks__subcontractor=user).distinct().order_by('-created_at')
+    assigned_projects_count = projects.count()
+
+    # 2. Subcontractor field tasks
+    tasks = SubcontractorTask.objects.filter(subcontractor=user).select_related('project').order_by('deadline')
+    total_tasks = tasks.count()
+    pending_tasks = tasks.exclude(status__in=['completed', 'verified'])
+    pending_tasks_count = pending_tasks.count()
+    awaiting_verification_count = tasks.filter(status='completed').count()
+    verified_count = tasks.filter(status='verified').count()
+
+    # 3. Tasks due today
+    due_today_tasks = tasks.filter(deadline=today).exclude(status__in=['completed', 'verified'])
+
+    # 4. Inventory allocations for assigned projects
+    allocations_count = MaterialAllocation.objects.filter(project__subcontractor_tasks__subcontractor=user).distinct().count()
+
+    context = {
+        'assigned_projects_count': assigned_projects_count,
+        'total_tasks': total_tasks,
+        'pending_tasks_count': pending_tasks_count,
+        'awaiting_verification_count': awaiting_verification_count,
+        'verified_count': verified_count,
+        'due_today_tasks': due_today_tasks,
+        'recent_tasks': tasks[:8],
+        'projects': projects[:8],
+        'allocations_count': allocations_count,
+        'today': today,
+    }
+    return render(request, 'dashboard/subcontractor/subcontractor_dashboard.html', context)
+
 
 
 
@@ -517,6 +589,8 @@ class ChangePassword(PasswordChangeView):
 
 @login_required
 def admin_profile(request):
+    if request.user.role != 'admin':
+        return redirect('dashboard')
     user = request.user
 
     if request.method == 'POST':
@@ -543,18 +617,21 @@ def admin_profile(request):
 @login_required(login_url='/users/login')
 def add_employee(request):
 
+    if request.user.role != 'admin' and not request.user.is_superuser:
+        return redirect('dashboard')
+
     role = request.POST.get('role') or request.GET.get('role')
 
     if request.method == "POST":
         form = EmployeeForm(request.POST, request.FILES, role=role)
 
-        username = request.POST.get('username')
-        email = request.POST.get('email')
-
         if form.is_valid():
+            username = form.cleaned_data['username']
+            email = form.cleaned_data['email']
+            role = form.cleaned_data['role']
+
             try:
                 with transaction.atomic():
-
                     temp_password = generate_temp_password()
 
                     user = CustomUser.objects.create(
@@ -571,35 +648,42 @@ def add_employee(request):
                     employee.user = user
                     employee.save()
 
+                # Email sending outside atomic transaction with fail_silently=True
+                email_sent = False
+                try:
+                    login_url = request.build_absolute_uri(reverse('login'))
                     send_mail(
                         subject="Welcome to Kiana Green Private Limited",
-                        message=f"""
-                                Hi {employee.name},
+                        message=f"""Hi {employee.name or username},
 
-                                Welcome to Kiana Green Private Limited!
+Welcome to Kiana Green Private Limited!
 
-                                Your account has been created.
+Your account has been created.
 
-                                Username: {username}
-                                Temporary Password: {temp_password}
+Username: {username}
+Temporary Password: {temp_password}
 
-                                Please login and change your password immediately.
+Please login and change your password immediately.
 
-                                Login here:
-                                http://127.0.0.1:8000/users/login
+Login here:
+{login_url}
 
-                                Regards,
-                                Kiana Green Private Limited Team
-                                """,
-                        from_email=settings.EMAIL_HOST_USER,
+Regards,
+Kiana Green Private Limited Team
+""",
+                        from_email=settings.DEFAULT_FROM_EMAIL or settings.EMAIL_HOST_USER,
                         recipient_list=[email],
-                        fail_silently=False,
+                        fail_silently=True,
                     )
+                    email_sent = True
+                except Exception:
+                    pass
 
+                try:
                     create_notification(
                         recipient=request.user,
                         title="New Employee Added",
-                        message=f"{employee.name} ({employee.designation}) has joined the team.",
+                        message=f"{employee.name or username} ({employee.designation or role}) has joined the team.",
                         sender=request.user,
                         link=reverse('emplist'),
                         category="employee"
@@ -608,21 +692,32 @@ def add_employee(request):
                     create_notification(
                         recipient=user,
                         title="Welcome to the Team!",
-                        message=f"Hi {employee.name}, welcome to Kiana Green Private Limited! We're excited to have you onboard as {employee.designation}.",
+                        message=f"Hi {employee.name or username}, welcome to Kiana Green Private Limited! We're excited to have you onboard as {employee.designation or role}.",
                         sender=None,
                         link=reverse('dashboard')
                     )
-                    return redirect(all_employees)
+                except Exception:
+                    pass
+
+                if email_sent:
+                    messages.success(request, f"Employee '{employee.name or username}' registered successfully! Credentials sent to {email}.")
+                else:
+                    messages.success(request, f"Employee '{employee.name or username}' registered successfully! Temporary password: {temp_password}")
+
+                return redirect('emplist')
 
             except Exception as e:
+                messages.error(request, f"Registration failed: {str(e)}")
                 create_notification(
-                        recipient=request.user,
-                        title="Employee registration Failed ",
-                        message=f"{e}",
-                        sender=request.user,
-                        link=reverse('emplist'),
-                        category="employee"
-                    )
+                    recipient=request.user,
+                    title="Employee registration Failed",
+                    message=f"{e}",
+                    sender=request.user,
+                    link=reverse('emplist'),
+                    category="employee"
+                )
+        else:
+            messages.error(request, "Please correct the errors in the form below.")
 
     else:
         form = EmployeeForm(role=role)
@@ -631,6 +726,8 @@ def add_employee(request):
 
 @login_required(login_url='/users/login')
 def all_employees(request):
+    if request.user.role != 'admin':
+        return redirect('dashboard')
     role = request.GET.get('role','')
     query = request.GET.get("q")
     employees = Employee.objects.all()
@@ -658,11 +755,15 @@ def all_employees(request):
 
 @login_required(login_url='/users/login')
 def view_employee(request, emp_id):
+    if request.user.role != 'admin':
+        return redirect('dashboard')
     emp = get_object_or_404(Employee, id=emp_id)
     return render(request,'dashboard/admin/view_emp.html',{'employee': emp})
 
 @login_required(login_url='/users/login')
 def edit_employee(request, emp_id):
+    if request.user.role != 'admin':
+        return redirect('dashboard')
     emp = get_object_or_404(Employee, id=emp_id)
 
     if request.method == "POST":
@@ -741,51 +842,100 @@ def view_post(request,id):
 
 
 
-@login_required(login_url='/users/login')
-def edit_post(request, bid):
-    post = BlogPost.objects.get(id=bid)
-    client = Groq(api_key=settings.GROQ_API_KEY)
+def format_blog_with_ai(title, content, current_summary=None):
+    """
+    Attempts to format blog content into clean SEO HTML and generate summary using Groq API.
+    If Groq is unreachable, APIConnectionError occurs, or API key is not configured,
+    it gracefully falls back to clean paragraph-structured HTML and auto-generated excerpt.
+    """
+    html_content = content or ""
+    summary = current_summary
 
-    if request.method == 'POST':
+    groq_key = getattr(settings, 'GROQ_API_KEY', '').strip()
+    if groq_key:
+        try:
+            client = Groq(api_key=groq_key, timeout=7.0)
+            response = client.chat.completions.create(
+                messages=[
+                    {
+                        "role": "user",
+                        "content": f"""You are a professional SEO blog writer.
+Convert the following blog content into clean structured HTML suitable for a blog article.
 
-        plain_content = request.POST.get('content')
-
-        response = client.chat.completions.create(
-            messages=[
-                {
-                    "role": "user",
-                    "content": f"""
-You are a professional SEO blog writer.
-
-Convert the following blog content into clean HTML format.
-
-Title: {post.title}
-Content: {plain_content}
+Title: {title}
+Content: {content}
 
 Formatting rules:
 - Use <p> for paragraphs
-- Use <h3> for sections
-- Use <h4> for subsections
+- Use <h3> for section headings
+- Use <h4> for subheadings
 - Use <ul> and <li> for lists
-- Use <strong> for important text
+- Use <strong> for important phrases
+- Use <table> for comparisons if needed
 
-Return ONLY HTML.
-"""
-                }
-            ],
-            model="llama-3.3-70b-versatile",
-            temperature=0.6
-        )
+Return ONLY valid HTML. Do not include markdown fences or explanations."""
+                    }
+                ],
+                model="llama-3.3-70b-versatile",
+                temperature=0.6
+            )
+            raw_html = response.choices[0].message.content.strip()
+            # Clean possible markdown ```html fences if LLM returns them
+            if raw_html.startswith("```html"):
+                raw_html = raw_html[7:]
+            if raw_html.startswith("```"):
+                raw_html = raw_html[3:]
+            if raw_html.endswith("```"):
+                raw_html = raw_html[:-3]
+            html_content = raw_html.strip()
 
-        html_content = response.choices[0].message.content
+            if not summary:
+                resp_sum = client.chat.completions.create(
+                    messages=[
+                        {
+                            "role": "user",
+                            "content": f"""You are a professional content writer. Write a blog excerpt under 30 words.
+Blog Post Title: {title}
+Blog Post Content: {content}"""
+                        }
+                    ],
+                    model="llama-3.3-70b-versatile",
+                    temperature=0.7
+                )
+                summary = resp_sum.choices[0].message.content.strip()
+        except Exception:
+            # Groq connection error, timeout, or invalid key: gracefully fallback
+            pass
+
+    # Fallback formatting if AI was not available or failed
+    if not html_content.strip().startswith('<'):
+        paragraphs = [p.strip() for p in html_content.split('\n') if p.strip()]
+        html_content = ''.join(f'<p>{p}</p>' for p in paragraphs) if paragraphs else f'<p>{html_content}</p>'
+
+    if not summary:
+        plain_words = strip_tags(content).split()
+        summary = ' '.join(plain_words[:28]) + ('...' if len(plain_words) > 28 else '')
+
+    return html_content, summary
+
+
+@login_required(login_url='/users/login')
+def edit_post(request, bid):
+    post = get_object_or_404(BlogPost, id=bid)
+
+    if request.method == 'POST':
+        plain_content = request.POST.get('content', '')
+        html_content, summary = format_blog_with_ai(post.title, plain_content, post.summary)
 
         form = BlogPostForm(request.POST, request.FILES, instance=post)
 
         if form.is_valid():
             post = form.save(commit=False)
             post.content = html_content
+            if summary and not post.summary:
+                post.summary = summary
             post.save()
-
+            messages.success(request, 'Blog post updated successfully!')
             return redirect(view_post, id=post.id)
 
     else:
@@ -796,82 +946,30 @@ Return ONLY HTML.
 
 
 @login_required(login_url='/users/login')
-def delete_post(request,bid):
-    post = BlogPost.objects.get(id=bid)
+def delete_post(request, bid):
+    post = get_object_or_404(BlogPost, id=bid)
     post.delete()
+    messages.success(request, 'Blog post deleted successfully.')
     return redirect(blog_list)
-
 
 
 @login_required(login_url='/users/login')
 def add_post(request):
-    client = Groq(api_key=settings.GROQ_API_KEY)
-
     if request.method == 'POST':
         form = BlogPostForm(request.POST, request.FILES)
 
         if form.is_valid():
             post = form.save(commit=False)
-
             plain_content = post.content
 
-            response = client.chat.completions.create(
-                messages=[
-                    {
-                        "role": "user",
-                        "content": f"""
-You are a professional SEO blog writer.
-
-Convert the following blog content into clean structured HTML suitable for a blog article.
-
-Title: {post.title}
-Content: {plain_content}
-
-Formatting rules:
-
-- Use <p> for paragraphs
-- Use <h3> for section headings
-- Use <h4> for subheadings
-- Use <ul> and <li> for lists
-- Use <strong> for important phrases
-- Use <table> for comparisons if needed
-
-Return ONLY valid HTML.
-Do not include explanations.
-"""
-                    }
-                ],
-                model="llama-3.3-70b-versatile",
-                temperature=0.6
-            )
-
-            post.content = response.choices[0].message.content
-
-
-            if not post.summary:
-
-                response = client.chat.completions.create(
-                    messages=[
-                        {
-                            "role": "user",
-                            "content": f"""
-You are a professional content writer. Write a blog excerpt.
-
-Blog Post Title: {post.title}
-Blog Post Content: {plain_content}
-
-Keep it under 30 words.
-"""
-                        }
-                    ],
-                    model="llama-3.3-70b-versatile",
-                    temperature=0.7
-                )
-
-                post.summary = response.choices[0].message.content
+            # Format with AI or robust fallback
+            html_content, summary = format_blog_with_ai(post.title, plain_content, post.summary)
+            post.content = html_content
+            if summary and not post.summary:
+                post.summary = summary
 
             post.save()
-
+            messages.success(request, 'Blog post published successfully!')
             return redirect('blogposts')
 
     else:
@@ -1117,3 +1215,162 @@ def notifyEmployee(request,id):
 
         return redirect(notifyEmployee,id=id)
     return render(request,'dashboard/notify.html',{'emp': emp})
+
+
+# ===============================
+# HR & STAFF MANAGEMENT
+# ===============================
+from django.utils import timezone
+from datetime import timedelta
+
+@login_required(login_url='/users/login')
+def hr_dashboard(request):
+    employees = Employee.objects.all().order_by('-date_joined')
+    today = timezone.now().date()
+    
+    # Overview Stats
+    total_employees = employees.count()
+    present_today = Attendance.objects.filter(date=today, status__in=['present', 'half_day']).count()
+    on_leave = LeaveRequest.objects.filter(status='approved', start_date__lte=today, end_date__gte=today).count()
+    
+    # Recent requests
+    leave_requests = LeaveRequest.objects.all().order_by('-applied_on')[:10]
+    
+    # Employee's own data (if they have an employee profile)
+    my_employee = getattr(request.user, 'employee', None)
+    my_leaves = LeaveRequest.objects.filter(employee=my_employee).order_by('-applied_on') if my_employee else None
+    my_attendance = Attendance.objects.filter(employee=my_employee).order_by('-date')[:5] if my_employee else None
+    my_kpis = EmployeeKPI.objects.filter(employee=my_employee).order_by('-month')[:3] if my_employee else None
+    
+    context = {
+        'total_employees': total_employees,
+        'present_today': present_today,
+        'on_leave': on_leave,
+        'employees': employees,
+        'leave_requests': leave_requests,
+        'my_leaves': my_leaves,
+        'my_attendance': my_attendance,
+        'my_kpis': my_kpis,
+        'today': today,
+    }
+    return render(request, 'dashboard/admin/hr_dashboard.html', context)
+
+@login_required(login_url='/users/login')
+def mark_attendance(request):
+    if request.method == 'POST':
+        try:
+            employee = request.user.employee
+        except Employee.DoesNotExist:
+            messages.error(request, "No employee profile found for your account.")
+            return redirect('hr_dashboard')
+            
+        action = request.POST.get('action')
+        today = timezone.now().date()
+        current_time = timezone.now().time()
+        
+        attendance, created = Attendance.objects.get_or_create(
+            employee=employee,
+            date=today,
+            defaults={'status': 'present'}
+        )
+        
+        if action == 'sign_in':
+            if not attendance.sign_in:
+                attendance.sign_in = current_time
+                messages.success(request, "Successfully signed in.")
+            else:
+                messages.warning(request, "Already signed in today.")
+        elif action == 'sign_out':
+            if not attendance.sign_out:
+                attendance.sign_out = current_time
+                messages.success(request, "Successfully signed out.")
+            else:
+                messages.warning(request, "Already signed out today.")
+                
+        attendance.save()
+    return redirect('hr_dashboard')
+
+@login_required(login_url='/users/login')
+def apply_leave(request):
+    if request.method == 'POST':
+        try:
+            employee = request.user.employee
+        except Employee.DoesNotExist:
+            messages.error(request, "No employee profile found for your account.")
+            return redirect('hr_dashboard')
+            
+        leave_type = request.POST.get('leave_type')
+        start_date = request.POST.get('start_date')
+        end_date = request.POST.get('end_date')
+        reason = request.POST.get('reason')
+        
+        LeaveRequest.objects.create(
+            employee=employee,
+            leave_type=leave_type,
+            start_date=start_date,
+            end_date=end_date,
+            reason=reason
+        )
+        messages.success(request, "Leave request submitted successfully.")
+    return redirect('hr_dashboard')
+
+@login_required(login_url='/users/login')
+def approve_leave(request, pk):
+    if request.user.role not in ['admin', 'staff']:
+        messages.error(request, "Unauthorized action.")
+        return redirect('hr_dashboard')
+        
+    leave = get_object_or_404(LeaveRequest, pk=pk)
+    action = request.POST.get('action') # 'approve' or 'reject'
+    
+    if action == 'approve':
+        leave.status = 'approved'
+        leave.approved_by = request.user
+        messages.success(request, "Leave request approved.")
+    elif action == 'reject':
+        leave.status = 'rejected'
+        leave.approved_by = request.user
+        messages.success(request, "Leave request rejected.")
+        
+    leave.save()
+    return redirect('hr_dashboard')
+
+
+# ===============================
+# APPROVAL ENGINE VIEWS
+# ===============================
+
+@login_required(login_url="/users/login")
+def approval_dashboard(request):
+    approvals = ApprovalRequest.objects.filter(rule__required_role=request.user.role).order_by("-created_at")
+    pending_approvals = approvals.filter(status="pending")
+    past_approvals = approvals.exclude(status="pending")
+    context = {
+        "pending_approvals": pending_approvals, 
+        "past_approvals": past_approvals
+    }
+    return render(request, "dashboard/admin/approvals.html", context)
+
+
+@login_required(login_url="/users/login")
+@require_POST
+def approve_request(request, pk):
+    req = get_object_or_404(ApprovalRequest, pk=pk)
+    if req.rule.required_role == request.user.role:
+        req.status = "approved"
+        req.approved_by = request.user
+        req.save()
+        messages.success(request, f"Approved {req.rule.get_module_display()} request.")
+    return redirect("approval_dashboard")
+
+
+@login_required(login_url="/users/login")
+@require_POST
+def reject_request(request, pk):
+    req = get_object_or_404(ApprovalRequest, pk=pk)
+    if req.rule.required_role == request.user.role:
+        req.status = "rejected"
+        req.approved_by = request.user
+        req.save()
+        messages.error(request, f"Rejected {req.rule.get_module_display()} request.")
+    return redirect("approval_dashboard")

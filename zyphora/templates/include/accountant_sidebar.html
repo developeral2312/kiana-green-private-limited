@@ -6,19 +6,20 @@
     <!-- ===== HEADER (LOGO + TOGGLE) ===== -->
     <div class="sidebar-header d-flex align-items-center justify-content-between px-3 py-2">
 
-        <!-- Logo -->
-                <!-- Custom HTML Text Logo -->
-        <div class="sidebar-logo d-flex flex-column align-items-center justify-content-center" style="width: 90px; margin: 0 auto; padding: 5px 0;">
-    <img src="{% static 'images/logo1.png' %}" 
-         class="img-fluid" 
-         alt="Logo" 
-         style="width: 100%; height: auto;">
-    
-    <div style="width: 100%; text-align-last: justify; font-weight: 800; color: #2ecc71; font-size: 0.85rem; letter-spacing: 1px; margin-top: 2px; line-height: 1;">GREEN</div>
-</div>
+        <!-- Logo Full (Expanded State) -->
+        <a href="{% url 'dashboard' %}" class="sidebar-logo-full text-decoration-none d-flex align-items-center">
+            <img src="{% static 'images/kiana-green-logo.png' %}" alt="Kiana Green Logo"
+                style="max-height: 42px; width: auto; object-fit: contain;">
+        </a>
+
+        <!-- Logo Mini (Collapsed State) -->
+        <a href="{% url 'dashboard' %}" class="sidebar-logo-mini text-decoration-none d-none align-items-center justify-content-center" title="Dashboard">
+            <img src="{% static 'images/favicon.png' %}" alt="Zyphora"
+                style="width: 36px; height: 36px; object-fit: contain; border-radius: 8px;">
+        </a>
 
         <!-- Sidebar Toggle: ONLY on desktop. On mobile, hamburger in topnavbar is used. -->
-        <label for="sidebarToggleCheckbox" class="toggle-btn d-none d-lg-flex">
+        <label for="sidebarToggleCheckbox" class="toggle-btn d-none d-lg-flex align-items-center justify-content-center" title="Toggle Sidebar">
             <i class="bi bi-chevron-left arrow-icon"></i>
         </label>
 
@@ -37,13 +38,25 @@
                data-bs-placement="right"
                title="Dashboard">
 
-                <i class="bi bi-speedometer2 nav-icon  text-primary "></i>
+                <i class="bi bi-grid-1x2-fill nav-icon"></i>
                 <span class="link-text ms-2">Dashboard</span>
 
             </a>
 
         </li>
     
+        <!-- ================= APPROVAL ENGINE ================= -->
+        <li class="nav-item">
+            <a href="{% url 'approval_dashboard' %}"
+               class="nav-link d-flex align-items-center {% if request.resolver_match.url_name == 'approval_dashboard' %}active{% endif %}"
+               data-bs-toggle="tooltip"
+               data-bs-placement="right"
+               title="Approvals">
+                <i class="bi bi-shield-check nav-icon"></i>
+                <span class="link-text ms-2">Approval Engine</span>
+            </a>
+        </li>
+
         <li class="sidebar-heading mt-3 text-muted small">FINANCE MANAGEMENT</li>
 
         <!-- Invoice Management -->
@@ -51,7 +64,7 @@
             <a class="nav-link d-flex align-items-center justify-content-between"
             data-bs-toggle="collapse" href="#invoiceMenu">
                 <div class="d-flex align-items-center">
-                    <i class="bi bi-file-earmark-text nav-icon text-info"></i>
+                    <i class="bi bi-receipt-cutoff nav-icon"></i>
                     <span class="link-text ms-2">Invoice Management</span>
                 </div>
                 
@@ -73,7 +86,7 @@
             <a class="nav-link d-flex align-items-center justify-content-between"
             data-bs-toggle="collapse" href="#revenueMenu">
                 <div class="d-flex align-items-center">
-                    <i class="bi bi-currency-dollar nav-icon text-success"></i>
+                    <i class="bi bi-wallet2 nav-icon"></i>
                     <span class="link-text ms-2">Revenue & Payments</span>
                 </div>
                 
@@ -94,7 +107,7 @@
             <a class="nav-link d-flex align-items-center justify-content-between"
             data-bs-toggle="collapse" href="#expenseMenu">
                 <div class="d-flex align-items-center">
-                    <i class="bi bi-receipt nav-icon text-warning"></i>
+                    <i class="bi bi-credit-card-2-back nav-icon"></i>
                     <span class="link-text ms-2">Expense Management</span>
                 </div>
                 
@@ -115,7 +128,7 @@
             <a class="nav-link d-flex align-items-center justify-content-between"
             data-bs-toggle="collapse" href="#fundMenu">
                 <div class="d-flex align-items-center">
-                    <i class="bi bi-cash-stack nav-icon text-success"></i>
+                    <i class="bi bi-cash-stack nav-icon"></i>
                     <span class="link-text ms-2">Fund Release</span>
                 </div>
                 
@@ -135,7 +148,7 @@
             <a class="nav-link d-flex align-items-center justify-content-between"
             data-bs-toggle="collapse" href="#budgetMenu">
                 <div class="d-flex align-items-center">
-                    <i class="bi bi-bar-chart-line nav-icon text-primary"></i>
+                    <i class="bi bi-pie-chart nav-icon"></i>
                     <span class="link-text ms-2">Project Budget</span>
                 </div>
                 
@@ -156,7 +169,7 @@
             <a class="nav-link d-flex align-items-center justify-content-between"
             data-bs-toggle="collapse" href="#reportMenu">
                 <div class="d-flex align-items-center">
-                    <i class="bi bi-graph-up-arrow nav-icon text-danger"></i>
+                    <i class="bi bi-graph-up nav-icon"></i>
                     <span class="link-text ms-2">Financial Reports</span>
                 </div>
                 
@@ -176,7 +189,7 @@
         <!-- ================= NOTIFICATIONS ================= -->
         <li class="nav-item mt-3">
             <a href="{% url 'notifications' %}" class="nav-link d-flex align-items-center">
-                <i class="bi bi-bell nav-icon text-danger"></i>
+                <i class="bi bi-bell nav-icon"></i>
                 <span class="link-text ms-2">Notifications</span>
             </a>
         </li>
@@ -185,7 +198,7 @@
         <!-- ================= PROFILE ================= -->        
         <li class="nav-item mt-3">
             <a href="{% url 'profile' %}" class="nav-link d-flex align-items-center">
-                <i class="bi bi-person-circle nav-icon text-primary"></i>
+                <i class="bi bi-person-circle nav-icon"></i>
                 <span class="link-text ms-2">My Profile</span>
             </a>
         </li>

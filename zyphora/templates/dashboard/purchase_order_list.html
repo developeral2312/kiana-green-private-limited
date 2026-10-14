@@ -5,140 +5,185 @@
 
 <!-- Breadcrumbs -->
 <nav aria-label="breadcrumb" class="mb-3">
-    <div class="container-fluid">
-        <ol class="breadcrumb mb-0">
-            <li class="breadcrumb-item"><a href="{% url request.user.role %}">{{ request.user.role|title }} Dashboard</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Purchase Orders</li>
-        </ol>
-    </div>
+    <ol class="breadcrumb mb-0">
+        <li class="breadcrumb-item"><a href="{% url request.user.role %}">{{ request.user.role|title }} Dashboard</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Purchase Orders</li>
+    </ol>
 </nav>
 
-<div class="main-content">
-    <div class="container-fluid">
-
-        <!-- Page Header -->
-        <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
-            <h4 class="mb-2 mb-md-0 text-primary"><i class="bi bi-receipt me-1"></i> Purchase Orders</h4>
-            <a href="{% url 'create_purchase_order' %}" class="btn btn-primary">
-                <i class="bi bi-plus-lg me-1"></i> New Purchase Order
-            </a>
-        </div>
-
-        <!-- Search -->
-        <div class="card shadow-sm mb-3">
-            <div class="card-body">
-                <form method="get" class="row g-2">
-                    <div class="col-md-4">
-                        <input type="text" name="q" class="form-control" placeholder="Search PO or Vendor..." value="{{ request.GET.q }}">
-                    </div>
-                    <div class="col-md-auto">
-                        <button class="btn btn-outline-primary"><i class="bi bi-search me-1"></i> Search</button>
-                    </div>
-                </form>
+<!-- Executive Hero Card -->
+<div class="executive-hero-card mb-4">
+    <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+        <div class="d-flex align-items-center gap-3">
+            <div class="hero-icon-box">
+                <i class="bi bi-receipt"></i>
             </div>
-        </div>
-
-        <!-- Purchase Orders Table -->
-        <div class="card shadow-sm">
-            <div class="card-body p-0">
-                <div class="table-responsive">
-                    <table class="table table-hover mb-0">
-                        <thead class="table-light">
-                            <tr>
-                                <th>PO Number</th>
-                                <th>Vendor</th>
-                                <th>Status</th>
-                                <th>Total</th>
-                                <th>Order Date</th>
-                                <th>Expected Delivery</th>
-                                <th class="text-end">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for po in purchase_orders %}
-                                <tr {% if po.overdue_days > 0 %}class="table-danger"{% endif %}>
-                                    <!-- PO Number + Overdue Badge -->
-                                    <td>
-                                        <strong>PO-{{ po.id }}</strong>
-                                        {% if po.overdue_days > 0 %}
-                                            <span class="badge bg-danger ms-2" data-bs-toggle="tooltip" 
-                                                  title="{{ po.overdue_days }} day{% if po.overdue_days > 1 %}s{% endif %} overdue">
-                                                ⚠ {{ po.overdue_days }}d overdue
-                                            </span>
-                                        {% endif %}
-                                    </td>
-
-                                    <!-- Vendor -->
-                                    <td>{{ po.vendor.name }}</td>
-
-                                    <!-- Status Badge -->
-                                    <td>
-                                        {% if po.status == "pending" %}
-                                            <span class="badge bg-warning text-dark">Pending</span>
-                                        {% elif po.status == "ordered" %}
-                                            <span class="badge bg-primary">Ordered</span>
-                                        {% elif po.status == "received" %}
-                                            <span class="badge bg-success">Received</span>
-                                        {% elif po.status == "cancelled" %}
-                                            <span class="badge bg-danger">Cancelled</span>
-                                        {% else %}
-                                            <span class="badge bg-secondary">{{ po.status|capfirst }}</span>
-                                        {% endif %}
-                                    </td>
-
-                                    <!-- Total -->
-                                    <td>₹{{ po.total_amount|floatformat:2 }}</td>
-
-                                    <!-- Order Date -->
-                                    <td>{{ po.order_date|date:"d M Y" }}</td>
-
-                                    <!-- Expected Delivery -->
-                                    <td>
-                                        {% if po.expected_delivery %}
-                                            <span {% if po.overdue_days > 0 %}class="text-danger fw-bold"{% endif %}>
-                                                {{ po.expected_delivery|date:"d M Y" }}
-                                            </span>
-                                        {% else %}-{% endif %}
-                                    </td>
-
-                                    <!-- Actions -->
-                                    <td class="text-end d-flex gap-1 justify-content-end">
-                                        {% if po.status == 'received'%}
-                                        <a href="{% url 'download_report' 'purchase' po.id %}" class="btn btn-sm btn-outline-primary">Download</a>
-                                        {% endif %}
-                                        
-                                        <a href="{% url 'purchase_order_detail' po.id %}" class="btn btn-sm btn-outline-primary">View</a>
-
-                                        {% if po.status != 'received' and po.status != 'cancelled' %}
-                                            <a href="{% url 'add_goods_received' %}?po={{ po.id }}" 
-                                               class="btn btn-sm btn-outline-success {% if po.overdue_days > 0 %}fw-bold border border-danger{% endif %}">
-                                                Receive
-                                            </a>
-
-                                            <a href="{% url 'cancel_purchase_order' po.id %}" class="btn btn-sm btn-outline-danger" 
-                                               onclick="return confirm('Are you sure you want to cancel this purchase order?');">
-                                                Cancel
-                                            </a>
-                                        {% endif %}
-                                    </td>
-                                </tr>
-                            {% empty %}
-                                <tr>
-                                    <td colspan="7" class="text-center text-muted py-4">
-                                        No Purchase Orders Found
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+            <div>
+                <div class="d-flex align-items-center gap-2">
+                    <h3 class="hero-heading mb-0">Purchase Orders</h3>
+                    <span class="hero-count-badge">{{ purchase_orders|length }} POs</span>
                 </div>
+                <p class="hero-subtext mb-0">Manage supplier procurement contracts, fulfillment tracking & goods receipts</p>
             </div>
         </div>
 
+        <a href="{% url 'create_purchase_order' %}" class="btn-hero-action">
+            <i class="bi bi-plus-lg"></i> New Purchase Order
+        </a>
     </div>
 </div>
 
-<!-- Bootstrap Tooltip Initialization -->
+<!-- Search Toolbar -->
+<div class="filter-toolbar-card mb-4">
+    <form method="get" class="row g-3 align-items-center">
+        <div class="col-md-5">
+            <div class="search-input-wrap">
+                <i class="bi bi-search search-icon"></i>
+                <input type="text"
+                       name="q"
+                       class="form-control"
+                       placeholder="Search PO number or vendor..."
+                       value="{{ request.GET.q }}">
+            </div>
+        </div>
+
+        <div class="col-md-auto d-flex gap-2">
+            <button class="btn btn-primary px-3" type="submit">
+                <i class="bi bi-search me-1"></i> Search
+            </button>
+            {% if request.GET.q %}
+            <a href="{% url 'purchase_order_list' %}" class="btn btn-outline-secondary px-3">
+                <i class="bi bi-x-circle me-1"></i> Reset
+            </a>
+            {% endif %}
+        </div>
+    </form>
+</div>
+
+<!-- Purchase Orders Table Card -->
+<div class="card shadow-sm border-0 mb-4 overflow-hidden">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th>PO Number</th>
+                        <th>Vendor</th>
+                        <th>Status</th>
+                        <th>Total Amount</th>
+                        <th>Order Date</th>
+                        <th>Expected Delivery</th>
+                        <th class="text-end pe-3">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for po in purchase_orders %}
+                    <tr>
+                        <td>
+                            <div class="d-flex align-items-center gap-2">
+                                <div class="hero-icon-box" style="width: 32px; height: 32px; font-size: 0.95rem; border-radius: 8px;">
+                                    <i class="bi bi-file-earmark-check"></i>
+                                </div>
+                                <div>
+                                    <span class="fw-bold font-monospace text-dark">PO-{{ po.id }}</span>
+                                    {% if po.overdue_days > 0 %}
+                                    <span class="badge bg-danger ms-1" data-bs-toggle="tooltip" 
+                                          title="{{ po.overdue_days }} day{% if po.overdue_days > 1 %}s{% endif %} overdue">
+                                        ⚠ {{ po.overdue_days }}d overdue
+                                    </span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </td>
+
+                        <td>
+                            <span class="fw-semibold text-dark">{{ po.vendor.name }}</span>
+                        </td>
+
+                        <td>
+                            {% if po.status == "pending" %}
+                                <span class="badge bg-warning"><i class="bi bi-hourglass-split"></i> Pending</span>
+                            {% elif po.status == "ordered" %}
+                                <span class="badge bg-primary"><i class="bi bi-truck"></i> Ordered</span>
+                            {% elif po.status == "received" %}
+                                <span class="badge bg-success"><i class="bi bi-check-circle"></i> Received</span>
+                            {% elif po.status == "cancelled" %}
+                                <span class="badge bg-danger"><i class="bi bi-x-circle"></i> Cancelled</span>
+                            {% else %}
+                                <span class="badge bg-secondary">{{ po.status|capfirst }}</span>
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            <span class="fw-bold text-dark fs-6">₹{{ po.total_amount|floatformat:2 }}</span>
+                        </td>
+
+                        <td>
+                            <span class="text-secondary small">{{ po.order_date|date:"d M Y" }}</span>
+                        </td>
+
+                        <td>
+                            {% if po.expected_delivery %}
+                                <span class="small {% if po.overdue_days > 0 %}text-danger fw-bold{% else %}text-secondary{% endif %}">
+                                    {{ po.expected_delivery|date:"d M Y" }}
+                                </span>
+                            {% else %}<span class="text-muted small">-</span>{% endif %}
+                        </td>
+
+                        <td class="text-end pe-3">
+                            <div class="d-inline-flex gap-2">
+                                {% if po.status == 'received'%}
+                                <a href="{% url 'download_report' 'purchase' po.id %}"
+                                   class="btn-action-circle btn-action-view"
+                                   title="Download Purchase Order PDF">
+                                    <i class="bi bi-download"></i>
+                                </a>
+                                {% endif %}
+
+                                <a href="{% url 'purchase_order_detail' po.id %}"
+                                   class="btn-action-circle btn-action-view"
+                                   title="View PO Details">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+
+                                {% if po.status != 'received' and po.status != 'cancelled' %}
+                                    <a href="{% url 'add_goods_received' %}?po={{ po.id }}" 
+                                       class="btn btn-sm btn-success d-inline-flex align-items-center gap-1 px-2 py-1"
+                                       style="border-radius: 8px; font-size: 0.8rem;"
+                                       title="Receive Goods">
+                                        <i class="bi bi-box-arrow-in-down"></i> Receive
+                                    </a>
+
+                                    <a href="{% url 'cancel_purchase_order' po.id %}"
+                                       class="btn-action-circle btn-action-delete"
+                                       title="Cancel Purchase Order"
+                                       onclick="return confirm('Are you sure you want to cancel this purchase order?');">
+                                        <i class="bi bi-x-lg"></i>
+                                    </a>
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="7" class="text-center p-5">
+                            <div class="hero-icon-box mx-auto mb-3" style="width: 56px; height: 56px; font-size: 1.6rem;">
+                                <i class="bi bi-receipt"></i>
+                            </div>
+                            <h6 class="fw-bold text-dark mt-2">No Purchase Orders Found</h6>
+                            <p class="text-muted mb-3 small">Create purchase orders to procure materials from vendors.</p>
+                            <a href="{% url 'create_purchase_order' %}" class="btn-hero-action">
+                                <i class="bi bi-plus-lg"></i> New Purchase Order
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))

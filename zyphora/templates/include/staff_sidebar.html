@@ -6,19 +6,20 @@
     <!-- ===== HEADER (LOGO + TOGGLE) ===== -->
     <div class="sidebar-header d-flex align-items-center justify-content-between px-3 py-2">
 
-        <!-- Logo -->
-                <!-- Custom HTML Text Logo -->
-        <div class="sidebar-logo d-flex flex-column align-items-center justify-content-center" style="width: 90px; margin: 0 auto; padding: 5px 0;">
-    <img src="{% static 'images/logo1.png' %}" 
-         class="img-fluid" 
-         alt="Logo" 
-         style="width: 100%; height: auto;">
-    
-    <div style="width: 100%; text-align-last: justify; font-weight: 800; color: #2ecc71; font-size: 0.85rem; letter-spacing: 1px; margin-top: 2px; line-height: 1;">GREEN</div>
-</div>
+        <!-- Logo Full (Expanded State) -->
+        <a href="{% url 'dashboard' %}" class="sidebar-logo-full text-decoration-none d-flex align-items-center">
+            <img src="{% static 'images/kiana-green-logo.png' %}" alt="Kiana Green Logo"
+                style="max-height: 42px; width: auto; object-fit: contain;">
+        </a>
+
+        <!-- Logo Mini (Collapsed State) -->
+        <a href="{% url 'dashboard' %}" class="sidebar-logo-mini text-decoration-none d-none align-items-center justify-content-center" title="Dashboard">
+            <img src="{% static 'images/favicon.png' %}" alt="Zyphora"
+                style="width: 36px; height: 36px; object-fit: contain; border-radius: 8px;">
+        </a>
 
         <!-- Sidebar Toggle: ONLY on desktop. On mobile, hamburger in topnavbar is used. -->
-        <label for="sidebarToggleCheckbox" class="toggle-btn d-none d-lg-flex">
+        <label for="sidebarToggleCheckbox" class="toggle-btn d-none d-lg-flex align-items-center justify-content-center" title="Toggle Sidebar">
             <i class="bi bi-chevron-left arrow-icon"></i>
         </label>
 
@@ -32,12 +33,12 @@
         <li class="nav-item">
 
             <a href="{% url 'dashboard' %}"
-               class="nav-link d-flex align-items-center {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}"
+               class="nav-link d-flex align-items-center {% if request.resolver_match.url_name in 'dashboard subcontractor staff' %}active{% endif %}"
                data-bs-toggle="tooltip"
                data-bs-placement="right"
                title="Dashboard">
 
-                <i class="bi bi-speedometer2 nav-icon  text-primary "></i>
+                <i class="bi bi-grid-1x2-fill nav-icon"></i>
                 <span class="link-text ms-2">Dashboard</span>
 
             </a>
@@ -51,7 +52,7 @@
                data-bs-toggle="collapse"
                href="#myTasksMenu">
                 <div class="d-flex align-items-center">
-                    <i class="bi bi-list-check nav-icon text-primary"></i>
+                    <i class="bi bi-list-task nav-icon"></i>
                     <span class="link-text ms-2">
                         Assigned Tasks
                     </span>
@@ -86,22 +87,22 @@
         <!-- ================= PROJECTS ================= -->
         <li class="sidebar-heading mt-3 text-muted small">MY PROJECTS</li>
         <li class="nav-item">
-            <a class="nav-link d-flex align-items-center justify-content-between"
+            <a class="nav-link d-flex align-items-center justify-content-between {% if '/projects/' in request.path %}active{% endif %}"
                data-bs-toggle="collapse"
-               href="#staffProjectsMenu">
+               href="#staffProjectsMenu"
+               aria-expanded="{% if '/projects/' in request.path %}true{% else %}false{% endif %}">
                 <div class="d-flex align-items-center">
-                    <i class="bi bi-folder2-open nav-icon text-warning"></i>
+                    <i class="bi bi-kanban nav-icon"></i>
                     <span class="link-text ms-2">
                         Projects
-                        {% if project_count %}<span class="badge bg-success rounded-pill">{{ project_count }}</span>{% endif %}
+                        {% if project_count %}<span class="badge bg-secondary rounded-pill">{{ project_count }}</span>{% endif %}
                     </span>
                 </div>
-                
             </a>
-            <div class="collapse submenu" id="staffProjectsMenu" data-bs-parent="#sidebarMenu">
+            <div class="collapse submenu {% if '/projects/' in request.path %}show{% endif %}" id="staffProjectsMenu">
                 <ul class="nav flex-column ms-4">
-                    <li><a class="nav-link" href="{% url 'project_list' %}">Assigned Projects</a></li>
-                    <li><a class="nav-link" href="{% url 'layouts' %}">View Project Layouts</a></li>
+                    <li><a class="nav-link {% if request.resolver_match.url_name == 'project_list' %}active{% endif %}" href="{% url 'project_list' %}">Assigned Projects</a></li>
+                    <li><a class="nav-link {% if request.resolver_match.url_name == 'layouts' %}active{% endif %}" href="{% url 'layouts' %}">View Project Layouts</a></li>
                 </ul>
             </div>
         </li>
@@ -113,7 +114,7 @@
                data-bs-toggle="collapse"
                href="#installationWorkMenu">
                 <div class="d-flex align-items-center">
-                    <i class="bi bi-tools nav-icon text-success"></i>
+                    <i class="bi bi-wrench-adjustable nav-icon"></i>
                     <span class="link-text ms-2">
                         Work Progress
                     </span>
@@ -136,7 +137,7 @@
                data-bs-toggle="collapse"
                href="#materialsMenu">
                 <div class="d-flex align-items-center">
-                    <i class="bi bi-box-seam nav-icon text-secondary"></i>
+                    <i class="bi bi-boxes nav-icon"></i>
                     <span class="link-text ms-2">
                         Inventory
                     </span>
@@ -147,15 +148,24 @@
                 <ul class="nav flex-column ms-4">
                     <li><a class="nav-link" href="{% url 'allocation_list' %}">View Assigned Materials</a></li>
                     <li><a class="nav-link" href="{% url 'request_material' %}">Request Additional Materials</a></li>
+                    <li><a class="nav-link" href="{% url 'rfq_list' %}">Vendor Bidding (RFQ)</a></li>
                 </ul>
             </div>
+        </li>
+
+        <!-- SUBCONTRACTOR -->
+        <li class="nav-item">
+            <a href="{% url 'subcontractor_dashboard' %}" class="nav-link d-flex align-items-center {% if request.resolver_match.url_name == 'subcontractor_dashboard' %}active{% endif %}">
+                <i class="bi bi-hammer nav-icon"></i>
+                <span class="link-text ms-2">Subcontractor Portal</span>
+            </a>
         </li>
 
         <li class="sidebar-heading mt-3 text-muted small text-uppercase">System</li>
         <!-- ================= NOTIFICATIONS ================= -->
         <li class="nav-item mt-3">
             <a href="{% url 'notifications' %}" class="nav-link d-flex align-items-center">
-                <i class="bi bi-bell nav-icon text-danger"></i>
+                <i class="bi bi-bell nav-icon"></i>
                 <span class="link-text ms-2">Notifications</span>
             </a>
         </li>
@@ -164,7 +174,7 @@
         <!-- ================= PROFILE ================= -->        
         <li class="nav-item mt-3">
             <a href="{% url 'profile' %}" class="nav-link d-flex align-items-center">
-                <i class="bi bi-person-circle nav-icon text-primary"></i>
+                <i class="bi bi-person-circle nav-icon"></i>
                 <span class="link-text ms-2">My Profile</span>
             </a>
         </li>

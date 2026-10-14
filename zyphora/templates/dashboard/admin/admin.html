@@ -3,265 +3,901 @@
 {% load humanize %}
 
 {% block link %}
-<link rel="stylesheet" href="{% static 'css/dashboard/admin/admin.css' %}">
+<link rel="stylesheet" href="{% static 'css/dashboard/admin/admin.css' %}?v={% now 'U' %}">
 {% endblock %}
 
 {% block content %}
-<div class="main-content">
-    <div class="container-fluid">
+<style>
+    /* ==========================================================================
+       🌟 WHITE PREMIUM ENTERPRISE SAAS DASHBOARD ARCHITECTURE
+       ========================================================================== */
 
-        <!-- KPI CARDS - ROW 1 -->
-        <div class="row g-4 mb-4">
-            <div class="col-12 col-sm-6 col-lg-3">
-                <div class="kpi-card text-center" style="background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);">
-                    <div class="kpi-icon"><i class="bi bi-graph-up-arrow"></i></div>
-                    <div class="kpi-value">₹{{ revenue|intcomma }}</div>
-                    <div class="kpi-label">Total Revenue</div>
+    /* Force canvas background to crisp Slate-100 so pure white cards pop brilliantly */
+    body,
+    .main-wrapper,
+    .main-content {
+        background-color: #f1f5f9 !important;
+    }
+
+    [data-bs-theme="dark"] body,
+    [data-bs-theme="dark"] .main-wrapper,
+    [data-bs-theme="dark"] .main-content {
+        background-color: #0b1329 !important;
+    }
+
+    .admin-dashboard-container {
+        padding: 4px 0 32px 0;
+    /* Sidebar Links & Icons (Refined Enterprise Monochrome) */
+    .sidebar .nav-link {
+        padding: 8px 12px !important;
+        border-radius: 9px !important;
+        transition: all 0.18s ease !important;
+        color: #475569 !important;
+        font-weight: 600 !important;
+        font-size: 0.92rem !important;
+    }
+
+    .sidebar .nav-link .nav-icon {
+        color: #64748b !important;
+        font-size: 1.05rem !important;
+        width: 22px !important;
+        text-align: center !important;
+        transition: color 0.18s ease, transform 0.18s ease !important;
+    }
+
+    .sidebar .nav-link:hover {
+        background: #f1f5f9 !important;
+        color: #0f172a !important;
+        transform: translateX(3px) !important;
+    }
+
+    .sidebar .nav-link:hover .nav-icon {
+        color: #0f172a !important;
+        transform: scale(1.08) !important;
+    }
+
+    .sidebar .nav-link.active {
+        background: #eff6ff !important;
+        color: #2563eb !important;
+        font-weight: 700 !important;
+    }
+
+    .sidebar .nav-link.active .nav-icon {
+        color: #2563eb !important;
+    }
+
+    /* Top Executive Welcome Hero (Balanced & Elegant) */
+    .executive-hero-banner {
+        background: #ffffff !important;
+        border: 1px solid #cbd5e1 !important;
+        border-radius: 14px !important;
+        padding: 13px 20px !important;
+        margin-bottom: 16px !important;
+        box-shadow: 0 2px 10px -1px rgba(15, 23, 42, 0.05), 0 1px 3px -1px rgba(15, 23, 42, 0.02) !important;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    [data-bs-theme="dark"] .executive-hero-banner {
+        background: #1e293b !important;
+        border-color: #334155 !important;
+    }
+
+    .hero-live-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: #ecfdf5;
+        color: #047857;
+        border: 1px solid #a7f3d0;
+        font-size: 0.68rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        padding: 3px 9px;
+        border-radius: 16px;
+        margin-bottom: 0 !important;
+    }
+
+    .live-pulse-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background-color: #10b981;
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+        animation: pulseLive 1.8s infinite;
+    }
+
+    @keyframes pulseLive {
+        0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+        70% { transform: scale(1); box-shadow: 0 0 0 5px rgba(16, 185, 129, 0); }
+        100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+    }
+
+    /* Section Subtitle Bar */
+    .dashboard-section-bar {
+        font-size: 0.74rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: #475569;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 7px;
+    }
+
+    [data-bs-theme="dark"] .dashboard-section-bar {
+        color: #94a3b8;
+    }
+
+    /* ================= 🌟 WHITE PREMIUM KPI CARDS (BALANCED EXECUTIVE HEIGHT) 🌟 ================= */
+    .white-premium-card {
+        background: #ffffff !important;
+        border: 1px solid #cbd5e1 !important;
+        border-radius: 14px !important;
+        padding: 13px 17px !important;
+        box-shadow: 0 3px 12px -2px rgba(15, 23, 42, 0.06), 0 1px 4px -1px rgba(15, 23, 42, 0.03) !important;
+        transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease, border-color 0.2s ease !important;
+        position: relative !important;
+        overflow: hidden !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: space-between !important;
+        height: 100% !important;
+    }
+
+    .white-premium-card:hover {
+        transform: translateY(-3px) !important;
+        box-shadow: 0 12px 24px -3px rgba(15, 23, 42, 0.12), 0 4px 8px -1px rgba(15, 23, 42, 0.04) !important;
+        border-color: #94a3b8 !important;
+    }
+
+    [data-bs-theme="dark"] .white-premium-card {
+        background: #1e293b !important;
+        border-color: #334155 !important;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25) !important;
+    }
+
+    /* Top Accent Line */
+    .card-top-bar {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3.5px;
+    }
+
+    .bar-blue { background: linear-gradient(90deg, #2563eb, #3b82f6); }
+    .bar-emerald { background: linear-gradient(90deg, #059669, #10b981); }
+    .bar-rose { background: linear-gradient(90deg, #e11d48, #f43f5e); }
+    .bar-cyan { background: linear-gradient(90deg, #0891b2, #06b6d4); }
+    .bar-amber { background: linear-gradient(90deg, #d97706, #f59e0b); }
+    .bar-purple { background: linear-gradient(90deg, #7c3aed, #8b5cf6); }
+    .bar-orange { background: linear-gradient(90deg, #ea580c, #f97316); }
+    .bar-indigo { background: linear-gradient(90deg, #4f46e5, #6366f1); }
+    .bar-teal { background: linear-gradient(90deg, #0d9488, #14b8a6); }
+
+    /* Card Internal Typography */
+    .card-head-split {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 10px;
+        margin-bottom: 2px;
+    }
+
+    .card-label-sub {
+        font-size: 0.69rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.07em;
+        color: #64748b;
+        margin-bottom: 3px;
+        line-height: 1.2;
+    }
+
+    [data-bs-theme="dark"] .card-label-sub {
+        color: #94a3b8;
+    }
+
+    .card-value-hero {
+        font-size: 1.42rem;
+        font-weight: 800;
+        color: #0f172a;
+        letter-spacing: -0.025em;
+        line-height: 1.15;
+        margin: 0;
+    }
+
+    [data-bs-theme="dark"] .card-value-hero {
+        color: #f8fafc;
+    }
+
+    /* Icon Pill Containers (Refined 42px) */
+    .card-icon-pill {
+        width: 42px;
+        height: 42px;
+        border-radius: 11px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        flex-shrink: 0;
+        transition: transform 0.2s ease;
+    }
+
+    .white-premium-card:hover .card-icon-pill {
+        transform: scale(1.08);
+    }
+
+    .icon-pill-blue { background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; }
+    .icon-pill-emerald { background: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; }
+    .icon-pill-rose { background: #fff1f2; color: #be123c; border: 1px solid #fecdd3; }
+    .icon-pill-cyan { background: #ecfeff; color: #0e7490; border: 1px solid #a5f3fc; }
+    .icon-pill-amber { background: #fffbeb; color: #b45309; border: 1px solid #fde68a; }
+    .icon-pill-purple { background: #f5f3ff; color: #6d28d9; border: 1px solid #ddd6fe; }
+    .icon-pill-orange { background: #fff7ed; color: #c2410c; border: 1px solid #fed7aa; }
+    .icon-pill-teal { background: #f0fdfa; color: #0f766e; border: 1px solid #99f6e4; }
+    .icon-pill-indigo { background: #eef2ff; color: #4338ca; border: 1px solid #c7d2fe; }
+
+    /* Micro Status Tags (Clean Spacing) */
+    .card-meta-pill {
+        font-size: 0.69rem;
+        font-weight: 600;
+        padding: 3px 9px;
+        border-radius: 12px;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        margin-top: 7px;
+        width: fit-content;
+        line-height: 1.35;
+    }
+
+    .pill-sub-blue { background: #eff6ff; color: #1d4ed8; border: 1px solid #dbeafe; }
+    .pill-sub-emerald { background: #ecfdf5; color: #047857; border: 1px solid #d1fae5; }
+    .pill-sub-rose { background: #fff1f2; color: #be123c; border: 1px solid #ffe4e6; }
+    .pill-sub-cyan { background: #ecfeff; color: #0e7490; border: 1px solid #cffafe; }
+    .pill-sub-amber { background: #fffbeb; color: #b45309; border: 1px solid #fef3c7; }
+    .pill-sub-purple { background: #f5f3ff; color: #6d28d9; border: 1px solid #ede9fe; }
+    .pill-sub-orange { background: #fff7ed; color: #c2410c; border: 1px solid #ffedd5; }
+    .pill-sub-teal { background: #f0fdfa; color: #0f766e; border: 1px solid #ccfbf1; }
+    .pill-sub-indigo { background: #eef2ff; color: #4338ca; border: 1px solid #e0e7ff; }
+
+    /* ================= 🌟 WHITE PREMIUM PANEL BOXES 🌟 ================= */
+    .white-premium-panel {
+        background: #ffffff !important;
+        border: 1px solid #cbd5e1 !important;
+        border-radius: 16px !important;
+        padding: 22px 24px !important;
+        box-shadow: 0 4px 16px -2px rgba(15, 23, 42, 0.06), 0 2px 6px -1px rgba(15, 23, 42, 0.03) !important;
+        height: 100%;
+    }
+
+    [data-bs-theme="dark"] .white-premium-panel {
+        background: #1e293b !important;
+        border-color: #334155 !important;
+    }
+
+    .panel-header-wrap {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 20px;
+        padding-bottom: 14px;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    [data-bs-theme="dark"] .panel-header-wrap {
+        border-color: #334155;
+    }
+
+    .panel-heading {
+        font-size: 0.98rem;
+        font-weight: 700;
+        color: #0f172a;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 9px;
+    }
+
+    [data-bs-theme="dark"] .panel-heading {
+        color: #f8fafc;
+    }
+
+    /* Table Styles */
+    .table-luxury {
+        margin-bottom: 0;
+    }
+
+    .table-luxury thead th {
+        background: #f8fafc;
+        color: #475569;
+        font-size: 0.72rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.07em;
+        padding: 13px 18px;
+        border-bottom: 1px solid #cbd5e1;
+    }
+
+    .table-luxury tbody td {
+        padding: 15px 18px;
+        vertical-align: middle;
+        border-bottom: 1px solid #f1f5f9;
+        font-size: 0.88rem;
+    }
+
+    .table-luxury tbody tr:hover {
+        background-color: #f8fafc;
+    }
+
+    [data-bs-theme="dark"] .table-luxury thead th {
+        background: #0f172a;
+        color: #94a3b8;
+        border-color: #334155;
+    }
+
+    [data-bs-theme="dark"] .table-luxury tbody td {
+        border-color: #1e293b;
+        color: #cbd5e1;
+    }
+
+    .lead-avatar-sq {
+        width: 38px;
+        height: 38px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 0.88rem;
+        background: #eff6ff;
+        color: #1d4ed8;
+        border: 1px solid #bfdbfe;
+        flex-shrink: 0;
+    }
+</style>
+
+<div class="admin-dashboard-container">
+    <div class="container-fluid px-0">
+
+        <!-- ================= TOP EXECUTIVE WELCOME BANNER (SLIM) ================= -->
+        <div class="executive-hero-banner">
+            <div class="d-flex align-items-center flex-wrap gap-2">
+                <div class="hero-live-badge">
+                    <span class="live-pulse-dot"></span>
+                    <span>LIVE EPC</span>
                 </div>
+                <h5 class="fw-bold text-dark mb-0 d-flex align-items-center gap-2" style="font-size: 1.05rem;">
+                    <i class="bi bi-speedometer2 text-primary"></i>Executive Dashboard
+                </h5>
+                <span class="text-muted small d-none d-lg-inline ms-1" style="font-size: 0.76rem;">• Real-time solar EPC cashflow, milestones & inventory</span>
             </div>
-            <div class="col-12 col-sm-6 col-lg-3">
-                <div class="kpi-card text-center" style="background: linear-gradient(135deg, #10b981 0%, #34d399 100%);">
-                    <div class="kpi-icon"><i class="bi bi-wallet2"></i></div>
-                    <div class="kpi-value">₹{{ total_collected|intcomma }}</div>
-                    <div class="kpi-label">Total Collected</div>
-                </div>
-            </div>
-            <div class="col-12 col-sm-6 col-lg-3">
-                <div class="kpi-card text-center" style="background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);">
-                    <div class="kpi-icon"><i class="bi bi-hourglass-split"></i></div>
-                    <div class="kpi-value">₹{{ total_outstanding|intcomma }}</div>
-                    <div class="kpi-label">Outstanding Payments</div>
-                </div>
-            </div>
-            <div class="col-12 col-sm-6 col-lg-3">
-                <div class="kpi-card text-center" style="background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);">
-                    <div class="kpi-icon"><i class="bi bi-funnel"></i></div>
-                    <div class="kpi-value">₹{{ pipeline_value|intcomma }}</div>
-                    <div class="kpi-label">Pipeline Value (Est.)</div>
-                </div>
+            <div class="d-flex align-items-center gap-2">
+                <a href="{% url 'add_lead' %}" class="btn btn-outline-primary btn-sm rounded-pill px-3 py-1 fw-semibold shadow-xs" style="font-size: 0.78rem;">
+                    <i class="bi bi-person-plus me-1"></i>New Lead
+                </a>
+                <a href="{% url 'approval_dashboard' %}" class="btn btn-primary btn-sm rounded-pill px-3 py-1 fw-semibold text-white shadow-xs" style="font-size: 0.78rem;">
+                    <i class="bi bi-shield-check me-1"></i>Approval Engine
+                    {% if pending_approvals > 0 %}
+                    <span class="badge bg-danger ms-1 rounded-pill">{{ pending_approvals }}</span>
+                    {% endif %}
+                </a>
             </div>
         </div>
 
-        <!-- KPI CARDS - ROW 2 -->
-        <div class="row g-4 mb-4">
-            <div class="col-6 col-lg-2">
-                <div class="glass-card stat-box stat-box-leads">
-                    <span class="text-muted"><i class="bi bi-people me-1"></i> Total Leads</span>
-                    <h3 class="text-dark">{{ total_leads }}</h3>
-                </div>
-            </div>
-            <div class="col-6 col-lg-2">
-                <div class="glass-card stat-box stat-box-conv">
-                    <span class="text-muted"><i class="bi bi-arrow-repeat me-1"></i> Conv Rate</span>
-                    <h3 class="text-success">{{ conversion_rate }}%</h3>
-                </div>
-            </div>
-            <div class="col-6 col-lg-2">
-                <div class="glass-card stat-box stat-box-active">
-                    <span class="text-muted"><i class="bi bi-lightning-charge me-1"></i> Active</span>
-                    <h3 class="text-primary">{{ active_projects }}</h3>
-                </div>
-            </div>
-            <div class="col-6 col-lg-2">
-                <div class="glass-card stat-box stat-box-value">
-                    <span class="text-muted"><i class="bi bi-cash-stack me-1"></i> Avg Value</span>
-                    <h3 class="text-info">₹{{ avg_project_value|floatformat:0|intcomma }}</h3>
-                </div>
-            </div>
-            <div class="col-12 col-lg-4">
-                <div class="glass-card bottleneck-box p-3 h-100">
-                    <h6 class="text-danger fw-bold mb-3"><i class="bi bi-exclamation-triangle-fill me-2"></i> Workflow Bottlenecks</h6>
-                    <div class="d-flex justify-content-between text-dark fw-medium small mb-3">
-                        <span class="bg-light px-2 py-1 rounded">Installs: <span class="text-danger ms-1">{{ pending_installation }}</span></span>
-                        <span class="bg-light px-2 py-1 rounded">Net-M: <span class="text-danger ms-1">{{ pending_net_metering }}</span></span>
-                        <span class="bg-light px-2 py-1 rounded">Sub: <span class="text-danger ms-1">{{ pending_subsidy }}</span></span>
+        <!-- ================= ROW 1: 💰 FINANCIAL HEALTH & REVENUE INTELLIGENCE ================= -->
+        <div class="dashboard-section-bar">
+            <i class="bi bi-currency-rupee text-success"></i>Revenue & Financial Health
+        </div>
+        <div class="row g-3 mb-3">
+            <!-- 1. Total Revenue -->
+            <div class="col-12 col-sm-6 col-xl-3">
+                <div class="white-premium-card">
+                    <div class="card-top-bar bar-blue"></div>
+                    <div class="card-head-split">
+                        <div>
+                            <div class="card-label-sub">Total Revenue</div>
+                            <div class="card-value-hero text-primary">₹{{ revenue|intcomma }}</div>
+                        </div>
+                        <div class="card-icon-pill icon-pill-blue">
+                            <i class="bi bi-receipt"></i>
+                        </div>
                     </div>
-                    <div class="alert alert-danger py-2 px-3 mb-0 border-0 small fw-bold">
-                        <i class="bi bi-clock-history me-1"></i> {{ delayed_projects }} Projects Past SLA Deadline
+                    <span class="card-meta-pill pill-sub-blue">
+                        <i class="bi bi-graph-up-arrow me-1"></i>Total Invoiced Sites
+                    </span>
+                </div>
+            </div>
+
+            <!-- 2. Total Collected -->
+            <div class="col-12 col-sm-6 col-xl-3">
+                <div class="white-premium-card">
+                    <div class="card-top-bar bar-emerald"></div>
+                    <div class="card-head-split">
+                        <div>
+                            <div class="card-label-sub">Total Collected</div>
+                            <div class="card-value-hero text-success">₹{{ total_collected|intcomma }}</div>
+                        </div>
+                        <div class="card-icon-pill icon-pill-emerald">
+                            <i class="bi bi-wallet2"></i>
+                        </div>
+                    </div>
+                    <span class="card-meta-pill pill-sub-emerald">
+                        <i class="bi bi-check-circle-fill me-1"></i>{{ collection_rate }}% Realized
+                    </span>
+                </div>
+            </div>
+
+            <!-- 3. Outstanding Due -->
+            <div class="col-12 col-sm-6 col-xl-3">
+                <div class="white-premium-card">
+                    <div class="card-top-bar bar-rose"></div>
+                    <div class="card-head-split">
+                        <div>
+                            <div class="card-label-sub">Outstanding Due</div>
+                            <div class="card-value-hero {% if total_outstanding > 0 %}text-danger{% else %}text-muted{% endif %}">
+                                ₹{{ total_outstanding|intcomma }}
+                            </div>
+                        </div>
+                        <div class="card-icon-pill icon-pill-rose">
+                            <i class="bi bi-hourglass-split"></i>
+                        </div>
+                    </div>
+                    <span class="card-meta-pill {% if total_outstanding > 0 %}pill-sub-rose{% else %}pill-sub-emerald{% endif %}">
+                        <i class="bi bi-clock-history me-1"></i>Receivables Due
+                    </span>
+                </div>
+            </div>
+
+            <!-- 4. Estimated Pipeline -->
+            <div class="col-12 col-sm-6 col-xl-3">
+                <div class="white-premium-card">
+                    <div class="card-top-bar bar-cyan"></div>
+                    <div class="card-head-split">
+                        <div>
+                            <div class="card-label-sub">Pipeline (Est.)</div>
+                            <div class="card-value-hero text-info">₹{{ pipeline_value|intcomma }}</div>
+                        </div>
+                        <div class="card-icon-pill icon-pill-cyan">
+                            <i class="bi bi-funnel-fill"></i>
+                        </div>
+                    </div>
+                    <span class="card-meta-pill pill-sub-cyan">
+                        <i class="bi bi-filter me-1"></i>Deals in Funnel
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= ROW 2: ⚡ SOLAR EPC OPERATIONS & CRITICAL ALERTS (3 REQUESTED CARDS) ================= -->
+        <div class="dashboard-section-bar">
+            <i class="bi bi-shield-exclamation text-warning"></i>Operations & Critical Site Alerts
+        </div>
+        <div class="row g-3 mb-3">
+            <!-- 5. Active Projects -->
+            <div class="col-12 col-sm-6 col-xl-3">
+                <div class="white-premium-card">
+                    <div class="card-top-bar bar-amber"></div>
+                    <div class="card-head-split">
+                        <div>
+                            <div class="card-label-sub">Active Projects</div>
+                            <div class="card-value-hero text-dark">{{ active_projects }} Sites</div>
+                        </div>
+                        <div class="card-icon-pill icon-pill-amber">
+                            <i class="bi bi-lightning-charge-fill"></i>
+                        </div>
+                    </div>
+                    <span class="card-meta-pill pill-sub-amber">
+                        <i class="bi bi-sun-fill me-1"></i>Installation In-Progress
+                    </span>
+                </div>
+            </div>
+
+            <!-- 6. CRITICAL CARD 1: Delayed Projects Alert -->
+            <div class="col-12 col-sm-6 col-xl-3">
+                <div class="white-premium-card">
+                    <div class="card-top-bar bar-rose"></div>
+                    <div class="card-head-split">
+                        <div>
+                            <div class="card-label-sub">Delayed Projects</div>
+                            <div class="card-value-hero {% if delayed_projects > 0 %}text-danger{% else %}text-success{% endif %}">
+                                {{ delayed_projects }}
+                            </div>
+                        </div>
+                        <div class="card-icon-pill icon-pill-rose">
+                            <i class="bi bi-exclamation-octagon-fill"></i>
+                        </div>
+                    </div>
+                    <span class="card-meta-pill {% if delayed_projects > 0 %}pill-sub-rose{% else %}pill-sub-emerald{% endif %}">
+                        <i class="bi bi-alarm-fill me-1"></i>
+                        {% if delayed_projects > 0 %}{{ delayed_projects }} Past Deadline{% else %}All on Schedule{% endif %}
+                    </span>
+                </div>
+            </div>
+
+            <!-- 7. CRITICAL CARD 2: Pending Subsidies -->
+            <div class="col-12 col-sm-6 col-xl-3">
+                <div class="white-premium-card">
+                    <div class="card-top-bar bar-purple"></div>
+                    <div class="card-head-split">
+                        <div>
+                            <div class="card-label-sub">Pending Subsidies</div>
+                            <div class="card-value-hero" style="color: #7c3aed;">{{ pending_subsidy }}</div>
+                        </div>
+                        <div class="card-icon-pill icon-pill-purple">
+                            <i class="bi bi-bank2"></i>
+                        </div>
+                    </div>
+                    <span class="card-meta-pill pill-sub-purple">
+                        <i class="bi bi-shield-check me-1"></i>DISCOM / MNRE DBT Portal
+                    </span>
+                </div>
+            </div>
+
+            <!-- 8. CRITICAL CARD 3: Low Stock Items Threshold Alert -->
+            <div class="col-12 col-sm-6 col-xl-3">
+                <div class="white-premium-card">
+                    <div class="card-top-bar bar-orange"></div>
+                    <div class="card-head-split">
+                        <div>
+                            <div class="card-label-sub">Low Stock Items</div>
+                            <div class="card-value-hero {% if low_stock_count > 0 %}text-warning{% else %}text-success{% endif %}">
+                                {{ low_stock_count }}
+                            </div>
+                        </div>
+                        <div class="card-icon-pill icon-pill-orange">
+                            <i class="bi bi-boxes"></i>
+                        </div>
+                    </div>
+                    <span class="card-meta-pill {% if low_stock_count > 0 %}pill-sub-orange{% else %}pill-sub-emerald{% endif %}">
+                        <i class="bi bi-box-seam me-1"></i>
+                        {% if low_stock_count > 0 %}{{ low_stock_count }} Below Min Threshold{% else %}Inventory Optimal{% endif %}
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= ROW 3: 👥 CRM VELOCITY & COMMERCIAL METRICS ================= -->
+        <div class="dashboard-section-bar">
+            <i class="bi bi-people text-primary"></i>CRM & Velocity Metrics
+        </div>
+        <div class="row g-3 mb-3">
+            <!-- 9. Total Leads -->
+            <div class="col-12 col-sm-6 col-xl-3">
+                <div class="white-premium-card">
+                    <div class="card-top-bar bar-blue"></div>
+                    <div class="card-head-split">
+                        <div>
+                            <div class="card-label-sub">Total Leads</div>
+                            <div class="card-value-hero text-dark">{{ total_leads }}</div>
+                        </div>
+                        <div class="card-icon-pill icon-pill-blue">
+                            <i class="bi bi-people-fill"></i>
+                        </div>
+                    </div>
+                    <span class="card-meta-pill pill-sub-blue">
+                        <i class="bi bi-person-lines-fill me-1"></i>All Inquiries Logged
+                    </span>
+                </div>
+            </div>
+
+            <!-- 10. Conversion Rate -->
+            <div class="col-12 col-sm-6 col-xl-3">
+                <div class="white-premium-card">
+                    <div class="card-top-bar bar-emerald"></div>
+                    <div class="card-head-split">
+                        <div>
+                            <div class="card-label-sub">Conversion Rate</div>
+                            <div class="card-value-hero text-success">{{ conversion_rate }}%</div>
+                        </div>
+                        <div class="card-icon-pill icon-pill-emerald">
+                            <i class="bi bi-trophy-fill"></i>
+                        </div>
+                    </div>
+                    <span class="card-meta-pill pill-sub-emerald">
+                        <i class="bi bi-check2-all me-1"></i>Won {{ converted }} of {{ total_leads }}
+                    </span>
+                </div>
+            </div>
+
+            <!-- 11. Average Project Value -->
+            <div class="col-12 col-sm-6 col-xl-3">
+                <div class="white-premium-card">
+                    <div class="card-top-bar bar-teal"></div>
+                    <div class="card-head-split">
+                        <div>
+                            <div class="card-label-sub">Avg Project Value</div>
+                            <div class="card-value-hero text-dark">₹{{ avg_project_value|floatformat:0|intcomma }}</div>
+                        </div>
+                        <div class="card-icon-pill icon-pill-teal">
+                            <i class="bi bi-calculator"></i>
+                        </div>
+                    </div>
+                    <span class="card-meta-pill pill-sub-teal">
+                        <i class="bi bi-cash me-1"></i>Per Site Average
+                    </span>
+                </div>
+            </div>
+
+            <!-- 12. Net Metering Sync -->
+            <div class="col-12 col-sm-6 col-xl-3">
+                <div class="white-premium-card">
+                    <div class="card-top-bar bar-indigo"></div>
+                    <div class="card-head-split">
+                        <div>
+                            <div class="card-label-sub">Net Metering Queue</div>
+                            <div class="card-value-hero text-primary">{{ pending_net_metering }}</div>
+                        </div>
+                        <div class="card-icon-pill icon-pill-indigo">
+                            <i class="bi bi-cpu-fill"></i>
+                        </div>
+                    </div>
+                    <span class="card-meta-pill pill-sub-indigo">
+                        <i class="bi bi-plug-fill me-1"></i>Grid Meter Sync
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= ROW 4: ANALYTICS CHARTS SECTION ================= -->
+        <div class="row g-4 mb-4">
+            <!-- Financial Collections Realization -->
+            <div class="col-12 col-lg-5">
+                <div class="white-premium-panel">
+                    <div class="panel-header-wrap">
+                        <h6 class="panel-heading">
+                            <i class="bi bi-pie-chart-fill text-success"></i>Collections vs Outstanding
+                        </h6>
+                        <span class="card-meta-pill pill-sub-emerald m-0">
+                            {{ collection_rate }}% Realized
+                        </span>
+                    </div>
+
+                    <div class="d-flex flex-column flex-sm-row align-items-center justify-content-between gap-4 py-2">
+                        <div style="width: 145px; height: 145px; flex-shrink: 0; position: relative;">
+                            <canvas id="financeChart"></canvas>
+                            <div class="position-absolute top-50 start-50 translate-middle text-center" style="pointer-events: none;">
+                                <div class="fw-bold text-dark fs-6">{{ collection_rate }}%</div>
+                                <div class="text-muted" style="font-size: 0.62rem; font-weight: 700;">REALIZED</div>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1 w-100">
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between small mb-1">
+                                    <span class="text-muted fw-semibold">Collected Amount</span>
+                                    <strong class="text-success">₹{{ total_collected|intcomma }}</strong>
+                                </div>
+                                <div class="progress" style="height: 8px; border-radius: 4px; background: #e2e8f0;">
+                                    <div class="progress-bar bg-success" role="progressbar" style="width: {{ collection_rate }}%;"></div>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between small mb-1">
+                                    <span class="text-muted fw-semibold">Outstanding Due</span>
+                                    <strong class="text-danger">₹{{ total_outstanding|intcomma }}</strong>
+                                </div>
+                                <div class="progress" style="height: 8px; border-radius: 4px; background: #e2e8f0;">
+                                    <div class="progress-bar bg-danger" role="progressbar" style="width: {% widthratio total_outstanding revenue 100 %}%;"></div>
+                                </div>
+                            </div>
+
+                            <div class="pt-2 border-top d-flex justify-content-between align-items-center">
+                                <span class="small text-muted fw-semibold">Total Invoiced</span>
+                                <span class="fw-bold text-dark">₹{{ revenue|intcomma }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Solar Project Type Distribution -->
+            <div class="col-12 col-lg-7">
+                <div class="white-premium-panel">
+                    <div class="panel-header-wrap">
+                        <h6 class="panel-heading">
+                            <i class="bi bi-bar-chart-fill text-primary"></i>Solar Project Type Distribution
+                        </h6>
+                        <span class="card-meta-pill pill-sub-blue m-0">
+                            {{ active_projects }} Active Sites
+                        </span>
+                    </div>
+                    <div style="height: 185px;">
+                        <canvas id="projectTypeChart"></canvas>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- CHART ROW -->
-        <div class="row mt-4">
-            <!-- Revenue vs Pending Payments Bar -->
-            <div class="col-md-6 mb-4">
-                <div class="glass-card p-4">
-                    <h6 class="fw-bold mb-3">Collections vs Outstanding</h6>
-                    <canvas id="financeChart"></canvas>
-                </div>
+        <!-- ================= ROW 5: RECENT INQUIRIES & SITE LEADS ================= -->
+        <div class="white-premium-panel mb-4">
+            <div class="panel-header-wrap">
+                <h6 class="panel-heading">
+                    <i class="bi bi-person-lines-fill text-primary"></i>Recent Inquiries & Site Leads
+                </h6>
+                <a href="{% url 'lead_list' %}" class="btn btn-sm btn-link text-decoration-none fw-semibold">
+                    View All Leads <i class="bi bi-arrow-right"></i>
+                </a>
             </div>
-
-            <!-- Project Type Distribution -->
-            <div class="col-md-6 mb-4">
-                <div class="glass-card p-4">
-                    <h6 class="fw-bold mb-3">Project Type Distribution</h6>
-                    <canvas id="projectTypeChart"></canvas>
-                </div>
+            <div class="table-responsive">
+                <table class="table table-luxury align-middle">
+                    <thead>
+                        <tr>
+                            <th>Customer Name</th>
+                            <th>Contact Phone</th>
+                            <th>Service Requested</th>
+                            <th>Status</th>
+                            <th class="text-end">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for lead in recent_leads %}
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="lead-avatar-sq">
+                                        {{ lead.name|slice:":1"|upper }}
+                                    </div>
+                                    <div>
+                                        <div class="fw-bold text-dark">{{ lead.name }}</div>
+                                        <small class="text-muted">{{ lead.location|default:"Location N/A" }}</small>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <a href="tel:{{ lead.phone }}" class="text-decoration-none text-dark fw-semibold">
+                                    <i class="bi bi-telephone text-primary me-1"></i>{{ lead.phone }}
+                                </a>
+                            </td>
+                            <td>
+                                <span class="badge bg-light text-dark border px-2 py-1">
+                                    {{ lead.get_service_display }}
+                                </span>
+                            </td>
+                            <td>
+                                {% if lead.status == 'converted' %}
+                                <span class="card-meta-pill pill-sub-emerald m-0">
+                                    <i class="bi bi-check-circle me-1"></i>Converted to Project
+                                </span>
+                                {% elif lead.status == 'new' %}
+                                <span class="card-meta-pill pill-sub-blue m-0">
+                                    <i class="bi bi-stars me-1"></i>New Lead
+                                </span>
+                                {% elif lead.status == 'contacted' %}
+                                <span class="card-meta-pill pill-sub-cyan m-0">
+                                    <i class="bi bi-chat-dots me-1"></i>Contacted
+                                </span>
+                                {% else %}
+                                <span class="badge bg-secondary-subtle text-secondary border px-2 py-1">
+                                    {{ lead.get_status_display }}
+                                </span>
+                                {% endif %}
+                            </td>
+                            <td class="text-end">
+                                <a href="{% url 'view_lead' lead.id %}" class="btn btn-sm btn-outline-primary rounded-pill px-3 py-1 shadow-xs" style="font-size: 0.78rem;">
+                                    View Details
+                                </a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" class="text-center py-4 text-muted">
+                                No recent inquiries logged yet
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
-        </div>
-
-        <!-- CHART ROW 2 -->
-        <div class="row">
-            <!-- Lead Conversion Doughnut -->
-            <div class="col-md-6 mb-4">
-                <div class="glass-card p-4">
-                    <h6 class="fw-bold mb-3">Lead to Project Conversion</h6>
-                    <canvas id="conversionChart" width="300" height="300"></canvas>
-                </div>
-            </div>
-
-            <!-- Project Status Pie -->
-            <div class="col-md-6 mb-4">
-                <div class="glass-card p-4">
-                    <h6 class="fw-bold mb-3">Project Status Distribution</h6>
-                    <canvas id="statusChart"></canvas>
-                </div>
-            </div>
-        </div>
-
-        <!-- RECENT LEADS -->
-        <div class="glass-card p-4 mb-4">
-            <h5 class="fw-bold mb-4">Recent Leads</h5>
-            <div class="table-responsive-wrapper">
-                    <table class="table table-hover">
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Phone</th>
-                                <th>Service</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for lead in recent_leads %}
-                            <tr>
-                                <td>{{ lead.name }}</td>
-                                <td>{{ lead.phone }}</td>
-                                <td>{{ lead.get_service_display }}</td>
-                                <td>
-                                    <span class="badge bg-primary">{{ lead.get_status_display }}</span>
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
         </div>
 
     </div>
 </div>
 
-<!-- SCRIPTS -->
+<!-- ================= CHARTS SCRIPTS ================= -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
 
 <script>
-const converted = {{ converted }};
-const notConverted = {{ not_converted }};
-const totalLeads = converted + notConverted || 1;
+    const projectTypes = {{ project_types|safe }};
+    const projectCounts = {{ project_counts|safe }};
+    const totalCollected = {{ total_collected }};
+    const totalOutstanding = {{ total_outstanding }};
 
-const projectTypes = {{ project_types|safe }};
-const projectCounts = {{ project_counts|safe }};
-const projectStatuses = {{ statuses|safe }};
-const statusCounts = {{ status_counts|safe }};
+    const formattedTypes = projectTypes.map(t => {
+        const map = {
+            'ongrid': 'On-Grid',
+            'offgrid': 'Off-Grid',
+            'hybrid': 'Hybrid',
+            'leakproof': 'Roof EPC',
+            'commercial': 'Commercial'
+        };
+        return map[t] || t.toUpperCase();
+    });
 
-const revenue = {{ revenue }};
-const totalCollected = {{ total_collected }};
-const totalOutstanding = {{ total_outstanding }};
-
-// =======================
-// Lead Conversion Doughnut
-// =======================
-new Chart(document.getElementById('conversionChart'), {
-    type: 'doughnut',
-    data: {
-        labels: ['Converted', 'Not Converted'],
-        datasets: [{
-            data: [converted, notConverted],
-            backgroundColor: ['#28a745', '#dc3545'],
-            borderWidth: 1
-        }]
-    },
-    options: {
-        plugins: {
-            legend: { position: 'bottom' },
-            tooltip: {
-                callbacks: {
-                    label: function(ctx) {
-                        const value = ctx.parsed;
-                        const percent = ((value / totalLeads) * 100).toFixed(1);
-                        return `${ctx.label}: ${value} (${percent}%)`;
+    // 1. Project Type Bar Chart
+    const ctxBar = document.getElementById('projectTypeChart');
+    if (ctxBar) {
+        new Chart(ctxBar, {
+            type: 'bar',
+            data: {
+                labels: formattedTypes,
+                datasets: [{
+                    data: projectCounts,
+                    backgroundColor: [
+                        '#2563eb',
+                        '#059669',
+                        '#d97706',
+                        '#7c3aed',
+                        '#0284c7'
+                    ],
+                    borderRadius: 8,
+                    maxBarThickness: 38
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: '#0f172a',
+                        padding: 10,
+                        cornerRadius: 8
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: { display: false },
+                        ticks: { font: { size: 11, weight: '600' } }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        ticks: { precision: 0 },
+                        grid: { color: 'rgba(0, 0, 0, 0.05)' }
                     }
                 }
-            },
-            datalabels: {
-                color: '#fff',
-                formatter: (value) => ((value / totalLeads) * 100).toFixed(1) + '%',
-                font: { weight: 'bold', size: 14 }
             }
-        },
-        cutout: '60%'
-    },
-    plugins: [ChartDataLabels]
-});
-
-// =======================
-// Project Type Bar
-// =======================
-new Chart(document.getElementById('projectTypeChart'), {
-    type: 'bar',
-    data: {
-        labels: projectTypes,
-        datasets: [{
-            label: 'Number of Projects',
-            data: projectCounts,
-            backgroundColor: ['#0d6efd','#198754','#ffc107','#6f42c1','#dc3545']
-        }]
-    },
-    options: {
-        plugins: { legend: { display: false } }
+        });
     }
-});
 
-// =======================
-// Project Status Pie
-// =======================
-new Chart(document.getElementById('statusChart'), {
-    type: 'pie',
-    data: {
-        labels: {{ statuses|safe }},
-        datasets: [{
-            data: {{ status_counts|safe }},
-            backgroundColor: ['#ffc107','#17a2b8','#007bff','#6f42c1','#28a745','#6c757d','#fd7e14','#0dcaf0','#198754','#dc3545']
-        }]
-    },
-    options: {
-        plugins: { legend: { position: 'bottom' } }
+    // 2. Financial Collections Compact Doughnut Chart
+    const ctxDoughnut = document.getElementById('financeChart');
+    if (ctxDoughnut) {
+        new Chart(ctxDoughnut, {
+            type: 'doughnut',
+            data: {
+                labels: ['Collected', 'Outstanding'],
+                datasets: [{
+                    data: [totalCollected, totalOutstanding],
+                    backgroundColor: ['#10b981', '#ef4444'],
+                    borderWidth: 2,
+                    borderColor: '#ffffff',
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '76%',
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: function(ctx) {
+                                return ' ₹' + (ctx.raw || 0).toLocaleString('en-IN');
+                            }
+                        }
+                    }
+                }
+            }
+        });
     }
-});
-
-// =======================
-// Revenue vs Pending Payments Bar
-// =======================
-new Chart(document.getElementById('financeChart'), {
-    type: 'bar',
-    data: {
-        labels: ['Collected','Outstanding'],
-        datasets: [{
-            label: 'Amount (₹)',
-            data: [totalCollected, totalOutstanding],
-            backgroundColor: ['#28a745','#dc3545']
-        }]
-    },
-    options: {
-        plugins: { legend: { display: false } },
-        scales: {
-            y: { beginAtZero: true }
-        }
-    }
-});
 </script>
-
 {% endblock %}

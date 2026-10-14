@@ -323,14 +323,28 @@ def stock_list(request):
 
 @login_required(login_url='/users/login')
 def allocation_list(request):
-
+    user = request.user
     q = request.GET.get("q")
 
-    allocations = MaterialAllocation.objects.select_related(
+    if user.role in ['admin', 'manager', 'director', 'procurement'] or user.is_superuser:
+        allocations = MaterialAllocation.objects.all()
+    elif user.role == 'subcontractor':
+        allocations = MaterialAllocation.objects.filter(project__subcontractor_tasks__subcontractor=user)
+    elif user.role == 'engineer':
+        allocations = MaterialAllocation.objects.filter(
+            Q(project__engineer__user=user) | Q(project__installation_tasks__assigned_to=user)
+        )
+    elif user.role == 'staff':
+        allocations = MaterialAllocation.objects.filter(project__installation_tasks__assigned_to=user)
+    else:
+        allocations = MaterialAllocation.objects.none()
+
+    allocations = allocations.select_related(
         "project",
         "material",
+        "material__stock",
         "allocated_by"
-    ).order_by("project__title", "-allocated_date")
+    ).order_by("project__title", "-allocated_date").distinct()
 
     if q:
         allocations = allocations.filter(
@@ -352,44 +366,91 @@ def allocation_list(request):
 
 
 
+@login_required(login_url='/users/login')
 def allocate_material(request):
+    user = request.user
     if request.method == "POST":
-        form = MaterialAllocationForm(request.POST)
+        form = MaterialAllocationForm(request.POST, user=user)
 
         if form.is_valid():
             allocation = form.save(commit=False)
+            material_name = form.cleaned_data.get('material_name', '').strip()
+            quantity = form.cleaned_data.get('quantity', 1)
 
-            material = allocation.material
-            quantity = allocation.quantity
-
-            # 🔴 Prevent over allocation
-            if quantity > material.stock.quantity:
-                form.add_error('quantity', 'Not enough stock available.')
+            if not material_name:
+                form.add_error('material_name', 'Please write or enter material/hardware name.')
+            elif quantity <= 0:
+                form.add_error('quantity', 'Quantity must be at least 1.')
             else:
-                # ✅ Auto assign user
-                allocation.allocated_by = request.user
+                # Find existing material or dynamically create from manual input
+                material = Material.objects.filter(name__iexact=material_name).first()
+                if not material:
+                    material = Material.objects.create(
+                        name=material_name,
+                        category='accessory',
+                        unit='Units',
+                        minimum_stock=0
+                    )
+                    Stock.objects.get_or_create(material=material, defaults={'quantity': 100})
 
-                # ✅ Save allocation
+                allocation.material = material
+                allocation.quantity = quantity
+                allocation.allocated_by = request.user
                 allocation.save()
 
-                # ✅ Deduct stock
-                material.stock.quantity -= quantity
-                material.stock.save()
+                # Deduct stock if available
+                if hasattr(material, 'stock') and material.stock.quantity > 0:
+                    material.stock.quantity = max(0, material.stock.quantity - quantity)
+                    material.stock.save()
 
-                messages.success(request, "Material allocated successfully.")
+                messages.success(request, f"Material '{material.name}' ({quantity} {material.unit}) allocated to '{allocation.project.title}' successfully.")
                 return redirect('allocation_list')
 
     else:
-        form = MaterialAllocationForm()
+        form = MaterialAllocationForm(user=user)
 
-    return render(request, 'dashboard/allocate_material.html', {'form': form})
+    project_count = form.fields['project'].queryset.count()
+    all_materials = Material.objects.select_related('stock').all().order_by('name')
 
-def get_material_stock(request, material_id):
-    material = get_object_or_404(Material, id=material_id)
-
-    return JsonResponse({
-        'stock': material.stock.quantity
+    return render(request, 'dashboard/allocate_material.html', {
+        'form': form,
+        'project_count': project_count,
+        'all_materials': all_materials,
     })
+
+
+def get_material_stock(request, material_id=None):
+    name = request.GET.get('name')
+    if name:
+        material = Material.objects.filter(name__iexact=name.strip()).first()
+    elif material_id:
+        material = Material.objects.filter(id=material_id).first()
+    else:
+        material = None
+
+    if not material:
+        return JsonResponse({
+            'exists': False,
+            'stock': 0,
+            'unit': 'Units',
+            'name': name or '',
+            'category': 'Custom / Site Hardware',
+            'is_low_stock': False,
+            'min_stock': 0
+        })
+
+    stock_qty = material.stock.quantity if hasattr(material, 'stock') else 0
+    return JsonResponse({
+        'exists': True,
+        'stock': stock_qty,
+        'unit': material.unit or 'Units',
+        'name': material.name,
+        'category': material.get_category_display() if material.category else 'General',
+        'is_low_stock': material.is_low_stock,
+        'min_stock': material.minimum_stock,
+    })
+
+
 
 def request_material(request):
     MaterialFormSet = modelformset_factory(
@@ -402,7 +463,8 @@ def request_material(request):
     if request.method == "POST":
         formset = MaterialFormSet(
             request.POST,
-            queryset=MaterialAllocation.objects.none()
+            queryset=MaterialAllocation.objects.none(),
+            form_kwargs={'user': request.user}
         )
 
         if formset.is_valid():
@@ -412,14 +474,27 @@ def request_material(request):
                 if form.cleaned_data.get('DELETE'):
                     continue
 
-                project = form.cleaned_data['project']
-                material = form.cleaned_data['material']
-                quantity = form.cleaned_data['quantity']
+                project = form.cleaned_data.get('project')
+                material_name = form.cleaned_data.get('material_name', '').strip()
+                quantity = form.cleaned_data.get('quantity', 1)
+
+                if not project or not material_name:
+                    continue
+
+                # Match existing warehouse material or create new custom material
+                material = Material.objects.filter(name__iexact=material_name).first()
+                if not material:
+                    material = Material.objects.create(
+                        name=material_name,
+                        unit='Units',
+                        minimum_stock=0
+                    )
+                    Stock.objects.get_or_create(material=material, defaults={'quantity': 0})
 
                 existing = MaterialAllocation.objects.filter(
                     project=project,
                     material=material,
-                    allocated_by=request.user.employee,
+                    allocated_by=request.user,
                     status='pending'
                 ).first()
 
@@ -429,15 +504,25 @@ def request_material(request):
                     existing.save()
                 else:
                     allocation = form.save(commit=False)
-                    allocation.allocated_by = request.user.employee
+                    allocation.material = material
+                    allocation.allocated_by = request.user
+                    allocation.status = 'pending'
                     allocation.save()
 
+            messages.success(request, "Material request(s) submitted successfully.")
             return redirect('my_requests')
 
     else:
-        formset = MaterialFormSet(queryset=MaterialAllocation.objects.none())
+        formset = MaterialFormSet(
+            queryset=MaterialAllocation.objects.none(),
+            form_kwargs={'user': request.user}
+        )
 
-    return render(request, "dashboard/request_material.html", {"formset": formset})
+    all_materials = Material.objects.all().order_by('name')
+    return render(request, "dashboard/request_material.html", {
+        "formset": formset,
+        "all_materials": all_materials
+    })
 
 
 def my_requests(request):
@@ -470,19 +555,16 @@ def admin_material_requests(request):
         req = get_object_or_404(MaterialAllocation, id=req_id)
 
         admin_user = request.user
-        requester = req.allocated_by.user if req.allocated_by else None
-
-        # ✅ SAFELY GET EMPLOYEE
-        employee = getattr(request.user, "employee", None)
+        requester = getattr(req.allocated_by, 'user', req.allocated_by) if req.allocated_by else None
 
         if action == "approve":
             try:
                 with transaction.atomic():
 
                     # 🔹 STOCK CHECK & DEDUCT
-                    stock = req.material.stock
+                    stock, _ = Stock.objects.get_or_create(material=req.material, defaults={'quantity': 0})
                     if stock.quantity < req.quantity:
-                        raise ValueError(f"Not enough stock for {req.material.name}")
+                        raise ValueError(f"Not enough stock for {req.material.name}. Available: {stock.quantity}, Requested: {req.quantity}")
 
                     stock.quantity -= req.quantity
                     stock.save()
@@ -491,29 +573,26 @@ def admin_material_requests(request):
                     req.status = "approved"
                     req.save(update_fields=["status"])
 
-                    # 🔹 CALCULATE COST
-                    if not req.material.unit_price:
-                        raise ValueError(f"Price not set for {req.material.name}")
+                    # 🔹 CALCULATE COST & CREATE EXPENSE
+                    unit_price = req.material.unit_price or 0
+                    total_cost = req.quantity * unit_price
 
-                    total_cost = req.quantity * req.material.unit_price
+                    if total_cost > 0:
+                        report, created = ExpenseReport.objects.get_or_create(
+                            project=req.project,
+                            expense_date=date.today(),
+                            category='materials',
+                            defaults={
+                                "submitted_by": admin_user,
+                                "notes": f"Material allocation expenses for {req.project.title}"
+                            }
+                        )
 
-                    # 🔹 CREATE / GET EXPENSE REPORT
-                    report, created = ExpenseReport.objects.get_or_create(
-                        project=req.project,
-                        expense_date=date.today(),
-                        category='materials',
-                        defaults={
-                            "submitted_by": employee,
-                            "notes": f"Material allocation expenses for {req.project.title}"
-                        }
-                    )
-
-                    # 🔹 ADD EXPENSE ITEM
-                    ExpenseItem.objects.create(
-                        report=report,
-                        description=f"{req.material.name} ({req.quantity} {req.material.unit})",
-                        amount=total_cost
-                    )
+                        ExpenseItem.objects.create(
+                            report=report,
+                            description=f"{req.material.name} ({req.quantity} {req.material.unit})",
+                            amount=total_cost
+                        )
 
                 # 🔹 NOTIFICATION (SUCCESS)
                 if requester:
@@ -525,6 +604,7 @@ def admin_material_requests(request):
                         category="material"
                     )
 
+                messages.success(request, f"Material request for {req.material.name} ({req.quantity}) approved successfully.")
                 return redirect('admin_material_requests')
 
             except ValueError as e:
@@ -538,6 +618,7 @@ def admin_material_requests(request):
                     category="error"
                 )
 
+                messages.error(request, str(e))
                 return render(request, "dashboard/admin/material_requests.html", {
                     "pending_requests": pending_requests,
                     "history": history,
@@ -558,9 +639,206 @@ def admin_material_requests(request):
                     category="material"
                 )
 
+            messages.warning(request, f"Material request for {req.material.name} rejected.")
             return redirect('admin_material_requests')
 
     return render(request, "dashboard/admin/material_requests.html", {
         "pending_requests": pending_requests,
         "history": history
     })
+
+
+# ===============================
+# BOM / KIT ASSIGNMENT
+# ===============================
+@login_required(login_url='/users/login')
+def assign_kit_to_project(request, pid):
+    from projects.models import Project
+    project = get_object_or_404(Project, pk=pid)
+    
+    if request.method == 'POST':
+        kit_id = request.POST.get('kit_id')
+        if kit_id:
+            kit = get_object_or_404(KitConfiguration, id=kit_id)
+            # Create Material Allocations for each item in the kit
+            for item in kit.items.all():
+                # Check if allocation already exists
+                allocation, created = MaterialAllocation.objects.get_or_create(
+                    project=project,
+                    material=item.material,
+                    defaults={
+                        'quantity': item.quantity,
+                        'allocated_by': request.user,
+                        'status': 'pending'
+                    }
+                )
+                if not created:
+                    allocation.quantity += item.quantity
+                    allocation.save()
+                    
+            messages.success(request, f'Successfully assigned BOM Template: {kit.name} to {project.title}')
+        return redirect('project_detail', pid=project.id)
+        
+    kits = KitConfiguration.objects.filter(is_active=True)
+    return render(request, 'dashboard/admin/assign_kit.html', {'project': project, 'kits': kits})
+
+
+# ===============================
+# FEATURE 13: PROCUREMENT INTELLIGENCE (RFQ)
+# ===============================
+
+@login_required(login_url='/users/login')
+def rfq_list(request):
+    if request.method == 'POST':
+        title = request.POST.get('title', '').strip()
+        project_id = request.POST.get('project_id')
+        due_date = request.POST.get('due_date')
+        status = request.POST.get('status', 'published')
+
+        material_ids = request.POST.getlist('material_id[]')
+        quantities = request.POST.getlist('quantity[]')
+        target_prices = request.POST.getlist('target_price[]')
+
+        if not title or not due_date:
+            messages.error(request, 'RFQ Title and Due Date are required.')
+            return redirect('rfq_list')
+
+        project = None
+        if project_id:
+            try:
+                from projects.models import Project
+                project = Project.objects.get(id=project_id)
+            except:
+                pass
+
+        rfq = RequestForQuotation.objects.create(
+            title=title,
+            project=project,
+            due_date=due_date,
+            status=status,
+            created_by=request.user
+        )
+
+        item_count = 0
+        for mid, qty, tp in zip(material_ids, quantities, target_prices):
+            if mid and qty:
+                RFQItem.objects.create(
+                    rfq=rfq,
+                    material_id=mid,
+                    quantity=int(qty),
+                    target_price=float(tp) if tp else None
+                )
+                item_count += 1
+
+        messages.success(request, f'RFQ #{rfq.id:04d} "{rfq.title}" created with {item_count} items.')
+        return redirect('rfq_detail', rfq_id=rfq.id)
+
+    rfqs = RequestForQuotation.objects.all().order_by('-created_at')
+    from projects.models import Project
+    projects = Project.objects.all().order_by('title')
+    materials = Material.objects.all().order_by('name')
+
+    return render(request, 'dashboard/procurement/rfq_list.html', {
+        'rfqs': rfqs,
+        'projects': projects,
+        'materials': materials,
+        'now': timezone.now()
+    })
+
+@login_required(login_url='/users/login')
+def rfq_detail(request, rfq_id):
+    rfq = get_object_or_404(RequestForQuotation, id=rfq_id)
+    quotations = rfq.quotations.all().order_by('total_amount')
+    
+    if quotations.exists():
+        # Auto-detect L1 (Lowest Bidder)
+        l1_quote = quotations.first()
+        if not l1_quote.is_l1:
+            VendorQuotation.objects.filter(rfq=rfq).update(is_l1=False)
+            l1_quote.is_l1 = True
+            l1_quote.save(update_fields=['is_l1'])
+
+    vendors = Vendor.objects.all().order_by('name')
+
+    context = {
+        'rfq': rfq,
+        'quotations': quotations,
+        'vendors': vendors
+    }
+    return render(request, 'dashboard/procurement/rfq_detail.html', context)
+
+@login_required(login_url='/users/login')
+def add_vendor_quotation(request, rfq_id):
+    rfq = get_object_or_404(RequestForQuotation, id=rfq_id)
+    if request.method == 'POST':
+        vendor_id = request.POST.get('vendor_id')
+        delivery_days = request.POST.get('delivery_days', 7)
+        payment_terms = request.POST.get('payment_terms', 'Standard')
+
+        if not vendor_id:
+            messages.error(request, 'Please select a vendor.')
+            return redirect('rfq_detail', rfq_id=rfq.id)
+
+        vendor = get_object_or_404(Vendor, id=vendor_id)
+
+        quote = VendorQuotation.objects.create(
+            rfq=rfq,
+            vendor=vendor,
+            delivery_days=int(delivery_days) if delivery_days else 7,
+            payment_terms=payment_terms,
+            status='submitted'
+        )
+
+        total = 0
+        for item in rfq.items.all():
+            price = request.POST.get(f'item_price_{item.id}')
+            if price:
+                u_price = float(price)
+                QuotationItem.objects.create(
+                    quotation=quote,
+                    rfq_item=item,
+                    unit_price=u_price
+                )
+                total += item.quantity * u_price
+
+        quote.total_amount = total
+        quote.save(update_fields=['total_amount'])
+
+        if rfq.status in ['draft', 'published']:
+            rfq.status = 'evaluating'
+            rfq.save(update_fields=['status'])
+
+        messages.success(request, f'Quotation from {vendor.name} (Total: ₹{total:,.2f}) added successfully.')
+
+    return redirect('rfq_detail', rfq_id=rfq.id)
+
+@login_required(login_url='/users/login')
+def award_rfq(request, rfq_id, quote_id):
+    rfq = get_object_or_404(RequestForQuotation, id=rfq_id)
+    quote = get_object_or_404(VendorQuotation, id=quote_id, rfq=rfq)
+    
+    # Update statuses
+    rfq.status = 'closed'
+    rfq.save(update_fields=['status'])
+    
+    VendorQuotation.objects.filter(rfq=rfq).update(status='rejected')
+    quote.status = 'accepted'
+    quote.save(update_fields=['status'])
+    
+    # Auto-generate PO
+    po = PurchaseOrder.objects.create(
+        vendor=quote.vendor,
+        order_date=timezone.now().date(),
+        status='pending',
+        total_amount=quote.total_amount
+    )
+    for q_item in quote.items.all():
+        PurchaseOrderItem.objects.create(
+            purchase_order=po,
+            material=q_item.rfq_item.material,
+            quantity=q_item.quantity,
+            unit_price=q_item.unit_price
+        )
+    
+    messages.success(request, f"RFQ Awarded to {quote.vendor.name}! Purchase Order PO-{po.id} generated.")
+    return redirect('purchase_order_detail', oid=po.id)

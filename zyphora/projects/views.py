@@ -18,7 +18,7 @@ from django.views.decorators.http import require_POST
 
 from .models import *
 from .forms import *
-
+from .access import get_user_accessible_projects
 
 from users.views import notify_admins_and_assigned
 
@@ -46,23 +46,7 @@ from crm.models import *
 def all_projects(request):
     status = request.GET.get('status', '')
     query = request.GET.get("q")
-    projects = Project.objects.all()
-
-    # If engineer, filter projects assigned to them
-    if request.user.role == "engineer":
-        employee = Employee.objects.filter(user=request.user).first()
-        if employee:
-            projects = projects.filter(engineer=employee)
-
-    if request.user.role == "liaison":
-        employee = Employee.objects.filter(user=request.user).first()
-        if employee:
-            projects = projects.filter(status__in =['structure','electrical','liasoning','energisation','completed'])
-
-    if request.user.role == 'staff':
-        employee = Employee.objects.filter(user=request.user).first()
-        if employee:
-            projects = Project.objects.filter(installation_tasks__assigned_to=request.user).distinct()
+    projects = get_user_accessible_projects(request.user)
 
     # Filter by status
     if status:
@@ -97,12 +81,28 @@ def all_projects(request):
 def completed_projects(request):
     projects = Project.objects.filter(status='completed')
 
-    if request.user.role == 'engineer':
-        projects = projects.filter(engineer=request.user)
-    if request.user.role == 'liaison':
-        projects = projects.filter(licensing__assigned_to=request.user)
-    if request.user.role == 'staff':
+    if request.user.role in ['admin', 'manager', 'accountant'] or request.user.is_superuser:
+        pass
+    elif request.user.role == 'engineer':
+        employee = Employee.objects.filter(user=request.user).first()
+        if employee:
+            projects = projects.filter(
+                Q(engineer=employee) | Q(installation_tasks__assigned_to=request.user)
+            )
+        else:
+            projects = projects.filter(installation_tasks__assigned_to=request.user)
+    elif request.user.role == 'subcontractor':
+        projects = projects.filter(subcontractor_tasks__subcontractor=request.user)
+    elif request.user.role == 'staff':
         projects = projects.filter(installation_tasks__assigned_to=request.user)
+    elif request.user.role == 'sales':
+        projects = projects.filter(lead__assigned_to=request.user)
+    elif request.user.role == 'liaison':
+        projects = projects.filter(licensing__assigned_to=request.user)
+    elif request.user.role == 'partner':
+        projects = projects.filter(lead__channel_partner__user=request.user)
+    else:
+        projects = projects.none()
 
     projects = projects.distinct()
 
@@ -115,6 +115,9 @@ def completed_project_detail(request,pid):
 
 @login_required(login_url='/users/login')
 def update_project(request, pid):
+    if request.user.role in ['subcontractor', 'liaison']:
+        messages.error(request, "Permission denied. You cannot edit this project.")
+        return redirect('project_list')
     project = get_object_or_404(Project, id=pid)
     link = reverse('project_detail', kwargs={'pid': project.id})
 
@@ -164,19 +167,23 @@ def update_project(request, pid):
         form = ProjectForm(request.POST, request.FILES, instance=project)
 
         if form.is_valid():
-            with transaction.atomic():
+            try:
+                with transaction.atomic():
+                    engineer = form.cleaned_data.get("engineer")
+                    if engineer and isinstance(engineer, CustomUser):
+                        engineer = Employee.objects.filter(user=engineer).first()
 
-                engineer = form.cleaned_data.get("engineer")
-                if engineer and isinstance(engineer, CustomUser):
-                    engineer = Employee.objects.filter(user=engineer).first()
+                    project = form.save(commit=False)
+                    project.engineer = engineer
+                    
+                    # ✅ STRICT SOP STAGE-GATE VALIDATION
+                    project.validate_stage_gate()
+                    
+                    project.save()
 
-                project = form.save(commit=False)
-                project.engineer = engineer
-                project.save()
-
-                new_data = {}
-                for field in track_fields:
-                    value = getattr(project, field)
+                    new_data = {}
+                    for field in track_fields:
+                        value = getattr(project, field)
                     new_data[field] = get_display_value(value)
 
                 for field in track_fields:
@@ -241,7 +248,12 @@ def update_project(request, pid):
                         emp_cat="project"
                     )
 
-            return redirect('project_detail', pid=pid)
+                return redirect('project_detail', pid=pid)
+
+            except ValueError as e:
+                messages.error(request, str(e))
+                # Redirect back to the edit page to show the error
+                return redirect('update_project', pid=pid)
 
     else:
         form = ProjectForm(instance=project)
@@ -260,7 +272,35 @@ def update_project(request, pid):
 
 @login_required(login_url='/users/login')
 def view_project(request,pid):
-    project = Project.objects.get(id=pid)
+    project = get_object_or_404(Project, id=pid)
+
+    # Permission check for role: Users can only view projects assigned to them
+    if request.user.role not in ['admin', 'manager', 'accountant', 'director'] and not request.user.is_superuser:
+        has_access = False
+        if request.user.role == 'engineer':
+            employee = Employee.objects.filter(user=request.user).first()
+            if (employee and project.engineer == employee) or project.installation_tasks.filter(assigned_to=request.user).exists():
+                has_access = True
+        elif request.user.role == 'subcontractor':
+            if project.subcontractor_tasks.filter(subcontractor=request.user).exists():
+                has_access = True
+        elif request.user.role == 'staff':
+            if project.installation_tasks.filter(assigned_to=request.user).exists():
+                has_access = True
+        elif request.user.role == 'sales':
+            if project.lead and project.lead.assigned_to == request.user:
+                has_access = True
+        elif request.user.role == 'liaison':
+            if project.licensing_tasks.filter(assigned_to=request.user).exists():
+                has_access = True
+        elif request.user.role == 'partner':
+            if project.lead and project.lead.channel_partner and project.lead.channel_partner.user == request.user:
+                has_access = True
+
+        if not has_access:
+            messages.error(request, "Access denied. You can only view projects assigned to you.")
+            return redirect('project_list')
+
     activities = project.activities.order_by('-created_at') 
 
     context = {
@@ -292,10 +332,31 @@ def project_activities(request, pid):
 
 @login_required(login_url='/users/login')
 def recent_activity(request):
+    activities = ProjectActivity.objects.select_related('project', 'created_by')
 
-    activities = ProjectActivity.objects.select_related(
-        'project', 'created_by'
-    ).order_by('-created_at')
+    if request.user.role not in ['admin', 'manager', 'accountant'] and not request.user.is_superuser:
+        if request.user.role == 'engineer':
+            employee = Employee.objects.filter(user=request.user).first()
+            if employee:
+                allowed = Project.objects.filter(Q(engineer=employee) | Q(installation_tasks__assigned_to=request.user))
+            else:
+                allowed = Project.objects.filter(installation_tasks__assigned_to=request.user)
+        elif request.user.role == 'subcontractor':
+            allowed = Project.objects.filter(subcontractor_tasks__subcontractor=request.user)
+        elif request.user.role == 'staff':
+            allowed = Project.objects.filter(installation_tasks__assigned_to=request.user)
+        elif request.user.role == 'sales':
+            allowed = Project.objects.filter(lead__assigned_to=request.user)
+        elif request.user.role == 'liaison':
+            allowed = Project.objects.filter(licensing__assigned_to=request.user)
+        elif request.user.role == 'partner':
+            allowed = Project.objects.filter(lead__channel_partner__user=request.user)
+        else:
+            allowed = Project.objects.none()
+
+        activities = activities.filter(project__in=allowed)
+
+    activities = activities.order_by('-created_at')
 
     paginator = Paginator(activities, 10)
     page = request.GET.get('page')
@@ -371,7 +432,29 @@ def add_activity(request,pid):
 
 @login_required(login_url='/users/login')
 def gallery_projects(request):
-    projects = Project.objects.all()
+    if request.user.role in ['admin', 'manager', 'accountant'] or request.user.is_superuser:
+        projects = Project.objects.all()
+    elif request.user.role == 'engineer':
+        employee = Employee.objects.filter(user=request.user).first()
+        if employee:
+            projects = Project.objects.filter(
+                Q(engineer=employee) | Q(installation_tasks__assigned_to=request.user)
+            ).distinct()
+        else:
+            projects = Project.objects.filter(installation_tasks__assigned_to=request.user).distinct()
+    elif request.user.role == 'subcontractor':
+        projects = Project.objects.filter(subcontractor_tasks__subcontractor=request.user).distinct()
+    elif request.user.role == 'staff':
+        projects = Project.objects.filter(installation_tasks__assigned_to=request.user).distinct()
+    elif request.user.role == 'sales':
+        projects = Project.objects.filter(lead__assigned_to=request.user).distinct()
+    elif request.user.role == 'liaison':
+        projects = Project.objects.filter(licensing__assigned_to=request.user).distinct()
+    elif request.user.role == 'partner':
+        projects = Project.objects.filter(lead__channel_partner__user=request.user).distinct()
+    else:
+        projects = Project.objects.none()
+        
     return render(request,'dashboard/gallery_projects.html',{'projects':projects})
 
 
@@ -468,26 +551,17 @@ def project_gallery(request, pid):
 @login_required(login_url='/users/login')
 def assigned_tasks(request):
     # Only supervisors allowed
-    if request.user.role not in ['admin', 'engineer']:
+    if request.user.role not in ['admin', 'engineer', 'manager', 'director']:
         return redirect('my_tasks')
 
-    tasks = Task.objects.filter(assigned_by=request.user).order_by('-created_at')
-
-    return render(request, "dashboard/assigned_tasks.html", {'tasks':tasks})
-
-@login_required(login_url='/users/login')
-def my_tasks(request):
-    user = request.user
-    today = timezone.now().date()
-
-    # Get tasks assigned to logged-in user
-    tasks = Task.objects.filter(assigned_to=user)
-
-    # Count tasks for badge display
-    task_count = tasks.filter(status__in=['new', 'in_progress']).count()
-
-    # Optional: Filter by GET param (today, pending, completed, overdue)
+    today = timezone.localdate()
     filter_type = request.GET.get('filter')
+
+    if request.user.role in ['admin', 'director'] or request.user.is_superuser:
+        tasks = Task.objects.all()
+    else:
+        tasks = Task.objects.filter(assigned_by=request.user)
+
     if filter_type == 'today':
         tasks = tasks.filter(due_date=today)
     elif filter_type == 'pending':
@@ -497,8 +571,50 @@ def my_tasks(request):
     elif filter_type == 'completed':
         tasks = tasks.filter(status='completed')
 
+    tasks = tasks.order_by('-created_at')
+
+    return render(request, "dashboard/assigned_tasks.html", {'tasks': tasks, 'filter_type': filter_type or 'all', 'today': today})
+
+@login_required(login_url='/users/login')
+def my_tasks(request):
+    user = request.user
+    today = timezone.localdate()
+
+    # Get tasks assigned to logged-in user across all task types
+    tasks = Task.objects.filter(assigned_to=user)
+    installation_tasks = InstallationTask.objects.filter(assigned_to=user).select_related('project')
+    subcontractor_tasks = SubcontractorTask.objects.filter(subcontractor=user).select_related('project')
+
+    # Count active tasks for badge display
+    task_count = (
+        tasks.filter(status__in=['new', 'in_progress']).count() +
+        installation_tasks.filter(status__in=['new', 'in_progress']).count() +
+        subcontractor_tasks.exclude(status__in=['completed', 'verified']).count()
+    )
+
+    # Filter by GET param (today, pending, completed, overdue)
+    filter_type = request.GET.get('filter')
+    if filter_type == 'today':
+        tasks = tasks.filter(due_date=today)
+        installation_tasks = installation_tasks.filter(due_date=today)
+        subcontractor_tasks = subcontractor_tasks.filter(deadline=today)
+    elif filter_type == 'pending':
+        tasks = tasks.exclude(status='completed')
+        installation_tasks = installation_tasks.exclude(status='completed')
+        subcontractor_tasks = subcontractor_tasks.exclude(status__in=['completed', 'verified'])
+    elif filter_type == 'overdue':
+        tasks = tasks.exclude(status='completed').filter(due_date__lt=today)
+        installation_tasks = installation_tasks.exclude(status='completed').filter(due_date__lt=today)
+        subcontractor_tasks = subcontractor_tasks.exclude(status__in=['completed', 'verified']).filter(deadline__lt=today)
+    elif filter_type == 'completed':
+        tasks = tasks.filter(status='completed')
+        installation_tasks = installation_tasks.filter(status='completed')
+        subcontractor_tasks = subcontractor_tasks.filter(status__in=['completed', 'verified'])
+
     context = {
         "tasks": tasks,
+        "installation_tasks": installation_tasks,
+        "subcontractor_tasks": subcontractor_tasks,
         "task_count": task_count,
         "today": today,
         "filter_type": filter_type or "all",
@@ -513,29 +629,32 @@ def create_task(request):
         form = TaskForm(request.POST, user=request.user)
 
         # Hide assignment fields for normal users
-        if request.user.role not in ['admin', 'engineer']:
+        if request.user.role not in ['admin', 'engineer', 'manager', 'director'] and not request.user.is_superuser:
             form.fields.pop('assigned_to', None)
 
         if form.is_valid():
             task = form.save(commit=False)
 
-            # assign automatically to self
-            if request.user.role not in ['admin', 'engineer']:
+            # assign automatically to self if not management/engineer
+            if request.user.role not in ['admin', 'manager', 'director', 'engineer'] and not request.user.is_superuser:
                 task.assigned_to = request.user
 
             task.assigned_by = request.user
 
             task.save()
+            messages.success(request, f"Task '{task.title}' created successfully!")
 
-            if request.user.role in ['admin', 'engineer']:
+            if request.user.role in ['admin', 'manager', 'director', 'engineer'] or request.user.is_superuser:
                 return redirect('assigned_tasks')
             else:
                 return redirect('my_tasks')
+        else:
+            messages.error(request, "Please check the form for errors below.")
 
     else:
         form = TaskForm(user=request.user)
 
-        if request.user.role not in ['admin', 'engineer']:
+        if request.user.role not in ['admin', 'manager', 'director', 'engineer'] and not request.user.is_superuser:
             form.fields.pop('assigned_to', None)
 
     return render(request, "dashboard/create_task.html", {"form": form})
@@ -589,17 +708,20 @@ def complete_task(request, id):
                     description=f"Site visit on {visit.scheduled_date} completed via task '{task.title}'",
                     created_by=request.user
                 )
+    messages.success(request, f"Task '{task.title}' marked as completed!")
     return redirect('my_tasks')
 
 
 @login_required(login_url='/users/login')
 def delete_task(request, id):
     task = get_object_or_404(Task, id=id)
+    task_title = task.title
     task.delete()
-    if request.user.role in ['admin', 'engineer']:
-        return redirect(assigned_tasks)
+    messages.success(request, f"Task '{task_title}' deleted successfully!")
+    if request.user.role in ['admin', 'engineer', 'manager', 'director'] or request.user.is_superuser:
+        return redirect('assigned_tasks')
     else:
-        return redirect(my_tasks)
+        return redirect('my_tasks')
 
 
 
@@ -611,7 +733,8 @@ def edit_task(request, id):
     # Permission check
     if not (
         request.user == task.assigned_to
-        or request.user.role in ['admin', 'engineer']
+        or request.user.role in ['admin', 'engineer', 'manager', 'director']
+        or request.user.is_superuser
     ):
         return redirect('my_tasks')
 
@@ -625,14 +748,18 @@ def edit_task(request, id):
             if not task.assigned_to:
                 task.assigned_to = request.user
 
-            task.assigned_by = request.user
+            if not task.assigned_by:
+                task.assigned_by = request.user
 
             task.save()
+            messages.success(request, f"Task '{task.title}' updated successfully!")
 
-            if request.user.role in ['admin', 'engineer']:
-                return redirect(assigned_tasks)
+            if request.user.role in ['admin', 'engineer', 'manager', 'director'] or request.user.is_superuser:
+                return redirect('assigned_tasks')
             else:
-                return redirect(my_tasks)
+                return redirect('my_tasks')
+        else:
+            messages.error(request, "Please check the form for errors below.")
 
     else:
         form = TaskForm(instance=task, user=request.user)
@@ -647,7 +774,7 @@ def edit_task(request, id):
 def feasibility_list(request):
 
     # Admin view
-    if request.user.role == "admin":
+    if request.user.role == "admin" or request.user.is_superuser:
         projects = Project.objects.exclude(status='completed')
         reports = FeasibilityReport.objects.select_related("project", "submitted_by")
     
@@ -656,23 +783,29 @@ def feasibility_list(request):
         try:
             engineer = Employee.objects.get(user=request.user)
         except Employee.DoesNotExist:
-            # If engineer record is missing
             projects = Project.objects.none()
             reports = FeasibilityReport.objects.none()
         else:
-            # Projects assigned to this engineer
-            projects = Project.objects.filter(engineer=engineer).exclude(status='completed')
-            # All reports for these projects
-            reports = FeasibilityReport.objects.filter(project__in=projects).select_related("project", "submitted_by")
+            # Projects assigned to this engineer OR related via site visits OR unassigned lead/feasibility projects
+            projects = Project.objects.filter(
+                Q(engineer=engineer) |
+                Q(lead__site_visits__engineer=request.user) |
+                Q(site_visits__engineer=request.user) |
+                Q(engineer__isnull=True, status__in=['lead', 'feasibility'])
+            ).distinct().exclude(status='completed')
+            # All reports for these projects or submitted by this engineer
+            reports = FeasibilityReport.objects.filter(
+                Q(project__in=projects) | Q(submitted_by=request.user)
+            ).distinct().select_related("project", "submitted_by")
     
     # Other roles (if any)
     else:
         projects = Project.objects.none()
         reports = FeasibilityReport.objects.none()
 
-    # Categorize
-    pending_projects = projects.filter(status='feasibility').exclude(
-        id__in=reports.values_list('project_id', flat=True)
+    # Categorize: projects in lead/feasibility stage without existing feasibility reports
+    pending_projects = projects.filter(status__in=['lead', 'feasibility']).exclude(
+        id__in=FeasibilityReport.objects.values_list('project_id', flat=True)
     )
     submitted_reports = reports.filter(is_approved=False)
     approved_reports = reports.filter(is_approved=True)
@@ -693,30 +826,61 @@ def create_feasibility_general(request):
     user = request.user
     engineer = Employee.objects.filter(user=user).first()
 
-    # Filter projects in feasibility stage
-    if user.role == "admin":
-        projects = Project.objects.filter(status__in=['lead', 'feasibility'])
+    # Filter projects accessible by this user in feasibility stage without existing report
+    if user.is_superuser or user.role in ['admin', 'director']:
+        projects = Project.objects.filter(
+            status__in=['lead', 'feasibility']
+        ).exclude(feasibility__isnull=False).order_by('-created_at')
+    elif user.role == 'engineer':
+        projects = Project.objects.filter(
+            Q(engineer=engineer) |
+            Q(lead__site_visits__engineer=user) |
+            Q(site_visits__engineer=user) |
+            Q(engineer__isnull=True),
+            status__in=['lead', 'feasibility']
+        ).exclude(feasibility__isnull=False).distinct().order_by('-created_at')
     else:
-        projects = Project.objects.filter(engineer=engineer, status__in=['lead', 'feasibility'])
+        projects = get_user_accessible_projects(user).filter(
+            status__in=['lead', 'feasibility']
+        ).exclude(feasibility__isnull=False).distinct().order_by('-created_at')
 
     if request.method == "POST":
         project_id = request.POST.get("project")
+        if not project_id:
+            messages.error(request, "Please select a project.")
+            return redirect('create_feasibility_general')
 
+        project = get_object_or_404(Project, id=project_id)
+
+        # Prevent duplicate feasibility
+        if hasattr(project, 'feasibility') or FeasibilityReport.objects.filter(project=project).exists():
+            messages.warning(request, f"A feasibility report already exists for project {project.title}.")
+            return redirect('feasibility_list')
+
+        # Create report
         report = FeasibilityReport.objects.create(
-            project_id=project_id,
-            site_type=request.POST.get("site_type"),
-            roof_type=request.POST.get("roof_type"),
-            roof_area=request.POST.get("roof_area"),
-            shadow_analysis=request.POST.get("shadow_analysis"),
-            orientation=request.POST.get("orientation"),
-            connection_type=request.POST.get("connection_type"),
-            monthly_consumption=request.POST.get("monthly_consumption"),
-            suggested_capacity=request.POST.get("suggested_capacity"),
-            system_type=request.POST.get("system_type"),
-            remarks=request.POST.get("remarks"),
-            submitted_by=engineer
+            project=project,
+            site_type=request.POST.get("site_type") or 'residential',
+            roof_type=request.POST.get("roof_type") or 'rcc',
+            roof_area=float(request.POST.get("roof_area") or 0),
+            shadow_analysis=request.POST.get("shadow_analysis") or 'none',
+            orientation=request.POST.get("orientation") or 'north',
+            connection_type=request.POST.get("connection_type") or 'single_phase',
+            monthly_consumption=int(request.POST.get("monthly_consumption")) if request.POST.get("monthly_consumption") else None,
+            suggested_capacity=float(request.POST.get("suggested_capacity") or 0),
+            system_type=request.POST.get("system_type") or 'on_grid',
+            remarks=request.POST.get("remarks") or '',
+            submitted_by=user
         )
 
+        # Assign engineer if unassigned and update project status
+        if not project.engineer and engineer:
+            project.engineer = engineer
+        if project.status == 'lead':
+            project.status = 'feasibility'
+        project.save()
+
+        messages.success(request, f"Feasibility report submitted successfully for {project.title}.")
         return redirect('feasibility_list')
 
     return render(request, 'dashboard/engineer/create_feasibility_general.html', {
@@ -729,29 +893,38 @@ def create_feasibility_general(request):
 def create_feasibility(request, pid):
 
     project = get_object_or_404(Project, id=pid)
-
-    engineer = Employee.objects.filter(user=request.user).first()
+    user = request.user
+    engineer = Employee.objects.filter(user=user).first()
 
     # Prevent duplicate feasibility
-    if hasattr(project, 'feasibility'):
+    if hasattr(project, 'feasibility') or FeasibilityReport.objects.filter(project=project).exists():
+        messages.warning(request, f"A feasibility report already exists for project {project.title}.")
         return redirect('feasibility_list')
 
     if request.method == "POST":
         FeasibilityReport.objects.create(
             project=project,
-            site_type=request.POST.get("site_type"),
-            roof_type=request.POST.get("roof_type"),
-            roof_area=request.POST.get("roof_area"),
-            shadow_analysis=request.POST.get("shadow_analysis"),
-            orientation=request.POST.get("orientation"),
-            connection_type=request.POST.get("connection_type"),
-            monthly_consumption=request.POST.get("monthly_consumption"),
-            suggested_capacity=request.POST.get("suggested_capacity"),
-            system_type=request.POST.get("system_type"),
-            remarks=request.POST.get("remarks"),
-            submitted_by=request.user
+            site_type=request.POST.get("site_type") or 'residential',
+            roof_type=request.POST.get("roof_type") or 'rcc',
+            roof_area=float(request.POST.get("roof_area") or 0),
+            shadow_analysis=request.POST.get("shadow_analysis") or 'none',
+            orientation=request.POST.get("orientation") or 'north',
+            connection_type=request.POST.get("connection_type") or 'single_phase',
+            monthly_consumption=int(request.POST.get("monthly_consumption")) if request.POST.get("monthly_consumption") else None,
+            suggested_capacity=float(request.POST.get("suggested_capacity") or 0),
+            system_type=request.POST.get("system_type") or 'on_grid',
+            remarks=request.POST.get("remarks") or '',
+            submitted_by=user
         )
 
+        # Assign engineer if unassigned and update project status
+        if not project.engineer and engineer:
+            project.engineer = engineer
+        if project.status == 'lead':
+            project.status = 'feasibility'
+        project.save()
+
+        messages.success(request, f"Feasibility report submitted successfully for {project.title}.")
         return redirect('feasibility_list')
 
     return render(request, 'dashboard/engineer/create_feasibility.html', {'project': project})
@@ -806,13 +979,7 @@ def reject_feasibility(request, fid):
 def design_list(request):
     query = request.GET.get('q')
 
-    if request.user.role == "admin":
-        projects = Project.objects.all()
-    else:
-        engineer = Employee.objects.filter(user=request.user).first()
-        projects = Project.objects.filter(engineer=engineer) if engineer else Project.objects.none()
-
-    projects = projects.exclude(status='completed')
+    projects = get_user_accessible_projects(request.user).exclude(status='completed')
 
     if query:
         projects = projects.filter(
@@ -916,10 +1083,13 @@ def design_detail(request, pid):
     elif design_costing.status == "pending":
         current_phase = "design_costing_review"
 
+    elif project_costing and project_costing.client_approved:
+        current_phase = "completed"
+
     elif project_costing and project_costing.proposal_sent and not project_costing.client_approved:
         current_phase = "client_approval"  # ✅ check this BEFORE project_costing
 
-    elif design_costing.status == "approved" and project_costing and (project_costing.system_costing is not None):
+    elif design_costing and design_costing.status == "approved" and project_costing and (project_costing.total_cost > 0 or project_costing.panels_cost > 0):
         current_phase = "project_costing"
 
     else:
@@ -1045,44 +1215,56 @@ def design_detail(request, pid):
                     system_cost = Decimal(request.POST.get("system_cost") or 0)
                     kseb_cost = Decimal(request.POST.get("kseb_cost") or 0)
 
-                    ProjectCosting.objects.update_or_create(
-                        project=project,
-                        defaults={
-                            "design_costing": design_costing,
-                            "system_costing": system_cost,
-                            "kseb_cost": kseb_cost,
-                            "entered_by": request.user,
-                            "proposal_sent": False
-                        }
-                    )
+                    costing_obj, _ = ProjectCosting.objects.get_or_create(project=project)
+                    costing_obj.panels_cost = system_cost
+                    costing_obj.installation_overhead = kseb_cost
+                    costing_obj.updated_by = request.user
+                    costing_obj.proposal_sent = False
+                    costing_obj.calculate_costing()
 
-                elif "send_proposal" in request.POST and project_costing:
+                    design_cost = design_costing.cost if design_costing else Decimal('0')
+                    min_selling = costing_obj.total_cost + design_cost
+                    if not costing_obj.selling_price or costing_obj.selling_price < min_selling:
+                        costing_obj.selling_price = min_selling
 
-                    project_costing.proposal_sent = True
-                    project_costing.save()
-                    project.status = 'costing_approval'
-                    project.save()
+                    costing_obj.save()
+                    messages.success(request, "Project costing finalized successfully.")
+
+                elif "send_proposal" in request.POST:
+                    costing_to_send = project_costing or getattr(project, "project_costing", None)
+                    if costing_to_send:
+                        costing_to_send.proposal_sent = True
+                        costing_to_send.save()
+                        project.status = 'costing_approval'
+                        project.save()
+                        messages.success(request, "Proposal sent to client successfully.")
 
             elif current_phase == "client_approval":
-                print('approval')
                 if "client_approve" in request.POST:
 
                     start_date = request.POST.get("start_date")
 
-                    project_costing.client_approved = True
-                    project_costing.approved_at = timezone.now()
-                    project_costing.save()
+                    costing_to_approve = project_costing or getattr(project, "project_costing", None)
+                    if costing_to_approve:
+                        if hasattr(costing_to_approve, 'mark_client_approved'):
+                            costing_to_approve.mark_client_approved()
+                        else:
+                            costing_to_approve.client_approved = True
+                            costing_to_approve.approved_at = timezone.now()
+                            costing_to_approve.save()
 
                     project.start_date = start_date
                     project.status = "structure"
                     project.save()
 
                     for step, _ in InstallationTask.INSTALLATION_STEP_CHOICES:
-                        InstallationTask.objects.create(
+                        InstallationTask.objects.get_or_create(
                             project=project,
                             step=step,
-                            status='new',         
-                            assigned_to=None      
+                            defaults={
+                                'status': 'new',
+                                'assigned_to': None
+                            }
                         )
 
                     for step, _ in LicensingTask.LICENSE_STEP_CHOICES:
@@ -1090,10 +1272,11 @@ def design_detail(request, pid):
                             project=project,
                             step=step,
                             defaults={
-                                'status': 'new',       
-                                'assigned_to': CustomUser.objects.filter(role='liaison').first()    
+                                'status': 'new',
+                                'assigned_to': CustomUser.objects.filter(role='liaison').first()
                             }
                         )
+                    messages.success(request, "Client approval confirmed. Project started!")
                     
 
         return redirect('design_detail', pid=pid)
@@ -1141,12 +1324,8 @@ def installation_progress(request):
     engineer = Employee.objects.filter(user=request.user).first()
     search = request.GET.get('q', '')
 
-    # Base projects in structure/electrical/licensing
-    projects = Project.objects.filter(status__in=['structure', 'electrical', 'licensing'])
-
-    # Engineer sees only their projects
-    if engineer and request.user.role == 'engineer':
-        projects = projects.filter(engineer=engineer)
+    # Base projects in structure/electrical/qc/licensing accessible to user
+    projects = get_user_accessible_projects(request.user).filter(status__in=['structure', 'electrical', 'qc', 'licensing'])
 
     # Staff/Engineer users for assignment dropdown
     staff_users = CustomUser.objects.filter(role__in=['staff', 'engineer'])
@@ -1309,8 +1488,8 @@ def redirect_service_request(request, pk):
     
     sr = get_object_or_404(ServiceRequest, pk=pk)
 
-    # Get all engineers in the project (you could filter by role)
-    engineers = Employee.objects.filter(project=sr.project)
+    # Get all active engineers
+    engineers = Employee.objects.filter(user__role='engineer', is_active=True)
     
     if request.method == 'POST':
         engineer_id = request.POST.get('engineer')
@@ -1328,13 +1507,11 @@ def redirect_service_request(request, pk):
 @login_required(login_url='/users/login')
 def add_service_request(request):
     # Only show projects assigned to this salesperson
-    form = ServiceRequestForm()
-    form.fields['project'].queryset = Lead.objects.filter(assigned_to=request.user,status='converted')
+    form = ServiceRequestForm(user=request.user)
     form.fields['assigned_to'].queryset = Employee.objects.filter(user__role='engineer')  
 
     if request.method == 'POST':
-        form = ServiceRequestForm(request.POST)
-        form.fields['project'].queryset = Project.objects.filter(lead__assigned_to=request.user)
+        form = ServiceRequestForm(request.POST, user=request.user)
         form.fields['assigned_to'].queryset = Employee.objects.filter(user__role='engineer')
         if form.is_valid():
             sr = form.save(commit=False)
@@ -1399,7 +1576,7 @@ def service_report_detail(request,rid):
 def installation_tasks(request):
 
     filter_type = request.GET.get('filter', 'pending')
-    today = timezone.now().date()
+    today = timezone.localdate()
 
     base_qs = InstallationTask.objects.filter(
         assigned_to=request.user
@@ -1596,10 +1773,10 @@ def get_project_photos(request):
 
 @login_required(login_url='/users/login')
 def report_issues(request):
-    form = InstallationIssueForm()
+    form = InstallationIssueForm(user=request.user)
 
     if request.method == 'POST':
-        form = InstallationIssueForm(request.POST, request.FILES)
+        form = InstallationIssueForm(request.POST, request.FILES, user=request.user)
         if form.is_valid():
             issue = form.save(commit=False)
             issue.reported_by = request.user
@@ -1613,18 +1790,19 @@ def report_issues(request):
 @login_required(login_url='/users/login')
 def create_daily_report(request):
     if request.method == 'POST':
-        form = WorkReportForm(request.POST, request.FILES)
+        form = WorkReportForm(request.POST, request.FILES, user=request.user)
         if form.is_valid():
             report = form.save(commit=False)
             report.user = request.user  # auto assign user
             report.save()
-            return redirect('work_report_list')
+            return redirect('daily_report_list')
     else:
-        form = WorkReportForm()
+        form = WorkReportForm(user=request.user)
 
     return render(request, 'dashboard/engineer/create_report.html', {
         'form': form
     })
+
 
 
 @login_required(login_url='/users/login')
@@ -1757,18 +1935,14 @@ def completion_report_detail(request, project_id):
 @login_required(login_url='/users/login')
 def completion_report_list(request):
 
-    # 🔹 Base queryset (only completion reports)
-    reports = WorkReport.objects.filter(
-        report_type='completion'
-    ).select_related('project', 'user')
+    # 🔹 Accessible projects for user
+    projects = get_user_accessible_projects(request.user)
 
-    # 🔹 Role-based filtering
-    if request.user.role != "admin":
-        try:
-            employee = Employee.objects.get(user=request.user)
-            reports = reports.filter(project__engineer=employee)
-        except Employee.DoesNotExist:
-            reports = reports.none()
+    # 🔹 Base queryset (only completion reports for accessible projects)
+    reports = WorkReport.objects.filter(
+        report_type='completion',
+        project__in=projects
+    ).select_related('project', 'user')
 
     # 🔹 Filters
     date = request.GET.get('date')
@@ -1786,16 +1960,6 @@ def completion_report_list(request):
 
     # 🔹 Ordering
     reports = reports.order_by('-date')
-
-    # 🔹 Projects for dropdown filter
-    if request.user.role == "admin":
-        projects = Project.objects.all()
-    else:
-        try:
-            employee = Employee.objects.get(user=request.user)
-            projects = Project.objects.filter(engineer=employee)
-        except Employee.DoesNotExist:
-            projects = Project.objects.none()
 
     context = {
         'reports': reports,
@@ -1954,7 +2118,9 @@ def download_report(request, type, id=None):
 
 @login_required(login_url='/users/login')
 def view_project_layouts(request):
-    projects = Project.objects.filter(installation_tasks__assigned_to=request.user).distinct()
+    from projects.access import get_user_accessible_projects
+    projects = get_user_accessible_projects(request.user)
+
 
     for project in projects:
         project.total_tasks = project.installation_tasks.count()
@@ -1979,9 +2145,7 @@ def project_layout_detail(request, pid):
 
 @login_required(login_url='/users/login')
 def licensing_list(request):
-    user = request.user
-
-    projects = Project.objects.filter(status__in = ['structure','electrical','licensing'])
+    projects = get_user_accessible_projects(request.user).filter(status__in=['structure', 'electrical', 'qc', 'licensing', 'net_metering', 'subsidy'])
 
     # 🔥 ADD EXTRA DATA
     project_data = []
@@ -2207,4 +2371,220 @@ def upload_project_document(request, pid):
             messages.success(request, 'Document uploaded successfully.')
         else:
             messages.error(request, 'Please provide title, category, and a file.')
-    return redirect('view_project', pid=pid)
+    return redirect('project_detail', pid=pid)
+
+
+@login_required(login_url='/users/login')
+def project_equipment_list(request, pid):
+    project = get_object_or_404(Project, pk=pid)
+    equipments = project.equipments.all().order_by('-installation_date')
+    
+    context = {
+        'project': project,
+        'equipments': equipments,
+        'panel_count': equipments.filter(category='panel').count(),
+        'inverter_count': equipments.filter(category='inverter').count(),
+        'battery_count': equipments.filter(category='battery').count()
+    }
+    return render(request, 'dashboard/projects/equipment_list.html', context)
+
+@login_required(login_url='/users/login')
+def add_project_equipment(request, pid):
+    project = get_object_or_404(Project, pk=pid)
+    from .forms import EquipmentSerialForm
+    
+    if request.method == "POST":
+        form = EquipmentSerialForm(request.POST)
+        if form.is_valid():
+            equip = form.save(commit=False)
+            equip.project = project
+            equip.added_by = request.user
+            equip.save()
+            messages.success(request, f"{equip.get_category_display()} Serial '{equip.serial_number}' successfully tracked.")
+            return redirect('project_equipment', pid=project.id)
+    else:
+        form = EquipmentSerialForm()
+        
+    return render(request, 'dashboard/projects/add_equipment.html', {'project': project, 'form': form})
+
+
+# ===============================
+# FEATURE 22: HELPDESK & TICKETS
+# ===============================
+
+@login_required(login_url='/users/login')
+def ticket_list(request):
+    if request.method == 'POST':
+        project_id = request.POST.get('project')
+        customer_name = request.POST.get('customer_name')
+        customer_phone = request.POST.get('customer_phone')
+        issue_title = request.POST.get('issue_title')
+        issue_description = request.POST.get('issue_description')
+        priority = request.POST.get('priority', 'medium')
+        
+        project = None
+        if project_id:
+            try:
+                project = Project.objects.get(id=project_id)
+            except Project.DoesNotExist:
+                pass
+                
+        SupportTicket.objects.create(
+            project=project,
+            customer_name=customer_name,
+            customer_phone=customer_phone,
+            issue_title=issue_title,
+            issue_description=issue_description,
+            priority=priority,
+            status='open'
+        )
+        messages.success(request, 'Support ticket created successfully!')
+        return redirect('ticket_list')
+
+    tickets = SupportTicket.objects.all().order_by('-created_at')
+    
+    # Simple status filtering
+    status_filter = request.GET.get('status')
+    if status_filter:
+        tickets = tickets.filter(status=status_filter)
+        
+    from projects.access import get_user_accessible_projects
+    projects = get_user_accessible_projects(request.user)
+    return render(request, 'dashboard/projects/ticket_list.html', {'tickets': tickets, 'projects': projects})
+
+@login_required(login_url='/users/login')
+def view_ticket(request, ticket_id):
+    ticket = get_object_or_404(SupportTicket, id=ticket_id)
+    
+    if request.method == 'POST':
+        # Simple status and notes update
+        new_status = request.POST.get('status')
+        notes = request.POST.get('notes')
+        
+        if new_status:
+            ticket.status = new_status
+            if new_status == 'resolved' or new_status == 'closed':
+                ticket.resolved_at = timezone.now()
+        
+        if notes:
+            ticket.resolution_notes += f"\n[{timezone.now().strftime('%Y-%m-%d %H:%M')}] {notes}"
+            
+        ticket.save()
+        messages.success(request, "Ticket updated successfully.")
+        return redirect('view_ticket', ticket_id=ticket.id)
+        
+    return render(request, 'dashboard/projects/view_ticket.html', {'ticket': ticket})
+
+
+# ===============================
+# FEATURE 23: SUB-CONTRACTOR PORTAL
+# ===============================
+
+@login_required(login_url='/users/login')
+def subcontractor_dashboard(request):
+    from users.models import CustomUser
+    is_admin_or_engineer = request.user.role in ['admin', 'manager', 'engineer'] or request.user.is_superuser
+    
+    if is_admin_or_engineer:
+        accessible_projects = get_user_accessible_projects(request.user)
+        tasks = SubcontractorTask.objects.all().select_related('project', 'subcontractor').order_by('deadline')
+        if not (request.user.is_superuser or request.user.role in ['admin', 'director']):
+            tasks = tasks.filter(project__in=accessible_projects)
+        projects = accessible_projects.order_by('-created_at')
+        # Only actual sub-contractors/vendors and field engineers
+        subcontractors = CustomUser.objects.filter(is_active=True, role='subcontractor').order_by('username')
+        site_engineers = CustomUser.objects.filter(is_active=True, role='engineer').order_by('username')
+    else:
+        tasks = SubcontractorTask.objects.filter(subcontractor=request.user).order_by('deadline')
+        projects = None
+        subcontractors = None
+        site_engineers = None
+        
+    # Separate by status
+    pending_tasks = tasks.exclude(status__in=['completed', 'verified'])
+    completed_tasks = tasks.filter(status__in=['completed', 'verified'])
+    
+    awaiting_verification_count = tasks.filter(status='completed').count()
+    verified_count = tasks.filter(status='verified').count()
+    pending_count = tasks.exclude(status__in=['completed', 'verified']).count()
+    
+    context = {
+        'pending_tasks': pending_tasks,
+        'completed_tasks': completed_tasks,
+        'awaiting_verification_count': awaiting_verification_count,
+        'verified_count': verified_count,
+        'pending_count': pending_count,
+        'is_admin_or_engineer': is_admin_or_engineer,
+        'projects': projects,
+        'subcontractors': subcontractors,
+        'site_engineers': site_engineers,
+    }
+    return render(request, 'dashboard/projects/subcontractor_dashboard.html', context)
+
+@login_required(login_url='/users/login')
+def assign_subcontractor_task(request):
+    if request.user.role not in ['admin', 'manager', 'engineer'] and not request.user.is_superuser:
+        messages.error(request, "Permission denied. Only admins or engineers can assign tasks.")
+        return redirect('subcontractor_dashboard')
+        
+    if request.method == 'POST':
+        project_id = request.POST.get('project')
+        contractor_id = request.POST.get('subcontractor')
+        task_name = request.POST.get('task_name')
+        description = request.POST.get('description', '')
+        deadline = request.POST.get('deadline')
+        
+        if not (project_id and contractor_id and task_name and deadline):
+            messages.error(request, "Please fill in all required fields.")
+            return redirect('subcontractor_dashboard')
+            
+        from users.models import CustomUser
+        accessible_projects = get_user_accessible_projects(request.user)
+        project = get_object_or_404(accessible_projects, id=project_id)
+        contractor = get_object_or_404(CustomUser, id=contractor_id)
+        
+        SubcontractorTask.objects.create(
+            project=project,
+            subcontractor=contractor,
+            task_name=task_name,
+            description=description,
+            deadline=deadline,
+            status='assigned'
+        )
+        messages.success(request, f"Task '{task_name}' successfully assigned to {contractor.get_full_name()}!")
+        
+    return redirect('subcontractor_dashboard')
+
+@login_required(login_url='/users/login')
+def verify_subcontractor_task(request, task_id):
+    if request.user.role not in ['admin', 'manager', 'engineer'] and not request.user.is_superuser:
+        messages.error(request, "Permission denied.")
+        return redirect('subcontractor_dashboard')
+        
+    task = get_object_or_404(SubcontractorTask, id=task_id)
+    task.status = 'verified'
+    task.save()
+    messages.success(request, f"Task '{task.task_name}' has been verified & approved successfully!")
+    return redirect('subcontractor_dashboard')
+
+@login_required(login_url='/users/login')
+def mark_task_completed(request, task_id):
+    if request.user.role in ['admin', 'engineer'] or request.user.is_superuser:
+        task = get_object_or_404(SubcontractorTask, id=task_id)
+    else:
+        task = get_object_or_404(SubcontractorTask, id=task_id, subcontractor=request.user)
+    
+    if request.method == 'POST':
+        notes = request.POST.get('notes')
+        photo = request.FILES.get('photo')
+        
+        task.completion_notes = notes or ''
+        if photo:
+            task.photo_proof = photo
+            
+        task.status = 'completed'
+        task.save()
+        messages.success(request, f"Task '{task.task_name}' submitted for verification.")
+        
+    return redirect('subcontractor_dashboard')
+

@@ -2,208 +2,221 @@
 {% load static %}
 
 {% block link %}
-<link rel="stylesheet" href="{% static 'css/dashboard/engineer/engineer.css' %}">
+<link rel="stylesheet" href="{% static 'css/dashboard/admin/admin.css' %}?v=2">
+<link rel="stylesheet" href="{% static 'css/dashboard/engineer/engineer.css' %}?v=2">
 {% endblock %}
 
 {% block content %}
 
-<div class="container-fluid">
+<div class="admin-dashboard-container">
+    <div class="container-fluid px-0">
 
-    <!-- KPI SECTION -->
-    <div class="row g-4">
-
-        <div class="col-12 col-sm-6 col-lg-3">
-            <div class="kpi-card assigned text-center">
-                <div class="kpi-icon">
-                    <i class="bi bi-briefcase-fill"></i>
+        <!-- ================= TOP EXECUTIVE WELCOME BANNER (SLIM) ================= -->
+        <div class="executive-hero-banner">
+            <div class="d-flex align-items-center flex-wrap gap-2">
+                <div class="hero-live-badge">
+                    <span class="live-pulse-dot"></span>
+                    <span>ENGINEER EPC</span>
                 </div>
-                <div class="kpi-value">{{ assigned }}</div>
-                <div class="kpi-label">Assigned Projects</div>
+                <h5 class="fw-bold text-dark mb-0 d-flex align-items-center gap-2" style="font-size: 1.05rem;">
+                    <i class="bi bi-tools text-primary"></i>Engineering Operations
+                </h5>
+                <span class="text-muted small d-none d-lg-inline ms-1" style="font-size: 0.76rem;">• Site visits, installations, feasibility audits & daily reports</span>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+                <a href="{% url 'create_daily_report' %}" class="btn btn-outline-primary btn-sm rounded-pill px-3 py-1 fw-semibold shadow-xs" style="font-size: 0.78rem;">
+                    <i class="bi bi-clipboard-plus me-1"></i>New Report
+                </a>
+                <a href="{% url 'site_visits' 'today' %}" class="btn btn-primary btn-sm rounded-pill px-3 py-1 fw-semibold text-white shadow-xs" style="font-size: 0.78rem;">
+                    <i class="bi bi-geo-alt me-1"></i>Site Visits
+                </a>
             </div>
         </div>
 
-        <div class="col-12 col-sm-6 col-lg-3">
-            <div class="kpi-card ongoing text-center">
-                <div class="kpi-icon">
-                    <i class="bi bi-gear-fill"></i>
+        <!-- ================= KPI SECTION ================= -->
+        <div class="dashboard-section-bar">
+            <i class="bi bi-kanban text-primary"></i>Project & Engineering Milestones
+        </div>
+        <div class="row g-3 mb-4">
+            <div class="col-12 col-sm-6 col-xl-3">
+                <div class="white-premium-card">
+                    <div class="card-top-bar bar-blue"></div>
+                    <div class="card-head-split">
+                        <div>
+                            <div class="card-label-sub">Assigned Projects</div>
+                            <div class="card-value-hero text-primary">{{ assigned }}</div>
+                        </div>
+                        <div class="card-icon-pill icon-pill-blue">
+                            <i class="bi bi-kanban"></i>
+                        </div>
+                    </div>
+                    <div class="card-meta-pill pill-sub-blue">
+                        <i class="bi bi-geo-alt me-1"></i>Active Sites
+                    </div>
                 </div>
-                <div class="kpi-value">{{ active }}</div>
-                <div class="kpi-label">Ongoing Projects</div>
+            </div>
+
+            <div class="col-12 col-sm-6 col-xl-3">
+                <div class="white-premium-card">
+                    <div class="card-top-bar bar-amber"></div>
+                    <div class="card-head-split">
+                        <div>
+                            <div class="card-label-sub">Ongoing Projects</div>
+                            <div class="card-value-hero text-dark">{{ active }}</div>
+                        </div>
+                        <div class="card-icon-pill icon-pill-amber">
+                            <i class="bi bi-tools"></i>
+                        </div>
+                    </div>
+                    <div class="card-meta-pill pill-sub-amber">
+                        <i class="bi bi-hourglass-split me-1"></i>In-Execution
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-sm-6 col-xl-3">
+                <div class="white-premium-card">
+                    <div class="card-top-bar bar-emerald"></div>
+                    <div class="card-head-split">
+                        <div>
+                            <div class="card-label-sub">Completed Projects</div>
+                            <div class="card-value-hero text-success">{{ completed }}</div>
+                        </div>
+                        <div class="card-icon-pill icon-pill-emerald">
+                            <i class="bi bi-check-circle-fill"></i>
+                        </div>
+                    </div>
+                    <div class="card-meta-pill pill-sub-emerald">
+                        <i class="bi bi-award me-1"></i>Handed Over
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-sm-6 col-xl-3">
+                <div class="white-premium-card">
+                    <div class="card-top-bar bar-rose"></div>
+                    <div class="card-head-split">
+                        <div>
+                            <div class="card-label-sub">Pending Tasks</div>
+                            <div class="card-value-hero text-danger">{{ tasks }}</div>
+                        </div>
+                        <div class="card-icon-pill icon-pill-rose">
+                            <i class="bi bi-clock-history"></i>
+                        </div>
+                    </div>
+                    <div class="card-meta-pill pill-sub-rose">
+                        <i class="bi bi-exclamation-triangle me-1"></i>Action Required
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="col-12 col-sm-6 col-lg-3">
-            <div class="kpi-card completed text-center">
-                <div class="kpi-icon">
-                    <i class="bi bi-check-circle-fill"></i>
+        <!-- ================= CHARTS SECTION ================= -->
+        <div class="row g-4 mb-4">
+            <div class="col-lg-6">
+                <div class="white-premium-panel">
+                    <div class="panel-header-wrap">
+                        <h6 class="panel-heading">
+                            <i class="bi bi-bar-chart-fill text-primary"></i>Task Status Overview
+                        </h6>
+                    </div>
+                    <div class="chart-container" style="position: relative; height: 240px;">
+                        <canvas id="taskChart"></canvas>
+                        <div class="empty-state text-center text-muted py-5" id="taskEmpty">
+                            <i class="bi bi-inbox fs-3 d-block mb-1"></i>No task data available
+                        </div>
+                    </div>
                 </div>
-                <div class="kpi-value">{{ completed }}</div>
-                <div class="kpi-label">Completed Projects</div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="white-premium-panel">
+                    <div class="panel-header-wrap">
+                        <h6 class="panel-heading">
+                            <i class="bi bi-pie-chart-fill text-success"></i>Service Request Status
+                        </h6>
+                    </div>
+                    <div class="chart-container" style="position: relative; height: 240px;">
+                        <canvas id="serviceChart"></canvas>
+                        <div class="empty-state text-center text-muted py-5" id="serviceEmpty">
+                            <i class="bi bi-inbox fs-3 d-block mb-1"></i>No service requests
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="col-12 col-sm-6 col-lg-3">
-            <div class="kpi-card pending text-center">
-                <div class="kpi-icon">
-                    <i class="bi bi-clock-history"></i>
+        <!-- ================= TASKS + VISITS ================= -->
+        <div class="row g-4 align-items-stretch">
+            <div class="col-lg-6 d-flex">
+                <div class="white-premium-panel w-100">
+                    <div class="panel-header-wrap">
+                        <h6 class="panel-heading">
+                            <i class="bi bi-list-check text-primary"></i>Today's Assigned Tasks
+                        </h6>
+                        <span class="badge bg-primary rounded-pill">{{ todays_tasks|length }}</span>
+                    </div>
+
+                    {% for task in todays_tasks %}
+                    <div class="d-flex justify-content-between align-items-center p-3 mb-2 bg-light rounded" style="border: 1px solid #f1f5f9;">
+                        <div>
+                            <strong class="text-dark">{{ task.title }}</strong><br>
+                            <small class="text-muted">{{ task.get_status_display }}</small>
+                        </div>
+                        <span class="badge 
+                            {% if task.status == 'new' %}bg-primary
+                            {% elif task.status == 'in_progress' %}bg-warning
+                            {% elif task.status == 'completed' %}bg-success
+                            {% elif task.status == 'overdue' %}bg-danger
+                            {% endif %}">
+                            {{ task.status|title }}
+                        </span>
+                    </div>
+                    {% empty %}
+                    <div class="text-center py-5 text-muted">
+                        <i class="bi bi-check-circle fs-3 text-success d-block mb-1"></i>No tasks scheduled for today
+                    </div>
+                    {% endfor %}
                 </div>
-                <div class="kpi-value">{{ tasks }}</div>
-                <div class="kpi-label">Pending Tasks</div>
+            </div>
+
+            <div class="col-lg-6 d-flex">
+                <div class="white-premium-panel w-100">
+                    <div class="panel-header-wrap">
+                        <h6 class="panel-heading">
+                            <i class="bi bi-calendar-event text-amber"></i>Upcoming Site Visits
+                        </h6>
+                        <span class="badge bg-warning text-dark rounded-pill">{{ site_visits|length }}</span>
+                    </div>
+
+                    {% for visit in site_visits %}
+                    <div class="d-flex justify-content-between align-items-center p-3 mb-2 bg-light rounded" style="border: 1px solid #f1f5f9;">
+                        <div>
+                            <strong class="text-dark">{{ visit.project.title|default:"No Project" }}</strong><br>
+                            <small class="text-muted"><i class="bi bi-clock me-1"></i>{{ visit.scheduled_date }}</small>
+                        </div>
+                        <span class="badge 
+                            {% if visit.status == 'pending' %}bg-warning
+                            {% elif visit.status == 'done' %}bg-success
+                            {% elif visit.status == 'cancelled' %}bg-danger
+                            {% endif %}">
+                            {{ visit.status|title }}
+                        </span>
+                    </div>
+                    {% empty %}
+                    <div class="text-center py-5 text-muted">
+                        <i class="bi bi-calendar-check fs-3 text-muted d-block mb-1"></i>No upcoming visits scheduled
+                    </div>
+                    {% endfor %}
+                </div>
             </div>
         </div>
 
     </div>
-
-
-    <!-- CHARTS -->
-    <div class="row mt-4 g-4">
-
-        <div class="col-md-6">
-            <div class="dashboard-card">
-                <h6>Project Stage Distribution</h6>
-
-                <div class="chart-container">
-                    <canvas id="stageChart"></canvas>
-                    <div class="empty-state" id="stageEmpty">
-                        No project data
-                    </div>
-                </div>
-
-            </div>
-        </div>
-
-        <div class="col-md-6">
-            <div class="dashboard-card">
-                <h6>Project Type Distribution</h6>
-
-                <div class="chart-container">
-                    <canvas id="typeChart"></canvas>
-                    <div class="empty-state" id="typeEmpty">
-                        No project types
-                    </div>
-                </div>
-
-            </div>
-        </div>
-
-    </div>
-
-
-    <div class="row mt-4 g-4">
-
-        <div class="col-md-6">
-            <div class="dashboard-card">
-                <h6>Task Status Overview</h6>
-
-                <div class="chart-container">
-                    <canvas id="taskChart"></canvas>
-                    <div class="empty-state" id="taskEmpty">
-                        No task data
-                    </div>
-                </div>
-
-            </div>
-        </div>
-
-        <div class="col-md-6">
-            <div class="dashboard-card">
-                <h6>Service Request Status</h6>
-
-                <div class="chart-container">
-                    <canvas id="serviceChart"></canvas>
-                    <div class="empty-state" id="serviceEmpty">
-                        No service requests
-                    </div>
-                </div>
-
-            </div>
-        </div>
-
-    </div>
-
-
-    <!-- TASKS + VISITS -->
-    <div class="row mt-4 g-4">
-
-        <div class="col-md-6">
-            <div class="dashboard-card">
-                <h6>Today's Tasks</h6>
-
-                {% for task in todays_tasks %}
-                <div class="list-item d-flex justify-content-between align-items-center mb-2">
-
-                    <div>
-                        <strong>{{ task.title }}</strong><br>
-                        <small class="text-muted">
-                            {{ task.get_status_display }}
-                        </small>
-                    </div>
-
-                    <span class="badge
-                        {% if task.status == 'new' %} bg-primary
-                        {% elif task.status == 'in_progress' %} bg-warning text-dark
-                        {% elif task.status == 'completed' %} bg-success
-                        {% elif task.status == 'overdue' %} bg-danger
-                        {% endif %}
-                    ">
-                        {{ task.status|title }}
-                    </span>
-
-                </div>
-                {% empty %}
-                <div class="empty-list">
-                    No tasks today
-                </div>
-                {% endfor %}
-
-            </div>
-        </div>
-
-
-        <div class="col-md-6">
-            <div class="dashboard-card">
-                <h6>Upcoming Site Visits</h6>
-
-                {% for visit in site_visits %}
-                <div class="list-item d-flex justify-content-between align-items-center mb-2">
-
-                    <div>
-                        <strong>
-                            {{ visit.project.title|default:"No Project" }}
-                        </strong><br>
-                        <small class="text-muted">
-                            {{ visit.scheduled_date }}
-                        </small>
-                    </div>
-
-                    <span class="badge
-                        {% if visit.status == 'pending' %} bg-warning text-dark
-                        {% elif visit.status == 'done' %} bg-success
-                        {% elif visit.status == 'cancelled' %} bg-danger
-                        {% endif %}
-                    ">
-                        {{ visit.status|title }}
-                    </span>
-
-                </div>
-                {% empty %}
-                <div class="empty-list">
-                    No visits scheduled
-                </div>
-                {% endfor %}
-
-            </div>
-        </div>
-
-    </div>
-
 </div>
 
-
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
 <script>
-
 let charts = {};
 
 function mapData(data) {
@@ -218,80 +231,15 @@ function hasData(data) {
 }
 
 function renderCharts() {
-
-    const psData = {{ project_status|safe }};
-    const ptData = {{ project_type|safe }};
     const tsData = {{ task_status|safe }};
     const ssData = {{ service_status|safe }};
-
-    const colors = [
-        "#0d6efd",
-        "#ffc107",
-        "#198754",
-        "#dc3545",
-        "#6f42c1",
-        "#0dcaf0"
-    ];
 
     Object.values(charts).forEach(c => c.destroy());
     charts = {};
 
-    if (hasData(psData)) {
-
-        document.getElementById("stageEmpty").style.display = "none";
-
-        charts.stage = new Chart(stageChart, {
-            type: 'doughnut',
-            data: {
-                labels: mapData(psData).labels,
-                datasets: [{
-                    data: mapData(psData).values,
-                    backgroundColor: colors
-                }]
-            },
-            options: {
-                cutout: '65%',
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { position: 'bottom' }
-                },
-                layout: {
-                    padding: 0
-                }
-            }
-        });
-    }
-
-    if (hasData(ptData)) {
-
-        document.getElementById("typeEmpty").style.display = "none";
-
-        charts.type = new Chart(typeChart, {
-            type: 'pie',
-            data: {
-                labels: mapData(ptData).labels,
-                datasets: [{
-                    data: mapData(ptData).values,
-                    backgroundColor: colors
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { position: 'bottom' }
-                },
-                layout: {
-                    padding: 0
-                }
-            }
-        });
-    }
-
     if (hasData(tsData)) {
-
-        document.getElementById("taskEmpty").style.display = "none";
+        const el = document.getElementById("taskEmpty");
+        if (el) el.style.display = "none";
 
         charts.task = new Chart(taskChart, {
             type: 'bar',
@@ -299,25 +247,21 @@ function renderCharts() {
                 labels: mapData(tsData).labels,
                 datasets: [{
                     data: mapData(tsData).values,
-                    backgroundColor: "#0d6efd"
+                    backgroundColor: "#2563eb",
+                    borderRadius: 6
                 }]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                plugins: {
-                    legend: { position: 'bottom' }
-                },
-                layout: {
-                    padding: 0
-                }
+                plugins: { legend: { display: false } }
             }
         });
     }
 
     if (hasData(ssData)) {
-
-        document.getElementById("serviceEmpty").style.display = "none";
+        const el = document.getElementById("serviceEmpty");
+        if (el) el.style.display = "none";
 
         charts.service = new Chart(serviceChart, {
             type: 'bar',
@@ -325,18 +269,14 @@ function renderCharts() {
                 labels: mapData(ssData).labels,
                 datasets: [{
                     data: mapData(ssData).values,
-                    backgroundColor: "#198754"
+                    backgroundColor: "#10b981",
+                    borderRadius: 6
                 }]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                plugins: {
-                    legend: { position: 'bottom' }
-                },
-                layout: {
-                    padding: 0
-                }
+                plugins: { legend: { display: false } }
             }
         });
     }
@@ -345,7 +285,6 @@ function renderCharts() {
 document.addEventListener("DOMContentLoaded", () => {
     setTimeout(renderCharts, 50);
 });
-
 </script>
 
 {% endblock %}

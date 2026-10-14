@@ -18,8 +18,11 @@ from django.contrib import admin
 from django.urls import path,include
 from django.conf import settings
 from django.conf.urls.static import static
+from django.views.generic import RedirectView
+from core_api.ai_views import ai_agent_query
 
 urlpatterns = [
+    path('login/', RedirectView.as_view(url='/users/login/', permanent=False), name='login_redirect'),
     path('admin/', admin.site.urls),
     path('users/',include('users.urls')),
     path('projects/',include('projects.urls')),
@@ -27,7 +30,9 @@ urlpatterns = [
     path('finance/',include('finance.urls')),
     path('',include('public.urls')),
     path('crm/',include('crm.urls')),
-    
+    path('partners/',include('partners.urls')),
+    path('api/ai/query/', ai_agent_query, name='ai_agent_query'),
+    path('api/mobile/', include('api.urls')),
 ]
 
 

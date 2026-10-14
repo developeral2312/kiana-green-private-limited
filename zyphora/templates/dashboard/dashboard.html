@@ -19,7 +19,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="{% static 'css/dashboard/dashboard.css' %}">
+    <link rel="stylesheet" href="{% static 'css/dashboard/dashboard.css' %}?v={% now 'U' %}">
 
     {% block link %}
     {% endblock %}
@@ -49,13 +49,13 @@
 
             {% include "include/accountant_sidebar.html" %}
 
-        <!-- Sales -->
-        {% elif request.user.role == "sales" %}
+        <!-- Sales & Manager -->
+        {% elif request.user.role == "sales" or request.user.role == "manager" %}
 
             {% include "include/sales_sidebar.html" %}
 
-        <!-- Staff -->
-        {% elif request.user.role == "staff" %}
+        <!-- Staff / Procurement / Partner -->
+        {% elif request.user.role == "staff" or request.user.role == "procurement" or request.user.role == "partner" or request.user.role == "subcontractor" %}
 
             {% include "include/staff_sidebar.html" %}
 
@@ -71,6 +71,17 @@
             {% include "include/topnavbar.html" %}
 
             <main class="main-content p-4">
+
+                {% if messages %}
+                <div class="container mb-3">
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
 
                 {% block content %}{% endblock %}
 
@@ -215,7 +226,320 @@
     }
 })();
 
+    // --- AUTO-EXPAND & PERSIST ACTIVE SIDEBAR SUBMENUS ---
+    (function () {
+        const currentPath = window.location.pathname;
+
+        // 1. Highlight the current active link and open its parent collapse menu
+        document.querySelectorAll('#sidebarMenu .submenu a').forEach(function(link) {
+            const href = link.getAttribute('href');
+            if (href && (href === currentPath || (href !== '/' && href !== '#' && currentPath.startsWith(href)))) {
+                link.classList.add('active');
+                const parentCollapse = link.closest('.collapse');
+                if (parentCollapse) {
+                    parentCollapse.classList.add('show');
+                    const toggle = document.querySelector(`[href="#${parentCollapse.id}"]`) || document.querySelector(`[data-bs-target="#${parentCollapse.id}"]`);
+                    if (toggle) {
+                        toggle.classList.add('active');
+                        toggle.setAttribute('aria-expanded', 'true');
+                    }
+                }
+            }
+        });
+
+        // 2. If browsing any /projects/ URL, keep all project menus open
+        if (currentPath.includes('/projects/')) {
+            document.querySelectorAll('#projectMenu, #engineerProjectMenu, #staffProjectsMenu').forEach(function(m) {
+                m.classList.add('show');
+                const toggle = document.querySelector(`[href="#${m.id}"]`) || document.querySelector(`[data-bs-target="#${m.id}"]`);
+                if (toggle) {
+                    toggle.classList.add('active');
+                    toggle.setAttribute('aria-expanded', 'true');
+                }
+            });
+        }
+
+        // 3. Persist manual collapse toggling across page navigations
+        document.querySelectorAll('#sidebarMenu .collapse').forEach(function(col) {
+            const savedState = sessionStorage.getItem('sidebar_menu_' + col.id);
+            if (savedState === 'open') {
+                col.classList.add('show');
+                const toggle = document.querySelector(`[href="#${col.id}"]`);
+                if (toggle) toggle.setAttribute('aria-expanded', 'true');
+            } else if (savedState === 'closed') {
+                if (!col.querySelector('a.active') && !currentPath.includes('/projects/')) {
+                    col.classList.remove('show');
+                    const toggle = document.querySelector(`[href="#${col.id}"]`);
+                    if (toggle) toggle.setAttribute('aria-expanded', 'false');
+                }
+            }
+
+            col.addEventListener('shown.bs.collapse', function () {
+                sessionStorage.setItem('sidebar_menu_' + col.id, 'open');
+            });
+            col.addEventListener('hidden.bs.collapse', function () {
+                sessionStorage.setItem('sidebar_menu_' + col.id, 'closed');
+            });
+        });
+    })();
+
     </script>
 
+    <!-- AI Agent Floating UI -->
+    {% if request.user.is_authenticated and request.user.role in 'admin,manager,director,procurement,sales,accountant,engineer,staff' or request.user.is_superuser %}
+    <div id="aiChatBubble" style="position: fixed; bottom: 24px; right: 24px; z-index: 1060;">
+        <!-- Chat Button -->
+        <button id="aiChatBtn" class="btn btn-primary rounded-circle shadow-lg p-0 d-flex align-items-center justify-content-center position-relative" 
+                style="width: 58px; height: 58px; transition: transform 0.2s ease, box-shadow 0.2s ease;"
+                title="Ask Zyphora AI Copilot">
+            <i class="bi bi-robot fs-3 text-white"></i>
+            <span class="position-absolute top-0 start-100 translate-middle p-1 bg-success border border-light rounded-circle" style="width: 12px; height: 12px;"></span>
+        </button>
+
+        <!-- Chat Window -->
+        <div id="aiChatWindow" class="card shadow-lg d-none border-0" 
+             style="width: 380px; max-width: calc(100vw - 32px); height: 530px; position: absolute; bottom: 70px; right: 0; border-radius: 16px; overflow: hidden; display: flex; flex-direction: column;">
+            
+            <!-- Header -->
+            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center px-3 py-2" style="border-bottom: 1px solid rgba(255,255,255,0.15);">
+                <div class="d-flex align-items-center gap-2">
+                    <div class="bg-white rounded-circle d-flex align-items-center justify-content-center text-primary" style="width: 32px; height: 32px;">
+                        <i class="bi bi-robot fs-5"></i>
+                    </div>
+                    <div>
+                        <div class="fw-bold lh-1" style="font-size: 0.95rem;">Zyphora AI Copilot</div>
+                        <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-2 py-0" style="font-size: 0.68rem;">
+                            <i class="bi bi-circle-fill me-1" style="font-size: 6px;"></i>Live ERP Engine
+                        </span>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center gap-1">
+                    <button type="button" class="btn btn-sm btn-link text-white-50 p-1" id="resetAiChat" title="Clear chat">
+                        <i class="bi bi-arrow-clockwise fs-6 text-white"></i>
+                    </button>
+                    <button type="button" class="btn-close btn-close-white btn-sm ms-1" id="closeAiChat" aria-label="Close"></button>
+                </div>
+            </div>
+
+            <!-- Chat Messages Body -->
+            <div class="card-body bg-light flex-grow-1 p-3" id="aiChatMessages" style="overflow-y: auto; font-size: 0.88rem;">
+                <!-- Initial Welcome Message -->
+                <div class="d-flex justify-content-start mb-3">
+                    <div class="bg-white border rounded-3 p-3 shadow-sm" style="max-width: 95%;">
+                        <div class="fw-semibold text-primary mb-1">
+                            <i class="bi bi-stars me-1 text-warning"></i>Zyphora AI Assistant Ready
+                        </div>
+                        <div class="text-secondary small mb-2">
+                            Poochiye koi bhi live ERP question Hindi ya English me:
+                        </div>
+                        <!-- Quick Prompt Chips -->
+                        <div class="d-flex flex-wrap gap-1 mt-2" id="aiQuickChips">
+                            <button type="button" class="btn btn-outline-primary btn-sm py-1 px-2 rounded-pill ai-chip" data-prompt="summary" style="font-size: 0.75rem;">
+                                <i class="bi bi-bar-chart me-1"></i>Summary
+                            </button>
+                            <button type="button" class="btn btn-outline-danger btn-sm py-1 px-2 rounded-pill ai-chip" data-prompt="delayed projects" style="font-size: 0.75rem;">
+                                <i class="bi bi-exclamation-triangle me-1"></i>Delayed Projects
+                            </button>
+                            <button type="button" class="btn btn-outline-info btn-sm py-1 px-2 rounded-pill ai-chip" data-prompt="subsidy" style="font-size: 0.75rem;">
+                                <i class="bi bi-bank me-1"></i>Subsidy
+                            </button>
+                            <button type="button" class="btn btn-outline-success btn-sm py-1 px-2 rounded-pill ai-chip" data-prompt="leads" style="font-size: 0.75rem;">
+                                <i class="bi bi-people me-1"></i>New Leads
+                            </button>
+                            <button type="button" class="btn btn-outline-warning btn-sm py-1 px-2 rounded-pill ai-chip text-dark" data-prompt="stock" style="font-size: 0.75rem;">
+                                <i class="bi bi-boxes me-1"></i>Stock Alert
+                            </button>
+                            <button type="button" class="btn btn-outline-secondary btn-sm py-1 px-2 rounded-pill ai-chip" data-prompt="revenue" style="font-size: 0.75rem;">
+                                <i class="bi bi-currency-rupee me-1"></i>Revenue
+                            </button>
+                            <button type="button" class="btn btn-outline-primary btn-sm py-1 px-2 rounded-pill ai-chip" data-prompt="vendors" style="font-size: 0.75rem;">
+                                <i class="bi bi-truck me-1"></i>Vendors & PO
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer / Input -->
+            <div class="card-footer bg-white p-2 border-top">
+                <div class="input-group">
+                    <input type="text" id="aiQueryInput" class="form-control border-end-0 shadow-none ps-3" 
+                           placeholder="Ask AI (e.g., 'delayed projects', 'stock')..." 
+                           style="border-radius: 24px 0 0 24px; font-size: 0.88rem;">
+                    <button class="btn btn-primary px-3" id="aiSendBtn" style="border-radius: 0 24px 24px 0;">
+                        <i class="bi bi-send-fill"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        (function() {
+            const chatBubble = document.getElementById('aiChatBubble');
+            const chatBtn = document.getElementById('aiChatBtn');
+            const chatWindow = document.getElementById('aiChatWindow');
+            const closeBtn = document.getElementById('closeAiChat');
+            const resetBtn = document.getElementById('resetAiChat');
+            const sendBtn = document.getElementById('aiSendBtn');
+            const queryInput = document.getElementById('aiQueryInput');
+            const msgBox = document.getElementById('aiChatMessages');
+
+            if (!chatBtn || !chatWindow) return;
+
+            chatBtn.addEventListener('click', function() {
+                chatWindow.classList.toggle('d-none');
+                if (!chatWindow.classList.contains('d-none')) {
+                    queryInput.focus();
+                }
+            });
+
+            closeBtn.addEventListener('click', function() {
+                chatWindow.classList.add('d-none');
+            });
+
+            // Delegate quick chip clicks
+            msgBox.addEventListener('click', function(e) {
+                const chip = e.target.closest('.ai-chip');
+                if (chip && chip.dataset.prompt) {
+                    executeAiQuery(chip.dataset.prompt);
+                }
+            });
+
+            if (resetBtn) {
+                resetBtn.addEventListener('click', function() {
+                    msgBox.innerHTML = `
+                        <div class="d-flex justify-content-start mb-3">
+                            <div class="bg-white border rounded-3 p-3 shadow-sm" style="max-width: 95%;">
+                                <div class="fw-semibold text-primary mb-1">
+                                    <i class="bi bi-stars me-1 text-warning"></i>Zyphora AI Assistant Ready
+                                </div>
+                                <div class="text-secondary small mb-2">
+                                    Poochiye koi bhi live ERP question Hindi ya English me:
+                                </div>
+                                <div class="d-flex flex-wrap gap-1 mt-2">
+                                    <button type="button" class="btn btn-outline-primary btn-sm py-1 px-2 rounded-pill ai-chip" data-prompt="summary" style="font-size: 0.75rem;"><i class="bi bi-bar-chart me-1"></i>Summary</button>
+                                    <button type="button" class="btn btn-outline-danger btn-sm py-1 px-2 rounded-pill ai-chip" data-prompt="delayed projects" style="font-size: 0.75rem;"><i class="bi bi-exclamation-triangle me-1"></i>Delayed Projects</button>
+                                    <button type="button" class="btn btn-outline-info btn-sm py-1 px-2 rounded-pill ai-chip" data-prompt="subsidy" style="font-size: 0.75rem;"><i class="bi bi-bank me-1"></i>Subsidy</button>
+                                    <button type="button" class="btn btn-outline-success btn-sm py-1 px-2 rounded-pill ai-chip" data-prompt="leads" style="font-size: 0.75rem;"><i class="bi bi-people me-1"></i>New Leads</button>
+                                    <button type="button" class="btn btn-outline-warning btn-sm py-1 px-2 rounded-pill ai-chip text-dark" data-prompt="stock" style="font-size: 0.75rem;"><i class="bi bi-boxes me-1"></i>Stock Alert</button>
+                                    <button type="button" class="btn btn-outline-secondary btn-sm py-1 px-2 rounded-pill ai-chip" data-prompt="revenue" style="font-size: 0.75rem;"><i class="bi bi-currency-rupee me-1"></i>Revenue</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+
+            sendBtn.addEventListener('click', function() {
+                const q = queryInput.value.trim();
+                if (q) executeAiQuery(q);
+            });
+
+            queryInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    const q = queryInput.value.trim();
+                    if (q) executeAiQuery(q);
+                }
+            });
+
+            function executeAiQuery(queryText) {
+                if (!queryText) return;
+
+                // Add user message to UI
+                msgBox.innerHTML += `
+                    <div class="d-flex justify-content-end mb-2">
+                        <div class="bg-primary text-white px-3 py-2 rounded-3 shadow-sm text-break" style="max-width: 82%;">
+                            ${escapeHtml(queryText)}
+                        </div>
+                    </div>
+                `;
+                queryInput.value = '';
+                msgBox.scrollTop = msgBox.scrollHeight;
+
+                // Add loading skeleton
+                const loadingId = 'ai-loading-' + Date.now();
+                msgBox.innerHTML += `
+                    <div id="${loadingId}" class="d-flex justify-content-start mb-2">
+                        <div class="bg-white border px-3 py-2 rounded-3 text-muted shadow-sm d-flex align-items-center gap-2">
+                            <div class="spinner-border spinner-border-sm text-primary" role="status"></div>
+                            <span>Analyzing ERP records...</span>
+                        </div>
+                    </div>
+                `;
+                msgBox.scrollTop = msgBox.scrollHeight;
+                sendBtn.disabled = true;
+
+                // Obtain CSRF token safely
+                const csrf = document.querySelector('[name=csrfmiddlewaretoken]')?.value || '{{ csrf_token }}';
+
+                fetch('/api/ai/query/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrf
+                    },
+                    body: JSON.stringify({ query: queryText })
+                })
+                .then(res => {
+                    if (!res.ok) {
+                        return res.json().then(errData => { throw new Error(errData.error || 'Server error ' + res.status); });
+                    }
+                    return res.json();
+                })
+                .then(data => {
+                    const loadingEl = document.getElementById(loadingId);
+                    if (loadingEl) loadingEl.remove();
+
+                    if (data.error) {
+                        msgBox.innerHTML += `
+                            <div class="d-flex justify-content-start mb-2">
+                                <div class="bg-danger-subtle text-danger border border-danger-subtle px-3 py-2 rounded-3 shadow-sm" style="max-width: 90%;">
+                                    <i class="bi bi-exclamation-circle-fill me-1"></i>${data.error}
+                                </div>
+                            </div>
+                        `;
+                    } else {
+                        msgBox.innerHTML += `
+                            <div class="d-flex justify-content-start mb-3">
+                                <div class="bg-white border px-3 py-2 rounded-3 shadow-sm" style="max-width: 92%; line-height: 1.45;">
+                                    ${data.response}
+                                </div>
+                            </div>
+                        `;
+                    }
+                    msgBox.scrollTop = msgBox.scrollHeight;
+                })
+                .catch(err => {
+                    const loadingEl = document.getElementById(loadingId);
+                    if (loadingEl) loadingEl.remove();
+
+                    msgBox.innerHTML += `
+                        <div class="d-flex justify-content-start mb-2">
+                            <div class="bg-danger-subtle text-danger border border-danger-subtle px-3 py-2 rounded-3 shadow-sm">
+                                <i class="bi bi-wifi-off me-1"></i>Connection error. Please try again.
+                            </div>
+                        </div>
+                    `;
+                    msgBox.scrollTop = msgBox.scrollHeight;
+                })
+                .finally(() => {
+                    sendBtn.disabled = false;
+                });
+            }
+
+            function escapeHtml(text) {
+                const map = {
+                    '&': '&amp;',
+                    '<': '&lt;',
+                    '>': '&gt;',
+                    '"': '&quot;',
+                    "'": '&#039;'
+                };
+                return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+            }
+        })();
+    </script>
+    {% endif %}
 </body>
 </html>

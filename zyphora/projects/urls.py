@@ -10,6 +10,7 @@ urlpatterns = [
     path('completed-project/<int:pid>/',completed_project_detail,name='completed_project_detail'), 
     path('edit-project/<int:pid>/',update_project,name='edit_project'),
     path('view-project/<int:pid>/',view_project,name='project_detail'),
+    path('view-project/<int:pid>/view/',view_project,name='view_project'),
 
 
     path('delete-media/<int:id>/',delete_project_media,name='delete_media'),
@@ -69,6 +70,7 @@ urlpatterns = [
     path('report-issues/', report_issues, name='report_issues'),
 
     path('reports/', daily_report_list, name='daily_report_list'),
+    path('work-reports/', daily_report_list, name='work_report_list'),
     path('reports/create/', create_daily_report, name='create_daily_report'),
     path('reports/<int:pk>/', daily_report_detail, name='daily_report_detail'),
     path('weekly-reports/', weekly_report_list, name='weekly_report_list'),
@@ -87,4 +89,17 @@ urlpatterns = [
     path('energisation/', energisation_projects, name='energisation_projects'),
     path('project-completed/<int:id>/', mark_project_completed, name='mark_project_completed'),
 
+    # WARRANTY & SERIAL TRACKING
+    path('equipment/<int:pid>/', project_equipment_list, name='project_equipment'),
+    path('equipment/add/<int:pid>/', add_project_equipment, name='add_project_equipment'),
+    
+    # POST-INSTALLATION SUPPORT
+    path('support-tickets/', ticket_list, name='ticket_list'),
+    path('support-tickets/<int:ticket_id>/', view_ticket, name='view_ticket'),
+    
+    # SUBCONTRACTOR PORTAL
+    path('subcontractor/', subcontractor_dashboard, name='subcontractor_dashboard'),
+    path('subcontractor/task/assign/', assign_subcontractor_task, name='assign_subcontractor_task'),
+    path('subcontractor/task/<int:task_id>/complete/', mark_task_completed, name='mark_task_completed'),
+    path('subcontractor/task/<int:task_id>/verify/', verify_subcontractor_task, name='verify_subcontractor_task'),
 ]

@@ -32,46 +32,75 @@
         </p>
     </div>
 
+    {% if messages %}
+    <div class="mb-3">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
 
-    <form method="post" enctype="multipart/form-data">
+    {% if form.errors %}
+    <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
+        <div class="fw-bold mb-1"><i class="bi bi-exclamation-triangle-fill me-2"></i>Please fix the following errors:</div>
+        <ul class="mb-0 ps-3">
+            {% for field in form %}
+                {% for error in field.errors %}
+                    <li><strong>{{ field.label }}:</strong> {{ error }}</li>
+                {% endfor %}
+            {% endfor %}
+            {% for error in form.non_field_errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endif %}
+
+    <form method="post" enctype="multipart/form-data" novalidate>
         {% csrf_token %}
 
         <div class="card shadow-sm border-0">
 
-            <div class="card-body">
+            <div class="card-body p-4">
 
                 <!-- BASIC INFO -->
-                <h6 class="text-muted mb-3">Basic Information</h6>
+                <h6 class="text-muted mb-3 fw-bold text-uppercase small">Basic Information</h6>
 
                 <div class="row g-3 mb-4">
 
                     <div class="col-md-4">
-                        <label class="form-label">Username</label>
-                        <input type="text" name="username" class="form-control" required>
+                        <label class="form-label fw-semibold">Username <span class="text-danger">*</span></label>
+                        {{ form.username }}
+                        {% if form.username.errors %}
+                            <div class="text-danger small mt-1">{{ form.username.errors|striptags }}</div>
+                        {% endif %}
                     </div>
 
                     <div class="col-md-4">
-                        <label class="form-label">Email</label>
-                        <input type="email" name="email" class="form-control" required>
+                        <label class="form-label fw-semibold">Email <span class="text-danger">*</span></label>
+                        {{ form.email }}
+                        {% if form.email.errors %}
+                            <div class="text-danger small mt-1">{{ form.email.errors|striptags }}</div>
+                        {% endif %}
                     </div>
 
                     <div class="col-md-4">
-                        <label class="form-label">Role</label>
-                        <select name="role" id="role-select" class="form-select" required>
-                            <option value="">Select Role</option>
-                            <option value="staff">Staff</option>
-                            <option value="sales">Sales</option>
-                            <option value="engineer">Engineer</option>
-                            <option value="accountant">Accountant</option>
-                            <option value="liaison">Liaison Officer</option>
-                        </select>
+                        <label class="form-label fw-semibold">Role <span class="text-danger">*</span></label>
+                        {{ form.role }}
+                        {% if form.role.errors %}
+                            <div class="text-danger small mt-1">{{ form.role.errors|striptags }}</div>
+                        {% endif %}
                     </div>
 
                 </div>
 
 
                 <!-- PERSONAL INFO -->
-                <h6 class="text-muted mb-3">Personal Details</h6>
+                <h6 class="text-muted mb-3 fw-bold text-uppercase small">Personal Details</h6>
 
                 <div class="row g-3 mb-4">
 
@@ -79,10 +108,10 @@
                         {% for field in form %}
                             {% if field.name == "name" or field.name == "phone" or field.name == "designation" %}
                                 <div class="mb-3">
-                                    {{ field.label_tag }}
+                                    <label class="form-label fw-semibold">{{ field.label }}</label>
                                     {{ field }}
                                     {% for error in field.errors %}
-                                        <div class="text-danger small">{{ error }}</div>
+                                        <div class="text-danger small mt-1">{{ error }}</div>
                                     {% endfor %}
                                 </div>
                             {% endif %}
@@ -91,11 +120,13 @@
 
                     <div class="col-md-6">
                         {% if form.address %}
-                            {{ form.address.label_tag }}
-                            {{ form.address }}
-                            {% for error in form.address.errors %}
-                                <div class="text-danger small">{{ error }}</div>
-                            {% endfor %}
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">{{ form.address.label }}</label>
+                                {{ form.address }}
+                                {% for error in form.address.errors %}
+                                    <div class="text-danger small mt-1">{{ error }}</div>
+                                {% endfor %}
+                            </div>
                         {% endif %}
                     </div>
 
@@ -103,48 +134,67 @@
 
 
                 <!-- ROLE BASED -->
-                <h6 class="text-muted mb-3">Role Specific Details</h6>
+                <div id="role-specific-section">
+                    <h6 class="text-muted mb-2 fw-bold text-uppercase small">Role Specific Details</h6>
+                    <p id="role-hint-text" class="text-muted small fst-italic mb-3">
+                        <i class="bi bi-info-circle me-1"></i> Upar se Role select karein (jaise Engineer, Accountant, Sales, ya Manager) toh unke specific options yahan show honge.
+                    </p>
 
-                <div class="row g-3 mb-4">
+                    <div class="row g-3 mb-4" id="role-fields-row">
 
-                    {% for field in form %}
+                        {% for field in form %}
 
-                        {% if field.name == "specialization" %}
-                        <div class="col-md-6 role-field role-engineer">
-                            {{ field.label_tag }}
-                            {{ field }}
-                        </div>
-                        {% endif %}
+                            {% if field.name == "specialization" %}
+                            <div class="col-md-6 role-field role-engineer" style="display: none;">
+                                <label class="form-label fw-semibold">Specialization (Technical Skill)</label>
+                                {{ field }}
+                                <small class="text-muted d-block mt-1">e.g., Rooftop Installation, Electrical, Civil, Inverters</small>
+                                {% for error in field.errors %}
+                                    <div class="text-danger small mt-1">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                            {% endif %}
 
-                        {% if field.name == "access_level" %}
-                        <div class="col-md-6 role-field role-accountant">
-                            {{ field.label_tag }}
-                            {{ field }}
-                        </div>
-                        {% endif %}
+                            {% if field.name == "access_level" %}
+                            <div class="col-md-6 role-field role-accountant" style="display: none;">
+                                <label class="form-label fw-semibold">Access Level (Financial Permissions)</label>
+                                {{ field }}
+                                {% for error in field.errors %}
+                                    <div class="text-danger small mt-1">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                            {% endif %}
 
-                        {% if field.name == "supervisor" %}
-                        <div class="col-md-6 role-field role-staff role-sales">
-                            {{ field.label_tag }}
-                            {{ field }}
-                        </div>
-                        {% endif %}
+                            {% if field.name == "supervisor" %}
+                            <div class="col-md-6 role-field role-staff role-sales role-manager" style="display: none;">
+                                <label class="form-label fw-semibold">Supervisor (Reporting Manager)</label>
+                                {{ field }}
+                                <small class="text-muted d-block mt-1">Is employee ke reporting manager / lead ko select karein</small>
+                                {% for error in field.errors %}
+                                    <div class="text-danger small mt-1">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                            {% endif %}
 
-                    {% endfor %}
+                        {% endfor %}
 
+                    </div>
                 </div>
 
 
                 <!-- OTHER FIELDS -->
-                <h6 class="text-muted mb-3">Additional Information</h6>
+                <h6 class="text-muted mb-3 fw-bold text-uppercase small">Additional Information</h6>
 
                 <div class="row g-3">
 
                     {% for field in form %}
-                        {% if field.name not in "address name phone designation specialization access_level supervisor is_active" %}
-                        <div class="col-md-6">
-                            {{ field.label_tag }}
+                        {% if field.name not in "address name phone designation specialization access_level supervisor is_active username email role" %}
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-semibold">{{ field.label }}</label>
                             {{ field }}
+                            {% for error in field.errors %}
+                                <div class="text-danger small mt-1">{{ error }}</div>
+                            {% endfor %}
                         </div>
                         {% endif %}
                     {% endfor %}
@@ -153,17 +203,18 @@
 
 
                 <!-- ACTIVE -->
-                <div class="form-check form-switch mt-4">
+                <div class="form-check form-switch mt-3">
                     {{ form.is_active }}
-                    <label class="form-check-label">
+                    <label class="form-check-label fw-semibold ms-2">
                         Active Employee
                     </label>
                 </div>
 
 
                 <!-- SUBMIT -->
-                <div class="text-end mt-4">
-                    <button class="btn btn-primary px-4">
+                <div class="d-flex justify-content-end gap-2 mt-4 pt-3 border-top">
+                    <a href="{% url 'emplist' %}" class="btn btn-outline-secondary px-4">Cancel</a>
+                    <button type="submit" class="btn btn-success px-4">
                         <i class="bi bi-check-circle me-1"></i>
                         Register Employee
                     </button>
@@ -184,24 +235,37 @@ document.addEventListener("DOMContentLoaded", function(){
 
     const roleSelect = document.getElementById("role-select");
     const roleFields = document.querySelectorAll(".role-field");
+    const hintText = document.getElementById("role-hint-text");
 
     function toggleFields(){
+        if(!roleSelect) return;
         let role = roleSelect.value;
 
         roleFields.forEach(field => {
             field.style.display = "none";
         });
 
-        if(role){
-            document.querySelectorAll(".role-" + role)
-                .forEach(field => {
+        if(!role){
+            hintText.innerHTML = '<i class="bi bi-info-circle me-1"></i> Upar se Role select karein (jaise Engineer, Accountant, Sales, ya Manager) toh unke specific options yahan show honge.';
+            hintText.style.display = "block";
+        } else {
+            let matched = document.querySelectorAll(".role-" + role);
+            if(matched.length > 0){
+                hintText.style.display = "none";
+                matched.forEach(field => {
                     field.style.display = "block";
                 });
+            } else {
+                hintText.innerHTML = '<span class="badge bg-light text-secondary border px-3 py-2"><i class="bi bi-check2-circle text-success me-1"></i> Is role ke liye standard role-based access set hoga. Koi extra role-specific fields required nahi hain.</span>';
+                hintText.style.display = "block";
+            }
         }
     }
 
-    roleSelect.addEventListener("change", toggleFields);
-    toggleFields();
+    if(roleSelect){
+        roleSelect.addEventListener("change", toggleFields);
+        toggleFields();
+    }
 
 });
 </script>

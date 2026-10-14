@@ -135,7 +135,7 @@
 
                 <!-- If report already exists, show download PDF -->
                 {% if service_request.report %}
-                    <a href="{% url 'service_report_pdf' service_request.report.id %}" class="btn btn-primary ms-2">
+                    <a href="{% url 'download_report' 'service' service_request.report.id %}" class="btn btn-primary ms-2">
                         <i class="bi bi-download me-1"></i> Download PDF
                     </a>
                 {% endif %}

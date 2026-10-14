@@ -4,8 +4,8 @@
 {% block content %}
 
 <!-- Breadcrumb -->
-<nav aria-label="breadcrumb">
-  <ol class="breadcrumb mb-2">
+<nav aria-label="breadcrumb" class="mb-3">
+  <ol class="breadcrumb mb-0">
     <li class="breadcrumb-item">
         <a href="{% url request.user.role %}">{{ request.user.role|title }} Dashboard</a>
     </li>
@@ -18,61 +18,90 @@
   </ol>
 </nav>
 
-<div class="container-fluid">
+<!-- Executive Hero Card -->
+<div class="executive-hero-card mb-4">
+    <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+        <div class="d-flex align-items-center gap-3">
+            <div class="hero-icon-box" style="background: #ecfdf5; color: #059669; border-color: #a7f3d0;">
+                <i class="bi bi-award"></i>
+            </div>
+            <div>
+                <div class="d-flex align-items-center gap-2">
+                    <h3 class="hero-heading mb-0">Completed Solar Projects</h3>
+                    <span class="hero-count-badge" style="background: #ecfdf5; color: #047857; border-color: #a7f3d0;">{{ projects|length }} Delivered</span>
+                </div>
+                <p class="hero-subtext mb-0">Commissioned solar installations handed over to clients with completed documentation</p>
+            </div>
+        </div>
 
-    <!-- TITLE -->
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h4>Completed Projects</h4>
+        <a href="{% url 'project_list' %}" class="btn btn-outline-primary px-3 py-2" style="border-radius: 10px; font-weight: 600;">
+            <i class="bi bi-kanban me-1"></i> All Projects
+        </a>
     </div>
+</div>
 
-    <!-- TABLE -->
-    <div class="card shadow-sm">
-        <div class="card-body table-responsive">
-
-            <table class="table table-hover align-middle">
+<!-- Table Card -->
+<div class="card shadow-sm border-0 mb-4 overflow-hidden">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
                 <thead>
                     <tr>
-                        <th>#</th>
+                        <th width="60">#</th>
                         <th>Project Name</th>
                         <th>Client</th>
                         <th>Location</th>
                         <th>Capacity</th>
-                        <th class="text-end">Action</th>
+                        <th class="text-end pe-3">Action</th>
                     </tr>
                 </thead>
-
                 <tbody>
                     {% for project in projects %}
                     <tr>
-                        <td>{{ forloop.counter }}</td>
-                        <td>{{ project.title }}</td>
-                        <td>{{ project.lead.name }}</td>
-                        <td>{{ project.location }}</td>
-                        <td>{{ project.feasibility.suggested_capacity }} kW</td>
-
-                        <td class="text-end">
-                            <form method="POST" action="{% url 'completed_project_detail' project.id %}">
+                        <td>
+                            <span class="text-muted small fw-bold">{{ forloop.counter }}</span>
+                        </td>
+                        <td>
+                            <div class="d-flex align-items-center gap-2">
+                                <div class="hero-icon-box" style="width: 32px; height: 32px; font-size: 0.95rem; border-radius: 8px;">
+                                    <i class="bi bi-sun"></i>
+                                </div>
+                                <span class="fw-bold text-dark">{{ project.title }}</span>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="fw-medium text-secondary small">{{ project.lead.name }}</span>
+                        </td>
+                        <td>
+                            <span class="text-secondary small"><i class="bi bi-geo-alt me-1"></i>{{ project.location }}</span>
+                        </td>
+                        <td>
+                            <span class="badge bg-light text-dark border fw-bold">{{ project.feasibility.suggested_capacity }} kW</span>
+                        </td>
+                        <td class="text-end pe-3">
+                            <form method="POST" action="{% url 'completed_project_detail' project.id %}" class="d-inline">
                                 {% csrf_token %}
-                                <button class="btn btn-success btn-sm">
-                                    View
+                                <button type="submit" class="btn btn-sm btn-outline-success d-inline-flex align-items-center gap-1 px-3 py-1" style="border-radius: 8px;">
+                                    <i class="bi bi-eye"></i> View Dossier
                                 </button>
                             </form>
                         </td>
                     </tr>
                     {% empty %}
                     <tr>
-                        <td colspan="6" class="text-center text-muted">
-                            No projects completed
+                        <td colspan="6" class="text-center p-5">
+                            <div class="hero-icon-box mx-auto mb-3" style="width: 56px; height: 56px; font-size: 1.6rem;">
+                                <i class="bi bi-award"></i>
+                            </div>
+                            <h6 class="fw-bold text-dark mt-2">No Projects Completed Yet</h6>
+                            <p class="text-muted mb-0 small">Delivered projects will be archived into this portfolio.</p>
                         </td>
                     </tr>
                     {% endfor %}
                 </tbody>
-
             </table>
-
         </div>
     </div>
-
 </div>
 
 {% endblock %}

@@ -18,82 +18,147 @@
   </ol>
 </nav>
 
-<div class="container mt-4">
+<div class="admin-dashboard-container">
+    <div class="container-fluid px-0">
 
-    <!-- Header -->
-    <header class="d-flex justify-content-between align-items-start mb-4">
-        <div>
-            <h1 class="h3 fw-bold text-primary">
-                <i class="bi bi-truck me-2"></i>{{ vendor.name }}
-            </h1>
-            <p class="text-muted mb-0">Vendor Details</p>
-        </div>
-        <a href="{% url 'edit_vendor' vendor.id %}" class="btn btn-warning align-self-start">
-            <i class="bi bi-pencil me-1"></i> Edit Vendor
-        </a>
-    </header>
-
-    <div class="row">
-
-        <!-- Vendor Information -->
-        <div class="col-md-6">
-            <div class="card shadow-sm mb-3">
-                <div class="card-header">
-                    Vendor Information
+        <!-- Executive Hero Card -->
+        <div class="executive-hero-card mb-4">
+            <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="hero-icon-box">
+                        <i class="bi bi-building"></i>
+                    </div>
+                    <div>
+                        <div class="d-flex align-items-center gap-2">
+                            <h3 class="hero-heading mb-0">{{ vendor.name }}</h3>
+                            <span class="hero-count-badge">{{ vendor.category|default:"Solar Equipment" }}</span>
+                        </div>
+                        <p class="hero-subtext mb-0">Registered on {{ vendor.created_at|date:"d M Y" }} • Contact: {{ vendor.contact_person|default:"N/A" }}</p>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <dl class="row mb-0">
-                        <dt class="col-sm-4">Name:</dt>
-                        <dd class="col-sm-8">{{ vendor.name }}</dd>
 
-                        <dt class="col-sm-4">Phone:</dt>
-                        <dd class="col-sm-8">
-                            <a href="tel:{{ vendor.phone }}">{{ vendor.phone }}</a>
-                        </dd>
-
-                        <dt class="col-sm-4">Email:</dt>
-                        <dd class="col-sm-8">
-                            {% if vendor.email %}
-                                <a href="mailto:{{ vendor.email }}">{{ vendor.email }}</a>
-                            {% else %}
-                                <span class="text-muted">Not provided</span>
-                            {% endif %}
-                        </dd>
-
-                        <dt class="col-sm-4">GST Number:</dt>
-                        <dd class="col-sm-8">
-                            {% if vendor.gst_number %}
-                                {{ vendor.gst_number }}
-                            {% else %}
-                                <span class="text-muted">Not provided</span>
-                            {% endif %}
-                        </dd>
-
-                        <dt class="col-sm-4">Created On:</dt>
-                        <dd class="col-sm-8">{{ vendor.created_at|date:"d M Y" }}</dd>
-                    </dl>
+                <div class="d-flex align-items-center gap-2">
+                    <a href="{% url 'vendor_list' %}" class="btn btn-outline-secondary btn-sm rounded-pill px-3 py-1 fw-semibold">
+                        <i class="bi bi-arrow-left me-1"></i> Back to Vendors
+                    </a>
+                    <a href="{% url 'edit_vendor' vendor.id %}" class="btn-hero-action">
+                        <i class="bi bi-pencil me-1"></i> Edit Vendor
+                    </a>
                 </div>
             </div>
         </div>
 
-        <!-- Address -->
-        <div class="col-md-6">
-            <div class="card shadow-sm mb-3">
-                <div class="card-header">
-                    Address
+        <div class="row g-4">
+            <!-- 1. General & Contact Information -->
+            <div class="col-lg-6">
+                <div class="white-premium-panel h-100">
+                    <div class="panel-header-wrap">
+                        <h6 class="panel-heading">
+                            <i class="bi bi-building me-2 text-primary"></i>Company & Contact Details
+                        </h6>
+                    </div>
+                    <div class="p-2">
+                        <dl class="row mb-0 g-2">
+                            <dt class="col-sm-4 text-muted small text-uppercase fw-bold">Company Name</dt>
+                            <dd class="col-sm-8 fw-bold text-dark">{{ vendor.name }}</dd>
+
+                            <dt class="col-sm-4 text-muted small text-uppercase fw-bold">Contact Person</dt>
+                            <dd class="col-sm-8 text-dark">{{ vendor.contact_person|default:"Not specified" }}</dd>
+
+                            <dt class="col-sm-4 text-muted small text-uppercase fw-bold">Phone Number</dt>
+                            <dd class="col-sm-8">
+                                <a href="tel:{{ vendor.phone }}" class="text-decoration-none fw-semibold text-primary">
+                                    <i class="bi bi-telephone me-1"></i>{{ vendor.phone }}
+                                </a>
+                            </dd>
+
+                            <dt class="col-sm-4 text-muted small text-uppercase fw-bold">Email Address</dt>
+                            <dd class="col-sm-8">
+                                {% if vendor.email %}
+                                    <a href="mailto:{{ vendor.email }}" class="text-decoration-none text-dark">
+                                        <i class="bi bi-envelope me-1 text-primary"></i>{{ vendor.email }}
+                                    </a>
+                                {% else %}
+                                    <span class="text-muted">Not provided</span>
+                                {% endif %}
+                            </dd>
+
+                            <dt class="col-sm-4 text-muted small text-uppercase fw-bold">Address</dt>
+                            <dd class="col-sm-8 text-dark">{{ vendor.address|default:"Not provided" }}</dd>
+
+                            <dt class="col-sm-4 text-muted small text-uppercase fw-bold">Registered On</dt>
+                            <dd class="col-sm-8 text-muted">{{ vendor.created_at|date:"d M Y" }}</dd>
+                        </dl>
+                    </div>
                 </div>
-                <div class="card-body">
-                    {% if vendor.address %}
-                        <pre class="mb-0">{{ vendor.address }}</pre>
-                    {% else %}
-                        <span class="text-muted">No address provided</span>
-                    {% endif %}
+            </div>
+
+            <!-- 2. Compliance & Banking Information -->
+            <div class="col-lg-6">
+                <div class="d-flex flex-column gap-4">
+                    <!-- Compliance -->
+                    <div class="white-premium-panel">
+                        <div class="panel-header-wrap">
+                            <h6 class="panel-heading">
+                                <i class="bi bi-file-earmark-check me-2 text-primary"></i>Tax & Commercial Terms
+                            </h6>
+                        </div>
+                        <div class="p-2">
+                            <dl class="row mb-0 g-2">
+                                <dt class="col-sm-4 text-muted small text-uppercase fw-bold">GST Number</dt>
+                                <dd class="col-sm-8">
+                                    {% if vendor.gst_number %}
+                                        <span class="badge bg-light text-dark border px-2 py-1 font-monospace">{{ vendor.gst_number }}</span>
+                                    {% else %}
+                                        <span class="text-muted">N/A</span>
+                                    {% endif %}
+                                </dd>
+
+                                <dt class="col-sm-4 text-muted small text-uppercase fw-bold">PAN Number</dt>
+                                <dd class="col-sm-8">
+                                    {% if vendor.pan_number %}
+                                        <span class="badge bg-light text-dark border px-2 py-1 font-monospace">{{ vendor.pan_number }}</span>
+                                    {% else %}
+                                        <span class="text-muted">N/A</span>
+                                    {% endif %}
+                                </dd>
+
+                                <dt class="col-sm-4 text-muted small text-uppercase fw-bold">Supply Category</dt>
+                                <dd class="col-sm-8">
+                                    <span class="badge bg-primary text-white">{{ vendor.category|default:"Solar Equipment" }}</span>
+                                </dd>
+
+                                <dt class="col-sm-4 text-muted small text-uppercase fw-bold">Payment Terms</dt>
+                                <dd class="col-sm-8 fw-semibold text-success">{{ vendor.payment_terms|default:"30 Days Credit" }}</dd>
+                            </dl>
+                        </div>
+                    </div>
+
+                    <!-- Banking Information -->
+                    <div class="white-premium-panel">
+                        <div class="panel-header-wrap">
+                            <h6 class="panel-heading">
+                                <i class="bi bi-bank me-2 text-primary"></i>Bank Details (For Payments)
+                            </h6>
+                        </div>
+                        <div class="p-2">
+                            <dl class="row mb-0 g-2">
+                                <dt class="col-sm-4 text-muted small text-uppercase fw-bold">Bank Name</dt>
+                                <dd class="col-sm-8 text-dark">{{ vendor.bank_name|default:"Not provided" }}</dd>
+
+                                <dt class="col-sm-4 text-muted small text-uppercase fw-bold">Account Number</dt>
+                                <dd class="col-sm-8 font-monospace fw-bold text-dark">{{ vendor.bank_account_number|default:"Not provided" }}</dd>
+
+                                <dt class="col-sm-4 text-muted small text-uppercase fw-bold">IFSC Code</dt>
+                                <dd class="col-sm-8 font-monospace text-primary fw-semibold">{{ vendor.bank_ifsc|default:"Not provided" }}</dd>
+                            </dl>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
     </div>
-
 </div>
 
 {% endblock %}

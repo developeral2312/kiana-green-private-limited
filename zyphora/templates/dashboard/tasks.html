@@ -15,65 +15,73 @@
 </nav>
 
 <!-- Header -->
-<div class="mb-4">
-    <h4 class="fw-bold mb-1 d-flex align-items-center text-primary">
-        <i class="bi bi-list-check me-2 "></i>
-        My Tasks {% if filter_type != "all" %} - {{ filter_type|title }}{% endif %}
-    </h4>
-    <p class="text-muted mb-0">
-        Track and manage your task progress efficiently
-    </p>
+<div class="card p-3 mb-4 d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+    <div class="d-flex align-items-center gap-3">
+        <div style="width: 46px; height: 46px; border-radius: 12px; background: #eff6ff; color: #2563eb; border: 1px solid #bfdbfe; display: flex; align-items: center; justify-content: center; font-size: 1.35rem; flex-shrink: 0;">
+            <i class="bi bi-list-task"></i>
+        </div>
+        <div>
+            <div class="d-flex align-items-center gap-2 flex-wrap">
+                <h4 class="fw-bold mb-0 text-dark">My Tasks {% if filter_type != "all" %} &mdash; {{ filter_type|title }}{% endif %}</h4>
+                <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill px-2.5 py-1">
+                    {{ tasks|length|default:0 }} Tasks
+                </span>
+            </div>
+            <p class="text-muted small mb-0 mt-1">Track and manage your operational action items and engineering deadlines.</p>
+        </div>
+    </div>
 </div>
 
 {% if tasks %}
-    <div class="card shadow-sm">
+    <div class="card mb-4 overflow-hidden">
         <ul class="list-group list-group-flush">
 
             {% for task in tasks %}
-            <li class="list-group-item d-flex justify-content-between align-items-center ">
+            <li class="list-group-item d-flex justify-content-between align-items-center py-3 px-4">
 
                 <!-- Task Info -->
                 <div>
-                    <div class="fw-semibold d-flex align-items-center">
-                        <i class="bi bi-check2-square me-2 "></i>
-                        {{ task.title }}
+                    <div class="fw-bold text-dark d-flex align-items-center gap-2">
+                        <i class="bi bi-check2-circle text-primary"></i>
+                        <span>{{ task.title }}</span>
                     </div>
 
                     {% if task.due_date %}
-                        <small class="text-muted">
-                            Due: {{ task.due_date }}
-                        </small>
+                        <div class="small text-muted mt-1">
+                            <i class="bi bi-calendar-event me-1"></i>Due: <strong>{{ task.due_date }}</strong>
+                        </div>
                     {% endif %}
-                    <br>
 
-                    <small class="text-muted">
-                        {{ task.description|default:"No description" }}
-                    </small>
+                    {% if task.description %}
+                    <div class="small text-muted mt-1">
+                        {{ task.description }}
+                    </div>
+                    {% endif %}
                 </div>
 
                 <!-- Actions -->
-                <div class="d-flex align-items-center gap-2">
+                <div class="d-flex align-items-center gap-2 flex-nowrap">
 
                     <!-- Status Badge -->
-                    <span class="badge rounded-pill px-3 py-2
-                        {% if task.status == 'completed' %}bg-success
-                        {% elif task.status == 'overdue' %}bg-danger
-                        {% else %}bg-warning text-dark
+                    <span class="badge rounded-pill px-2.5 py-1 fw-semibold
+                        {% if task.status == 'completed' %}bg-success-subtle text-success border border-success-subtle
+                        {% elif task.status == 'overdue' %}bg-danger-subtle text-danger border border-danger-subtle
+                        {% else %}bg-warning-subtle text-warning-emphasis border border-warning-subtle
                         {% endif %}">
                         {{ task.get_status_display }}
                     </span>
 
                     {% if task.status != 'completed' %}
-                    <a href="{% url 'complete_task' task.id %}" class="btn btn-sm btn-success" title="Mark Complete">
-                        <i class="bi bi-check"></i>
+                    <a href="{% url 'complete_task' task.id %}" class="btn btn-sm btn-outline-success rounded-pill px-2.5 py-1" title="Mark Complete">
+                        <i class="bi bi-check-lg me-1"></i> Done
                     </a>
                     {% endif %}
 
-                    <a href="{% url 'edit_task' task.id %}" class="btn btn-sm btn-primary" title="Edit Task">
+                    <a href="{% url 'edit_task' task.id %}" class="btn btn-sm btn-light border text-primary rounded-circle p-1.5" style="width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center;" title="Edit Task">
                         <i class="bi bi-pencil"></i>
                     </a>
 
-                    <a href="{% url 'delete_task' task.id %}" class="btn btn-sm btn-danger" title="Delete Task">
+                    <a href="{% url 'delete_task' task.id %}" class="btn btn-sm btn-light border text-danger rounded-circle p-1.5" style="width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center;" title="Delete Task" onclick="return confirm('Delete this task?')">
                         <i class="bi bi-trash"></i>
                     </a>
 
@@ -84,12 +92,96 @@
 
         </ul>
     </div>
+{% endif %}
 
-{% else %}
+{% if installation_tasks %}
+    <div class="card shadow-sm mt-4">
+        <div class="card-header bg-primary bg-opacity-10 fw-bold text-primary d-flex justify-content-between align-items-center">
+            <span><i class="bi bi-tools me-2"></i> Installation Tasks (Project Work)</span>
+            <span class="badge bg-primary">{{ installation_tasks|length }}</span>
+        </div>
+        <ul class="list-group list-group-flush">
+            {% for itask in installation_tasks %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <div>
+                    <div class="fw-semibold d-flex align-items-center">
+                        <i class="bi bi-gear-fill text-warning me-2"></i>
+                        {{ itask.project.title }} &mdash; {{ itask.get_step_display }}
+                    </div>
+                    {% if itask.due_date %}
+                        <small class="text-muted"><i class="bi bi-calendar me-1"></i>Due: {{ itask.due_date }}</small><br>
+                    {% endif %}
+                    {% if itask.notes %}
+                        <small class="text-muted">{{ itask.notes|linebreaksbr }}</small>
+                    {% endif %}
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                    <span class="badge rounded-pill px-3 py-2
+                        {% if itask.status == 'completed' %}bg-success
+                        {% elif itask.status == 'overdue' %}bg-danger
+                        {% else %}bg-warning text-dark{% endif %}">
+                        {{ itask.get_status_display }}
+                    </span>
+                    {% if itask.status != 'completed' %}
+                    <form method="POST" action="{% url 'installation_progress' %}" class="d-inline m-0 p-0">
+                        {% csrf_token %}
+                        <input type="hidden" name="form_type" value="mark_task_completed">
+                        <input type="hidden" name="complete_task_id" value="{{ itask.id }}">
+                        <button type="submit" class="btn btn-sm btn-success" title="Mark Complete">
+                            <i class="bi bi-check-lg"></i> Complete
+                        </button>
+                    </form>
+                    {% endif %}
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endif %}
+
+{% if subcontractor_tasks %}
+    <div class="card shadow-sm mt-4 border-0">
+        <div class="card-header bg-warning bg-opacity-10 fw-bold text-dark d-flex justify-content-between align-items-center">
+            <span><i class="bi bi-tools me-2 text-warning"></i> Subcontractor Installation Work</span>
+            <span class="badge bg-warning text-dark">{{ subcontractor_tasks|length }}</span>
+        </div>
+        <ul class="list-group list-group-flush">
+            {% for stask in subcontractor_tasks %}
+            <li class="list-group-item d-flex justify-content-between align-items-center py-3">
+                <div>
+                    <div class="fw-semibold text-dark">
+                        <i class="bi bi-hammer text-warning me-2"></i>
+                        {{ stask.task_name }} &mdash; <span class="text-primary">{{ stask.project.title }}</span>
+                    </div>
+                    {% if stask.deadline %}
+                        <small class="text-muted"><i class="bi bi-calendar me-1"></i>Due: {{ stask.deadline }}</small><br>
+                    {% endif %}
+                    {% if stask.description %}
+                        <small class="text-muted">{{ stask.description|linebreaksbr }}</small>
+                    {% endif %}
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                    <span class="badge rounded-pill px-3 py-2
+                        {% if stask.status == 'verified' %}bg-success
+                        {% elif stask.status == 'completed' %}bg-warning text-dark
+                        {% else %}bg-primary text-white{% endif %}">
+                        {{ stask.get_status_display }}
+                    </span>
+                    <a href="{% url 'subcontractor_dashboard' %}" class="btn btn-sm btn-outline-primary rounded-pill px-3">
+                        View in Portal
+                    </a>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endif %}
+
+{% if not tasks and not installation_tasks and not subcontractor_tasks %}
     <!-- Empty State -->
     <div class="text-center p-5 text-muted">
         <i class="bi bi-list-task fs-1"></i>
-        <p class="mt-3 mb-0">No tasks assigned.</p>
+        <p class="mt-3 mb-0">No tasks assigned{% if filter_type != "all" %} for {{ filter_type }}{% endif %}.</p>
     </div>
 {% endif %}
 

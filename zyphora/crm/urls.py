@@ -14,6 +14,7 @@ urlpatterns = [
     path('add-lead/',add_lead,name='add_lead'),
 
     path('mark-sitevisit/<int:vid>/',mark_site_visit_done,name='mark_site_visit_done'),
+    path('sitevisits/',site_visits,name='site_visits'),
     path('sitevisits/<str:filter>/',site_visits,name='site_visits'),
     path('edit-visit/<int:vid>/',edit_site_visit,name='edit_visit'),
     path('site-photo/',upload_site_photos_page,name='upload_site_photos'),
@@ -24,4 +25,11 @@ urlpatterns = [
 
     path('universal-search/', universal_search, name='universal_search'),
     path('customer-360/<str:phone>/', customer_360, name='customer_360'),
+    
+    # REFERRAL ENGINE
+    path('referrals/', referral_list, name='referral_list'),
+    path('referrals/<int:ref_id>/pay/', mark_referral_paid, name='mark_referral_paid'),
+    
+    # ESCALATION MATRIX
+    path('escalations/', escalation_dashboard, name='escalation_dashboard'),
 ]

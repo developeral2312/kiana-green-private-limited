@@ -2,94 +2,149 @@
 
 {% block content %}
 
-<div class="container mt-4">
+<!-- Breadcrumbs -->
+<nav aria-label="breadcrumb" class="mb-3">
+    <ol class="breadcrumb mb-0">
+        <li class="breadcrumb-item">
+            <a href="{% url request.user.role %}">{{ request.user.role|title }} Dashboard</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">Expense List</li>
+    </ol>
+</nav>
 
-    <!-- Breadcrumbs -->
-    <nav aria-label="breadcrumb" class="mb-4">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item">
-                <a href="{% url request.user.role %}">{{ request.user.role|title }} Dashboard</a>
-            </li>
-            <li class="breadcrumb-item active" aria-current="page">Expense List</li>
-        </ol>
-    </nav>
-
-    <!-- Header + Add Expense Button -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h4 class="text-primary"><i class="bi bi-wallet2 me-2"></i>Expenses</h4>
-        {% if all_pending %}
-            <a href="{% url 'approve_all' %}" class="btn btn-success">
-                <i class="bi bi-check"></i> Approve All
-            </a>
-        {% else %}
-            <a href="{% url 'create_expense' %}" class="btn btn-primary">
-                <i class="bi bi-plus-lg me-1"></i> Add Expense
-            </a>
-        {% endif %}
-        
-    </div>
-
-    <!-- Expenses Table -->
-    <div class="card shadow-sm">
-        <div class="card-body p-0">
-            <div class="table-responsive">
-                <table class="table table-hover table-bordered mb-0 align-middle">
-                    <thead class="table-light">
-                        <tr>
-                            <th>Project</th>
-                            <th>Date</th>
-                            <th>Category</th>
-                            <th>Submitted By</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for e in expenses %}
-                        <tr>
-                            <td>{{ e.project }}</td>
-                            <td>{{ e.expense_date|date:"d M Y" }}</td>
-                            <td>{{ e.category }}</td>
-                            <td>{{ e.submitted_by }}</td>
-                            <td>
-                                <span class="badge 
-                                    {% if e.status == 'approved' %}bg-success
-                                    {% elif e.status == 'pending' %}bg-warning text-dark
-                                    {% elif e.status == 'rejected' %}bg-danger
-                                    {% endif %}">
-                                    {{ e.status|title }}
-                                </span>
-                            </td>
-                            <td>
-                                {% if e.status == 'approved' %}
-                                <a href="{% url 'download_report' 'expense' e.id %}" class="btn btn-sm btn-outline-primary">Download</a>
-                                {% endif %}
-                                <a href="{% url 'expense_detail' e.id %}" class="btn btn-sm btn-outline-secondary me-1">
-                                    View
-                                </a>
-                                {% if e.status == "pending" %}
-                                <a href="{% url 'approve_expense' e.id %}" class="btn btn-sm btn-success me-1">
-                                    Approve
-                                </a>
-                                <a href="{% url 'reject_expense' e.id %}" class="btn btn-sm btn-danger">
-                                    Reject
-                                </a>
-                                {% endif %}
-                            </td>
-                        </tr>
-                        {% empty %}
-                        <tr>
-                            <td colspan="6" class="text-center text-muted py-4">
-                                No expenses found
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+<!-- Executive Hero Card -->
+<div class="executive-hero-card mb-4">
+    <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+        <div class="d-flex align-items-center gap-3">
+            <div class="hero-icon-box">
+                <i class="bi bi-wallet2"></i>
+            </div>
+            <div>
+                <div class="d-flex align-items-center gap-2">
+                    <h3 class="hero-heading mb-0">Expense Management</h3>
+                    <span class="hero-count-badge">{{ expenses|length }} Records</span>
+                </div>
+                <p class="hero-subtext mb-0">Monitor operational outlays, vendor reimbursements & approvals</p>
             </div>
         </div>
-    </div>
 
+        <div class="d-flex gap-2">
+            {% if all_pending %}
+            <a href="{% url 'approve_all' %}" class="btn btn-success d-inline-flex align-items-center gap-1 shadow-sm px-3 py-2" style="border-radius: 10px; font-weight: 600;">
+                <i class="bi bi-check-all"></i> Approve All
+            </a>
+            {% endif %}
+            <a href="{% url 'create_expense' %}" class="btn-hero-action">
+                <i class="bi bi-plus-lg"></i> Add Expense
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Expenses Table Card -->
+<div class="card shadow-sm border-0 mb-4 overflow-hidden">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th>Project</th>
+                        <th>Date</th>
+                        <th>Category</th>
+                        <th>Submitted By</th>
+                        <th>Status</th>
+                        <th class="text-end pe-3">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for e in expenses %}
+                    <tr>
+                        <td>
+                            <div class="d-flex align-items-center gap-2">
+                                <div class="hero-icon-box" style="width: 32px; height: 32px; font-size: 0.95rem; border-radius: 8px;">
+                                    <i class="bi bi-folder2-open"></i>
+                                </div>
+                                <span class="fw-bold text-dark">{{ e.project }}</span>
+                            </div>
+                        </td>
+
+                        <td>
+                            <span class="text-secondary small">{{ e.expense_date|date:"d M Y" }}</span>
+                        </td>
+
+                        <td>
+                            <span class="badge bg-secondary">{{ e.category }}</span>
+                        </td>
+
+                        <td>
+                            <span class="fw-medium text-dark small">{{ e.submitted_by }}</span>
+                        </td>
+
+                        <td>
+                            <span class="badge 
+                                {% if e.status == 'approved' %}bg-success
+                                {% elif e.status == 'pending' %}bg-warning text-dark
+                                {% elif e.status == 'rejected' %}bg-danger
+                                {% endif %}">
+                                {% if e.status == 'approved' %}<i class="bi bi-check-circle"></i>{% endif %}
+                                {% if e.status == 'pending' %}<i class="bi bi-clock-history"></i>{% endif %}
+                                {% if e.status == 'rejected' %}<i class="bi bi-x-circle"></i>{% endif %}
+                                {{ e.status|title }}
+                            </span>
+                        </td>
+
+                        <td class="text-end pe-3">
+                            <div class="d-inline-flex gap-2">
+                                {% if e.status == 'approved' %}
+                                <a href="{% url 'download_report' 'expense' e.id %}"
+                                   class="btn-action-circle btn-action-view"
+                                   title="Download Expense Receipt">
+                                    <i class="bi bi-download"></i>
+                                </a>
+                                {% endif %}
+
+                                <a href="{% url 'expense_detail' e.id %}"
+                                   class="btn-action-circle btn-action-view"
+                                   title="View Expense Details">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+
+                                {% if e.status == "pending" %}
+                                <a href="{% url 'approve_expense' e.id %}"
+                                   class="btn btn-sm btn-success d-inline-flex align-items-center gap-1 px-2 py-1"
+                                   style="border-radius: 8px; font-size: 0.8rem;"
+                                   title="Approve Expense">
+                                    <i class="bi bi-check"></i> Approve
+                                </a>
+
+                                <a href="{% url 'reject_expense' e.id %}"
+                                   class="btn btn-sm btn-outline-danger d-inline-flex align-items-center gap-1 px-2 py-1"
+                                   style="border-radius: 8px; font-size: 0.8rem;"
+                                   title="Reject Expense">
+                                    <i class="bi bi-x"></i> Reject
+                                </a>
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center p-5">
+                            <div class="hero-icon-box mx-auto mb-3" style="width: 56px; height: 56px; font-size: 1.6rem;">
+                                <i class="bi bi-wallet2"></i>
+                            </div>
+                            <h6 class="fw-bold text-dark mt-2">No Expenses Recorded</h6>
+                            <p class="text-muted mb-3 small">Track site expenses and project bills here.</p>
+                            <a href="{% url 'create_expense' %}" class="btn-hero-action">
+                                <i class="bi bi-plus-lg"></i> Add Expense
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 
 {% endblock %}

@@ -87,8 +87,8 @@ class LeadUpdateForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        # 🔹 Filter sales, engineer, and admin users
-        self.fields['assigned_to'].queryset = CustomUser.objects.filter(role__in=['sales', 'engineer', 'admin', 'staff'])
+        # 🔹 Filter sales, manager, engineer, and admin users
+        self.fields['assigned_to'].queryset = CustomUser.objects.filter(role__in=['sales', 'manager', 'engineer', 'admin', 'staff'])
         self.fields['assigned_to'].empty_label = 'Select User'
 
 
@@ -144,6 +144,11 @@ class SitePhotoForm(forms.ModelForm):
             'visit': forms.Select(attrs={'class': 'form-select'}),
             'photo': forms.ClearableFileInput(attrs={'class': 'form-control'})  # single file only
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if 'visit' in self.fields:
+            self.fields['visit'].empty_label = 'Select Site Visit'
 
 
 

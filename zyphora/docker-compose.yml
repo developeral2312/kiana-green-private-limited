@@ -1,0 +1,74 @@
+services:
+  db:
+    image: postgres:15-alpine
+    restart: always
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: zyphora_db
+      POSTGRES_USER: zyphora_user
+      POSTGRES_PASSWORD: zyphora_password
+    ports:
+      - "5432:5432"
+
+  redis:
+    image: redis:7-alpine
+    restart: always
+    ports:
+      - "6379:6379"
+
+  web:
+    build: .
+    restart: always
+    command: >
+      sh -c "python manage.py migrate &&
+             python manage.py collectstatic --noinput &&
+             gunicorn zyphora.wsgi:application --bind 0.0.0.0:8000 --workers 3"
+    volumes:
+      - .:/app
+      - media_volume:/app/media
+    ports:
+      - "8000:8000"
+    environment:
+      - PRODUCTION=true
+      - SECRET_KEY=replace-with-production-secret-key-in-deployment
+      - ALLOWED_HOSTS=*
+      - DATABASE_URL=postgres://zyphora_user:zyphora_password@db:5432/zyphora_db
+      - CELERY_BROKER_URL=redis://redis:6379/0
+    depends_on:
+      - db
+      - redis
+
+  celery_worker:
+    build: .
+    restart: always
+    command: celery -A zyphora worker -l info
+    volumes:
+      - .:/app
+    environment:
+      - PRODUCTION=true
+      - SECRET_KEY=replace-with-production-secret-key-in-deployment
+      - DATABASE_URL=postgres://zyphora_user:zyphora_password@db:5432/zyphora_db
+      - CELERY_BROKER_URL=redis://redis:6379/0
+    depends_on:
+      - db
+      - redis
+
+  celery_beat:
+    build: .
+    restart: always
+    command: celery -A zyphora beat -l info --scheduler django_celery_beat.schedulers:DatabaseScheduler
+    volumes:
+      - .:/app
+    environment:
+      - PRODUCTION=true
+      - SECRET_KEY=replace-with-production-secret-key-in-deployment
+      - DATABASE_URL=postgres://zyphora_user:zyphora_password@db:5432/zyphora_db
+      - CELERY_BROKER_URL=redis://redis:6379/0
+    depends_on:
+      - db
+      - redis
+
+volumes:
+  postgres_data:
+  media_volume:

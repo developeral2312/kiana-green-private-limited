@@ -13,24 +13,49 @@
 
 <h4>Project Costing</h4>
 
-<table class="table table-bordered">
-    <thead>
+<table class="table table-bordered table-hover bg-white shadow-sm mt-4">
+    <thead class="table-dark">
         <tr>
             <th>Project</th>
-            <th>Estimated Cost</th>
-            <th>Actual Cost</th>
-            <th>Profit</th>
+            <th>Customer</th>
+            <th>Base Cost</th>
+            <th>Selling Price</th>
+            <th>Gross Margin</th>
+            <th>Status</th>
             <th>Last Updated</th>
+            <th class="text-center">Action</th>
         </tr>
     </thead>
     <tbody>
         {% for project in projects %}
         <tr>
-            <td>{{ project.name }}</td>
-            <td>{{ project.costing.estimated_cost }}</td>
-            <td>{{ project.costing.actual_cost }}</td>
-            <td>{{ project.costing.profit }}</td>
-            <td>{{ project.costing.last_updated }}</td>
+            <td class="fw-bold">{{ project.title }}</td>
+            <td>{{ project.customer.name }}</td>
+            <td>₹{{ project.project_costing.estimated_cost|default:"0.00" }}</td>
+            <td>₹{{ project.project_costing.selling_price|default:"0.00" }}</td>
+            <td class="{% if project.project_costing.gross_margin > 0 %}text-success fw-bold{% else %}text-danger fw-bold{% endif %}">
+                ₹{{ project.project_costing.gross_margin|default:"0.00" }} 
+                <br><small>({{ project.project_costing.gross_margin_percentage|default:"0.00"|floatformat:2 }}%)</small>
+            </td>
+            <td>
+                {% if project.project_costing.client_approved %}
+                    <span class="badge bg-success">Approved</span>
+                {% elif project.project_costing.proposal_sent %}
+                    <span class="badge bg-info">Proposal Sent</span>
+                {% else %}
+                    <span class="badge bg-warning text-dark">Draft</span>
+                {% endif %}
+            </td>
+            <td>{{ project.project_costing.last_updated|date:"d M Y" }}</td>
+            <td class="text-center">
+                <a href="{% url 'edit_project_costing' project.id %}" class="btn btn-sm btn-primary">
+                    <i class="fas fa-calculator"></i> Costing Engine
+                </a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="8" class="text-center p-4">No projects found.</td>
         </tr>
         {% endfor %}
     </tbody>

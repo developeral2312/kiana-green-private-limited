@@ -2,136 +2,152 @@
 
 {% block content %}
 
+<nav aria-label="breadcrumb" class="mb-3">
+  <ol class="breadcrumb mb-0">
+    <li class="breadcrumb-item"><a href="{% url 'engineer' %}">Engineer Dashboard</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'daily_report_list' %}">Daily Work Reports</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Submit Work Report</li>
+  </ol>
+</nav>
 
-    <nav aria-label="breadcrumb">
-      <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="{% url 'engineer' %}">Engineer Dashboard</a></li>
-        <li class="breadcrumb-item"><a href="{% url 'daily_report_list' %}">Daily Work Reports</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Submit Work Report</li>
-      </ol>
-    </nav>
+<div class="admin-dashboard-container">
+    <div class="container-fluid px-0">
 
-    
-<div class="container-fluid">
-
-    <!-- Header -->
-    <div class="mb-4">
-        <h4 class="fw-bold text-primary">
-            <i class="bi bi-journal-text me-2"></i> Submit Work Report
-        </h4>
-        <p class="text-muted mb-0">Fill in your daily work details</p>
-    </div>
-
-    <!-- Card -->
-    <div class="card shadow-sm border-0 rounded-3">
-        <div class="card-body p-4">
-
-            <form method="POST" enctype="multipart/form-data">
-                {% csrf_token %}
-
-                <!-- Errors -->
-                {% if form.errors %}
-                <div class="alert alert-danger">
-                    Please fix the errors below.
-                </div>
-                {% endif %}
-
-                <div class="row g-3">
-
-                    <!-- Project -->
-                    <div class="col-md-6">
-                        <label class="form-label fw-semibold">
-                            Project <span class="text-danger">*</span>
-                        </label>
-                        {{ form.project }}
-                        <div class="text-danger small">{{ form.project.errors }}</div>
+        <!-- Executive Hero Card -->
+        <div class="executive-hero-card mb-4">
+            <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="hero-icon-box">
+                        <i class="bi bi-journal-text"></i>
                     </div>
-
-                    <!-- Work Type -->
-                    <div class="col-md-6">
-                        <label class="form-label fw-semibold">
-                            Work Type <span class="text-danger">*</span>
-                        </label>
-                        {{ form.work_type }}
-                        <div class="text-danger small">{{ form.work_type.errors }}</div>
+                    <div>
+                        <div class="d-flex align-items-center gap-2">
+                            <h3 class="hero-heading mb-0">Submit Daily Work Report</h3>
+                            <span class="hero-count-badge">EPC Site Log</span>
+                        </div>
+                        <p class="hero-subtext mb-0">Log on-site activities, technical progress, milestones, and photo proofs</p>
                     </div>
-
-                    <!-- Status -->
-                    <div class="col-md-6">
-                        <label class="form-label fw-semibold">Status</label>
-                        {{ form.status }}
-                    </div>
-
-                    <!-- Date -->
-                    <div class="col-md-6">
-                        <label class="form-label fw-semibold">Date</label>
-                        {{ form.date }}
-                    </div>
-
-                    <!-- Description -->
-                    <div class="col-12">
-                        <label class="form-label fw-semibold">
-                            Description <span class="text-danger">*</span>
-                        </label>
-                        {{ form.description }}
-                        <div class="text-danger small">{{ form.description.errors }}</div>
-                    </div>
-
-                    <!-- Image Section -->
-                    <div class="col-12 mt-3">
-                        <h6 class="fw-bold text-secondary">📸 Work Images</h6>
-                    </div>
-
-                    <!-- Before Image -->
-                    <div class="col-md-6">
-                        <label class="form-label">Before Work</label>
-                        {{ form.before_image }}
-
-                        <!-- Existing Image (Edit Mode) -->
-                        {% if form.instance.before_image %}
-                        <img src="{{ form.instance.before_image.url }}"
-                             class="img-fluid mt-2 rounded"
-                             style="max-height:150px;">
-                        {% endif %}
-
-                        <!-- Preview -->
-                        <img id="beforePreview"
-                             class="img-fluid mt-2 rounded d-none"
-                             style="max-height:150px;">
-                    </div>
-
-                    <!-- After Image -->
-                    <div class="col-md-6">
-                        <label class="form-label">After Work</label>
-                        {{ form.after_image }}
-
-                        <!-- Existing Image -->
-                        {% if form.instance.after_image %}
-                        <img src="{{ form.instance.after_image.url }}"
-                             class="img-fluid mt-2 rounded"
-                             style="max-height:150px;">
-                        {% endif %}
-
-                        <!-- Preview -->
-                        <img id="afterPreview"
-                             class="img-fluid mt-2 rounded d-none"
-                             style="max-height:150px;">
-                    </div>
-
-                    <!-- Submit -->
-                    <div class="col-12 text-end mt-4">
-                        <button type="submit" class="btn btn-primary px-4 shadow-sm">
-                            <i class="bi bi-check-circle me-1"></i> Submit Report
-                        </button>
-                    </div>
-
                 </div>
 
-            </form>
-
+                <a href="{% url 'daily_report_list' %}" class="btn btn-outline-secondary btn-sm rounded-pill px-3 py-1 fw-semibold">
+                    <i class="bi bi-arrow-left me-1"></i> Back to Reports
+                </a>
+            </div>
         </div>
-    </div>
 
+        <!-- Form Card -->
+        <div class="white-premium-panel">
+            <div class="p-3">
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    <!-- Errors -->
+                    {% if form.errors %}
+                    <div class="alert alert-danger rounded-3 mb-4">
+                        <i class="bi bi-exclamation-triangle-fill me-1"></i> Please check and fix the errors below.
+                    </div>
+                    {% endif %}
+
+                    <div class="row g-3">
+                        <!-- Project -->
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold text-dark small">
+                                Project <span class="text-danger">*</span>
+                            </label>
+                            {{ form.project }}
+                            <div class="text-danger small">{{ form.project.errors }}</div>
+                        </div>
+
+                        <!-- Work Type -->
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold text-dark small">
+                                Work Type <span class="text-danger">*</span>
+                            </label>
+                            {{ form.work_type }}
+                            <div class="text-danger small">{{ form.work_type.errors }}</div>
+                        </div>
+
+                        <!-- Status -->
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold text-dark small">Status</label>
+                            {{ form.status }}
+                        </div>
+
+                        <!-- Date -->
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold text-dark small">Date</label>
+                            {{ form.date }}
+                        </div>
+
+                        <!-- Description -->
+                        <div class="col-12">
+                            <label class="form-label fw-semibold text-dark small">
+                                Description <span class="text-danger">*</span>
+                            </label>
+                            {{ form.description }}
+                            <div class="text-danger small">{{ form.description.errors }}</div>
+                        </div>
+
+                        <!-- Image Section -->
+                        <div class="col-12 mt-4 pt-2 border-top">
+                            <div class="d-flex align-items-center gap-2 mb-2">
+                                <i class="bi bi-camera text-primary fs-5"></i>
+                                <h6 class="fw-bold text-dark mb-0">Site Photo Proofs</h6>
+                            </div>
+                            <p class="text-muted small mb-3">Upload clear before and after photographs of the installation work</p>
+                        </div>
+
+                        <!-- Before Image -->
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold text-dark small">Before Work</label>
+                            {{ form.before_image }}
+
+                            <!-- Existing Image (Edit Mode) -->
+                            {% if form.instance.before_image %}
+                            <img src="{{ form.instance.before_image.url }}"
+                                 class="img-fluid mt-2 rounded border shadow-xs"
+                                 style="max-height:150px;">
+                            {% endif %}
+
+                            <!-- Preview -->
+                            <img id="beforePreview"
+                                 class="img-fluid mt-2 rounded border shadow-xs d-none"
+                                 style="max-height:150px;">
+                        </div>
+
+                        <!-- After Image -->
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold text-dark small">After Work</label>
+                            {{ form.after_image }}
+
+                            <!-- Existing Image -->
+                            {% if form.instance.after_image %}
+                            <img src="{{ form.instance.after_image.url }}"
+                                 class="img-fluid mt-2 rounded border shadow-xs"
+                                 style="max-height:150px;">
+                            {% endif %}
+
+                            <!-- Preview -->
+                            <img id="afterPreview"
+                                 class="img-fluid mt-2 rounded border shadow-xs d-none"
+                                 style="max-height:150px;">
+                        </div>
+
+                        <!-- Submit -->
+                        <div class="col-12 text-end mt-4 pt-3 border-top">
+                            <a href="{% url 'daily_report_list' %}" class="btn btn-outline-secondary rounded-pill me-2 px-4">
+                                Cancel
+                            </a>
+                            <button type="submit" class="btn btn-primary rounded-pill px-4 shadow-xs">
+                                <i class="bi bi-check-circle me-1"></i> Submit Report
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </div>
 </div>
 
 <!-- ✅ Image Preview Script -->
@@ -152,7 +168,6 @@ function previewImage(input, previewId) {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-
     const beforeInput = document.querySelector("input[name='before_image']");
     const afterInput = document.querySelector("input[name='after_image']");
 
@@ -167,7 +182,6 @@ document.addEventListener("DOMContentLoaded", function () {
             previewImage(this, "afterPreview");
         });
     }
-
 });
 </script>
 

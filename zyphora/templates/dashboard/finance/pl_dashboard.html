@@ -1,0 +1,157 @@
+{% extends "dashboard/dashboard.html" %}
+
+{% block content %}
+<style>
+    .metric-card {
+        border-radius: 15px;
+        padding: 25px;
+        color: white;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        border: none;
+    }
+    .metric-card.revenue { background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%); }
+    .metric-card.cost { background: linear-gradient(135deg, #f6ad55 0%, #dd6b20 100%); }
+    .metric-card.profit { background: linear-gradient(135deg, #48bb78 0%, #38a169 100%); }
+    .metric-card.margin { background: linear-gradient(135deg, #9f7aea 0%, #805ad5 100%); }
+    
+    .metric-icon {
+        font-size: 2.5rem;
+        opacity: 0.8;
+    }
+    .metric-title {
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-weight: 700;
+        opacity: 0.9;
+    }
+    .metric-value {
+        font-size: 2rem;
+        font-weight: 800;
+        margin: 10px 0 0;
+    }
+    
+    .profit-positive { color: #38a169; }
+    .profit-negative { color: #e53e3e; }
+    .profit-neutral { color: #718096; }
+</style>
+
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold mb-0 text-dark">Profit & Loss Analytics</h2>
+            <p class="text-muted">Overarching financial performance of all costed projects</p>
+        </div>
+        <button class="btn btn-outline-primary rounded-pill px-4" onclick="window.print()">
+            <i class="fas fa-print me-2"></i> Export Report
+        </button>
+    </div>
+
+    <!-- Top Metrics -->
+    <div class="row g-4 mb-5">
+        <div class="col-md-3">
+            <div class="metric-card revenue">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <div class="metric-title">Total Revenue</div>
+                        <div class="metric-value">₹{{ total_revenue|floatformat:2 }}</div>
+                    </div>
+                    <i class="fas fa-wallet metric-icon"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="metric-card cost">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <div class="metric-title">Total Cost</div>
+                        <div class="metric-value">₹{{ total_cost|floatformat:2 }}</div>
+                    </div>
+                    <i class="fas fa-chart-line metric-icon"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="metric-card profit">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <div class="metric-title">Gross Profit</div>
+                        <div class="metric-value">₹{{ gross_profit|floatformat:2 }}</div>
+                    </div>
+                    <i class="fas fa-hand-holding-usd metric-icon"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="metric-card margin">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <div class="metric-title">Avg Margin</div>
+                        <div class="metric-value">{{ avg_margin|floatformat:2 }}%</div>
+                    </div>
+                    <i class="fas fa-percentage metric-icon"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Project Breakdown Table -->
+    <div class="card border-0 shadow-sm rounded-4">
+        <div class="card-header bg-white border-bottom p-4">
+            <h5 class="mb-0 fw-bold"><i class="fas fa-table text-primary me-2"></i> Breakdown by Project</h5>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="ps-4">Project</th>
+                            <th>Status</th>
+                            <th>Revenue (Selling Price)</th>
+                            <th>Total Est. Cost</th>
+                            <th>Gross Profit</th>
+                            <th>Margin %</th>
+                            <th>Last Updated</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for cost in costings %}
+                        <tr>
+                            <td class="ps-4 fw-bold">
+                                <a href="{% url 'project_detail' cost.project.id %}" class="text-decoration-none">{{ cost.project.title }}</a>
+                            </td>
+                            <td><span class="badge bg-secondary">{{ cost.project.get_status_display }}</span></td>
+                            <td class="fw-bold">₹{{ cost.selling_price|floatformat:2 }}</td>
+                            <td class="text-muted">₹{{ cost.total_cost|floatformat:2 }}</td>
+                            <td class="fw-bold {% if cost.gross_margin > 0 %}profit-positive{% elif cost.gross_margin < 0 %}profit-negative{% else %}profit-neutral{% endif %}">
+                                ₹{{ cost.gross_margin|floatformat:2 }}
+                            </td>
+                            <td>
+                                <span class="badge {% if cost.margin_percentage >= 20 %}bg-success{% elif cost.margin_percentage > 0 %}bg-info text-dark{% else %}bg-danger{% endif %} rounded-pill">
+                                    {{ cost.margin_percentage|floatformat:2 }}%
+                                </span>
+                            </td>
+                            <td class="small text-muted">{{ cost.updated_at|date:"d M, Y" }}</td>
+                            <td>
+                                <a href="{% url 'edit_project_costing' cost.project.id %}" class="btn btn-sm btn-outline-dark rounded-pill">
+                                    <i class="fas fa-calculator"></i> Details
+                                </a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="8" class="text-center py-5">
+                                <div class="text-muted mb-3"><i class="fas fa-chart-pie fa-3x opacity-50"></i></div>
+                                <h5>No Costings Found</h5>
+                                <p class="text-muted">Create costing sheets for projects to see P&L analytics.</p>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

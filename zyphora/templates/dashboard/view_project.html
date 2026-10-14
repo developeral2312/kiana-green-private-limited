@@ -33,8 +33,11 @@
         </div>
 
         <div>
-            {% if request.user.role in 'admin engineer' %}
-            <a href="{% url 'edit_project' project.id %}" class="btn btn-warning">Edit Project</a>
+            {% if request.user.role in 'admin engineer sales accountant' %}
+            <a href="{% url 'project_equipment' project.id %}" class="btn btn-outline-dark"><i class="fas fa-barcode me-1"></i> Assets</a>
+            <a href="{% url 'edit_project_costing' project.id %}" class="btn btn-dark text-white"><i class="fas fa-calculator me-1"></i> Costing</a>
+            <a href="{% url 'assign_kit_to_project' project.id %}" class="btn btn-info text-white"><i class="fas fa-boxes me-1"></i> Assign BOM</a>
+            <a href="{% url 'edit_project' project.id %}" class="btn btn-warning">Edit</a>
             <a href="{% url 'add_activity' project.id %}" class="btn btn-primary">Add Activity</a>
             <a href="{% url 'project_list' %}" class="btn btn-secondary">Back</a>
             {% endif %}
@@ -61,9 +64,16 @@
                         {% endif %}
                     </p>
                 </div>
-                {% if request.user.role == 'admin' %}
-                <div class="lead-info mb-3"><strong>Engineer</strong><p>{{ project.engineer.name|default:"Unassigned" }}</p></div>
-                {% endif %}
+                <div class="lead-info mb-3">
+                    <strong>Engineer</strong>
+                    <p>
+                        {% if project.engineer %}
+                            {{ project.engineer.user.username }}{% if project.engineer.name and project.engineer.name != project.engineer.user.username %} ({{ project.engineer.name }}){% endif %}
+                        {% else %}
+                            Unassigned
+                        {% endif %}
+                    </p>
+                </div>
             </div>
         </div>
 

@@ -1,0 +1,309 @@
+{% extends "dashboard/dashboard.html" %}
+
+{% block content %}
+<style>
+    .premium-card {
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        border: none;
+        background: #fff;
+        margin-bottom: 24px;
+        transition: transform 0.2s;
+    }
+    .premium-header {
+        background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+        color: white;
+        border-radius: 12px 12px 0 0;
+        padding: 20px;
+    }
+    .section-title {
+        font-weight: 600;
+        color: #1e3c72;
+        border-bottom: 2px solid #f0f2f5;
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+    }
+    .form-label {
+        font-size: 0.9rem;
+        color: #555;
+        font-weight: 500;
+    }
+    .cost-input {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        font-weight: 600;
+        color: #1e293b;
+    }
+    .cost-input:focus {
+        border-color: #2a5298;
+        box-shadow: 0 0 0 3px rgba(42, 82, 152, 0.1);
+    }
+    .summary-box {
+        background: #f1f5f9;
+        border-radius: 12px;
+        padding: 20px;
+        text-align: right;
+    }
+    .summary-item {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+        font-size: 1.1rem;
+        color: #475569;
+    }
+    .summary-total {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 15px;
+        padding-top: 15px;
+        border-top: 2px dashed #cbd5e1;
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: #0f172a;
+    }
+    .margin-positive { color: #10b981 !important; }
+    .margin-negative { color: #ef4444 !important; }
+    
+    .floating-summary {
+        position: sticky;
+        top: 20px;
+    }
+</style>
+
+<div class="container-fluid py-4">
+    <div class="row mb-4 align-items-center">
+        <div class="col-md-8">
+            <h2 class="fw-bold mb-0 text-dark">Project Costing & Margin Calculator</h2>
+            <p class="text-muted">Interactive costing engine for <b>{{ project.title }}</b> (Customer: {{ project.customer.name }})</p>
+        </div>
+        <div class="col-md-4 text-end">
+            <a href="{% url 'project_costing' %}" class="btn btn-outline-secondary rounded-pill px-4">Back to List</a>
+        </div>
+    </div>
+
+    <form method="POST">
+        {% csrf_token %}
+        <div class="row">
+            <!-- LEFT COLUMN: INPUTS -->
+            <div class="col-lg-8">
+                <div class="premium-card">
+                    <div class="premium-header">
+                        <h5 class="mb-0"><i class="fas fa-solar-panel me-2"></i> Core Materials & Equipment</h5>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Solar Panels (₹)</label>
+                                {{ form.panel_cost }}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Inverters (₹)</label>
+                                {{ form.inverter_cost }}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Mounting Structure (₹)</label>
+                                {{ form.structure_cost }}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">BOS (DBs, Breakers) (₹)</label>
+                                {{ form.bos_cost }}
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Cables (₹)</label>
+                                {{ form.cable_cost }}
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Earthing (₹)</label>
+                                {{ form.earthing_cost }}
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Lightning Protection (₹)</label>
+                                {{ form.lightning_protection_cost }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="premium-card">
+                    <div class="premium-header bg-dark text-white">
+                        <h5 class="mb-0"><i class="fas fa-tools me-2"></i> Execution, Labour & Overheads</h5>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Labour Cost (₹)</label>
+                                {{ form.labour_cost }}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Logistics / Transport (₹)</label>
+                                {{ form.logistics_cost }}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Installation / Civil Work (₹)</label>
+                                {{ form.installation_cost }}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">General Overheads (₹)</label>
+                                {{ form.overhead_cost }}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Commission (Sales/Partner) (₹)</label>
+                                {{ form.commission }}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Contingency Fund (₹)</label>
+                                {{ form.contingency }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT COLUMN: SUMMARY & PRICING -->
+            <div class="col-lg-4">
+                <div class="floating-summary">
+                    <div class="premium-card">
+                        <div class="premium-header" style="background: linear-gradient(135deg, #059669 0%, #10b981 100%);">
+                            <h5 class="mb-0"><i class="fas fa-calculator me-2"></i> Pricing & Margin Analysis</h5>
+                        </div>
+                        <div class="card-body p-4">
+                            
+                            <div class="mb-4">
+                                <label class="form-label text-primary fw-bold">GST Percentage (%)</label>
+                                {{ form.gst_percentage }}
+                            </div>
+                            <div class="mb-4">
+                                <label class="form-label text-success fw-bold">Final Selling Price (Quoted) (₹)</label>
+                                {{ form.selling_price }}
+                            </div>
+
+                            <div class="summary-box mt-4">
+                                <div class="summary-item">
+                                    <span>Base Cost:</span>
+                                    <span id="calc-base-cost" class="fw-bold">₹0.00</span>
+                                </div>
+                                <div class="summary-item">
+                                    <span>GST Amount:</span>
+                                    <span id="calc-gst" class="fw-bold">₹0.00</span>
+                                </div>
+                                <div class="summary-total">
+                                    <span>Total Project Cost:</span>
+                                    <span id="calc-total-cost">₹0.00</span>
+                                </div>
+                                
+                                <div class="summary-total mt-4 border-0 pt-0">
+                                    <span>Gross Margin:</span>
+                                    <span id="calc-margin">₹0.00</span>
+                                </div>
+                                <div class="summary-item fw-bold mt-2">
+                                    <span>Margin %:</span>
+                                    <span id="calc-margin-percent">0.00%</span>
+                                </div>
+                            </div>
+
+                            <div class="d-grid gap-2 mt-4">
+                                <button type="submit" class="btn btn-primary btn-lg rounded-pill shadow-sm">
+                                    <i class="fas fa-save me-2"></i> Save Costing
+                                </button>
+                                {% if costing.id %}
+                                <a href="#" class="btn btn-outline-info rounded-pill">
+                                    <i class="fas fa-paper-plane me-2"></i> Request Approval
+                                </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- JAVASCRIPT FOR REAL-TIME CALCULATION -->
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const inputs = document.querySelectorAll('.cost-input');
+        const gstInput = document.querySelector('input[name="gst_percentage"]');
+        const sellingPriceInput = document.querySelector('input[name="selling_price"]');
+
+        const elBaseCost = document.getElementById('calc-base-cost');
+        const elGst = document.getElementById('calc-gst');
+        const elTotalCost = document.getElementById('calc-total-cost');
+        const elMargin = document.getElementById('calc-margin');
+        const elMarginPercent = document.getElementById('calc-margin-percent');
+
+        // Initial setup for existing design/system costs
+        // We will fetch all relevant fields from the form
+        const costFields = [
+            'panel_cost', 'inverter_cost', 'structure_cost', 'bos_cost',
+            'cable_cost', 'earthing_cost', 'lightning_protection_cost',
+            'labour_cost', 'logistics_cost', 'installation_cost',
+            'overhead_cost', 'commission', 'contingency'
+        ];
+
+        function formatCurrency(val) {
+            return "₹" + val.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        }
+
+        function calculate() {
+            let baseCost = 0;
+            
+            // Add all base fields
+            costFields.forEach(fieldName => {
+                const el = document.querySelector(`input[name="${fieldName}"]`);
+                if (el && el.value) {
+                    baseCost += parseFloat(el.value) || 0;
+                }
+            });
+
+            // Add legacy fields if any exist in the template
+            // Assuming design cost comes from backend or existing data
+            const legacySystemCost = parseFloat("{{ costing.system_costing|default:0 }}");
+            const legacyKsebCost = parseFloat("{{ costing.kseb_cost|default:0 }}");
+            const designCost = parseFloat("{{ costing.design_costing.cost|default:0 }}");
+            
+            baseCost += legacySystemCost + legacyKsebCost + designCost;
+
+            const gstPercent = parseFloat(gstInput.value) || 0;
+            const gstAmount = (baseCost * gstPercent) / 100.0;
+            const totalCost = baseCost + gstAmount;
+
+            const sellingPrice = parseFloat(sellingPriceInput.value) || 0;
+            
+            let margin = 0;
+            let marginPercent = 0;
+
+            if (sellingPrice > 0) {
+                margin = sellingPrice - totalCost;
+                marginPercent = (margin / sellingPrice) * 100.0;
+            }
+
+            // Update UI
+            elBaseCost.innerText = formatCurrency(baseCost);
+            elGst.innerText = formatCurrency(gstAmount);
+            elTotalCost.innerText = formatCurrency(totalCost);
+            
+            elMargin.innerText = formatCurrency(margin);
+            elMarginPercent.innerText = marginPercent.toFixed(2) + "%";
+
+            // Colors
+            if (margin >= 0) {
+                elMargin.className = "margin-positive";
+                elMarginPercent.className = "margin-positive";
+            } else {
+                elMargin.className = "margin-negative";
+                elMarginPercent.className = "margin-negative";
+            }
+        }
+
+        // Attach listeners
+        inputs.forEach(input => {
+            input.addEventListener('input', calculate);
+        });
+
+        // Initial Calculation
+        calculate();
+    });
+</script>
+{% endblock %}

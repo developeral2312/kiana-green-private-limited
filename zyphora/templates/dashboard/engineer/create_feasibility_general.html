@@ -31,13 +31,15 @@
 
         <!-- Project Selection -->
         <div class="mb-3">
-            <label class="form-label">Select Project</label>
+            <label class="form-label fw-bold">Select Project <span class="text-danger">*</span></label>
             <select name="project" class="form-select" required>
                 <option value="">-- Select Project --</option>
                 {% for p in projects %}
-                    <option value="{{ p.id }}">
-                        {{ p.title }} - {{ p.lead.name }}
+                    <option value="{{ p.id }}" {% if request.GET.project == p.id|stringformat:"s" %}selected{% endif %}>
+                        {{ p.title }}{% if p.lead.name %} - {{ p.lead.name }}{% elif p.location %} ({{ p.location }}){% endif %}
                     </option>
+                {% empty %}
+                    <option value="" disabled>No projects currently awaiting feasibility study</option>
                 {% endfor %}
             </select>
         </div>

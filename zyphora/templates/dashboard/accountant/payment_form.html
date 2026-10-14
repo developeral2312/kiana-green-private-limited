@@ -1,77 +1,287 @@
 {% extends "dashboard/dashboard.html" %}
+{% load static %}
 
 {% block content %}
-<div class="container mt-5">
+<div class="container-fluid py-4 px-md-4">
 
-    <!-- Breadcrumbs -->
-    <nav aria-label="breadcrumb" class="mb-4">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{% url request.user.role %}">{{request.user.role|title}} Dashboard</a></li>
-            <li class="breadcrumb-item active" aria-current="page">{{ title }}</li>
+    <!-- ===== BREADCRUMB & HEADER ===== -->
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb bg-transparent p-0 mb-2 small">
+            <li class="breadcrumb-item">
+                <a href="{% url 'dashboard' %}" class="text-decoration-none text-muted">
+                    <i class="bi bi-house-door me-1"></i> Dashboard
+                </a>
+            </li>
+            <li class="breadcrumb-item">
+                <a href="{% url 'client_payments' %}" class="text-decoration-none text-muted">
+                    Finance
+                </a>
+            </li>
+            <li class="breadcrumb-item">
+                <a href="{% url 'client_payments' %}" class="text-decoration-none text-muted">
+                    Payments
+                </a>
+            </li>
+            <li class="breadcrumb-item active text-success fw-semibold" aria-current="page">
+                {{ title }}
+            </li>
         </ol>
     </nav>
 
-    <!-- Card Form -->
-    <div class="card shadow border-0">
-        <div class="card-header bg-primary text-white">
-            <h5 class="mb-0"><i class="bi bi-cash-stack me-2"></i>{{ title }}</h5>
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3 border-bottom pb-3">
+        <div>
+            <div class="d-flex align-items-center gap-3 mb-1">
+                <div class="rounded-3 bg-success-subtle text-success p-2 px-3 d-inline-flex align-items-center justify-content-center shadow-sm">
+                    <i class="bi bi-cash-coin fs-4"></i>
+                </div>
+                <div>
+                    <h3 class="fw-bold mb-0 text-dark">{{ title }}</h3>
+                    <p class="text-muted mb-0 small">
+                        Log client receipts, bank wire transfers, UPI transactions, and mark invoice milestones as paid.
+                    </p>
+                </div>
+            </div>
         </div>
-        <div class="card-body">
-            <form method="POST">
-                {% csrf_token %}
-                <div class="row g-4">
-
-                    <!-- Invoice -->
-                    <div class="col-md-6">
-                        <label class="form-label fw-bold">Invoice</label>
-                        {{ form.invoice }}
-                    </div>
-
-                    <!-- Payment Date -->
-                    <div class="col-md-6">
-                        <label class="form-label fw-bold">Payment Date</label>
-                        {{ form.payment_date }}
-                    </div>
-
-                    <!-- Amount -->
-                    <div class="col-md-6">
-                        <label class="form-label fw-bold">Amount</label>
-                        {{ form.amount }}
-                    </div>
-
-                    <!-- Payment Method -->
-                    <div class="col-md-6">
-                        <label class="form-label fw-bold">Payment Method</label>
-                        {{ form.method }}
-                    </div>
-
-                    <!-- Received By -->
-                    <div class="col-md-6">
-                        <label class="form-label fw-bold">Received By</label>
-                        {{ form.received_by }}
-                    </div>
-
-                    <!-- Notes -->
-                    <div class="col-12">
-                        <label class="form-label fw-bold">Notes</label>
-                        {{ form.notes }}
-                    </div>
-
-                </div>
-
-                <!-- Form Actions -->
-                <div class="mt-4 d-flex justify-content-end gap-2">
-                    <button type="submit" class="btn btn-success btn-lg">
-                        <i class="bi bi-check-circle me-1"></i> Save
-                    </button>
-                    <a href="{% url 'client_payments' %}" class="btn btn-outline-secondary btn-lg">
-                        <i class="bi bi-x-circle me-1"></i> Cancel
-                    </a>
-                </div>
-
-            </form>
+        <div class="d-flex align-items-center gap-2">
+            <a href="{% url 'client_payments' %}" class="btn btn-outline-secondary rounded-pill px-3 py-2 btn-sm fw-semibold">
+                <i class="bi bi-arrow-left me-1"></i> Back to Payments
+            </a>
         </div>
     </div>
 
+    <!-- ===== MAIN CONTENT (FORM + SUMMARY) ===== -->
+    <div class="row g-4">
+
+        <!-- Form Column (Left) -->
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm rounded-4 bg-white overflow-hidden">
+                <div class="card-header bg-white border-bottom py-3 px-4 d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="bi bi-check2-circle text-success fs-5"></i>
+                        <span class="fw-bold text-dark">Payment Particulars</span>
+                    </div>
+                    <span class="badge bg-success-subtle text-success rounded-pill px-3 py-1 small">
+                        Receipt Entry
+                    </span>
+                </div>
+
+                <div class="card-body p-4 p-md-4">
+                    <form method="POST" id="paymentForm" novalidate>
+                        {% csrf_token %}
+
+                        <!-- Non-field Errors -->
+                        {% if form.non_field_errors %}
+                        <div class="alert alert-danger rounded-3 py-2 small mb-4">
+                            {% for error in form.non_field_errors %}
+                                <div><i class="bi bi-exclamation-circle me-1"></i> {{ error }}</div>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+
+                        <!-- SECTION 1: TARGET INVOICE -->
+                        <div class="mb-4">
+                            <label for="id_invoice" class="form-label fw-bold text-dark d-flex align-items-center gap-1 mb-1">
+                                <i class="bi bi-receipt text-primary"></i> Target Invoice
+                                <span class="text-danger">*</span>
+                            </label>
+                            <p class="text-muted small mb-2">Select the pending customer invoice this payment settles.</p>
+                            
+                            {{ form.invoice }}
+
+                            {% for error in form.invoice.errors %}
+                                <div class="text-danger small mt-1 d-flex align-items-center gap-1">
+                                    <i class="bi bi-x-circle"></i> {{ error }}
+                                </div>
+                            {% endfor %}
+                        </div>
+
+                        <!-- SECTION 2: AMOUNT & PAYMENT DATE -->
+                        <div class="p-3 p-md-4 rounded-4 bg-light bg-opacity-50 border mb-4">
+                            <h6 class="fw-bold text-dark mb-3 d-flex align-items-center gap-2">
+                                <i class="bi bi-currency-rupee text-success"></i> Settlement Details
+                            </h6>
+
+                            <div class="row g-3">
+                                <!-- Amount -->
+                                <div class="col-md-6">
+                                    <label for="id_amount" class="form-label fw-semibold text-dark small mb-1">
+                                        Received Amount (₹) <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-success-subtle text-success fw-bold border-end-0">₹</span>
+                                        {{ form.amount }}
+                                    </div>
+                                    {% for error in form.amount.errors %}
+                                        <div class="text-danger small mt-1">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+
+                                <!-- Payment Date -->
+                                <div class="col-md-6">
+                                    <label for="id_payment_date" class="form-label fw-semibold text-dark small mb-1">
+                                        Payment Date <span class="text-danger">*</span>
+                                    </label>
+                                    {{ form.payment_date }}
+                                    {% for error in form.payment_date.errors %}
+                                        <div class="text-danger small mt-1">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+
+                                <!-- Payment Method -->
+                                <div class="col-md-6">
+                                    <label for="id_method" class="form-label fw-semibold text-dark small mb-1">
+                                        Payment Method <span class="text-danger">*</span>
+                                    </label>
+                                    {{ form.method }}
+                                    {% for error in form.method.errors %}
+                                        <div class="text-danger small mt-1">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+
+                                <!-- Received By -->
+                                <div class="col-md-6">
+                                    <label for="id_received_by" class="form-label fw-semibold text-dark small mb-1">
+                                        Received By (Staff / Officer) <span class="text-danger">*</span>
+                                    </label>
+                                    {{ form.received_by }}
+                                    {% for error in form.received_by.errors %}
+                                        <div class="text-danger small mt-1">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- SECTION 3: NOTES & REFERENCE -->
+                        <div class="mb-4">
+                            <label for="id_notes" class="form-label fw-bold text-dark d-flex align-items-center gap-1 mb-1">
+                                <i class="bi bi-journal-text text-secondary"></i> Transaction Reference & Notes
+                            </label>
+                            <p class="text-muted small mb-2">Include IMPS/NEFT UTR reference, cheque number, or bank deposit remarks.</p>
+                            {{ form.notes }}
+                            {% for error in form.notes.errors %}
+                                <div class="text-danger small mt-1">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <!-- ACTIONS -->
+                        <div class="pt-3 border-top d-flex justify-content-end align-items-center gap-3">
+                            <a href="{% url 'client_payments' %}" class="btn btn-light border rounded-pill px-4 fw-semibold text-muted">
+                                Cancel
+                            </a>
+                            <button type="submit" class="btn btn-success rounded-pill px-5 fw-bold shadow-sm d-inline-flex align-items-center gap-2">
+                                <i class="bi bi-check-circle-fill"></i> Save Payment Receipt
+                            </button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Live Payment Summary Card (Right Column) -->
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm rounded-4 bg-white p-4 sticky-top" style="top: 20px;">
+                <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-3">
+                    <span class="fw-bold text-dark d-flex align-items-center gap-2">
+                        <i class="bi bi-wallet2 text-success"></i> Payment Summary
+                    </span>
+                    <span id="preview-method-badge" class="badge bg-success-subtle text-success rounded-pill px-3 py-1 text-uppercase small">
+                        Verified
+                    </span>
+                </div>
+
+                <!-- Preview Amount Box -->
+                <div class="bg-success-subtle bg-gradient p-3 rounded-4 mb-3 text-center">
+                    <div class="small text-muted fw-semibold text-uppercase tracking-wider">Settled Amount</div>
+                    <div class="display-6 fw-bold text-success mt-1" id="preview-pay-amount">
+                        ₹0.00
+                    </div>
+                </div>
+
+                <!-- Payment Details List -->
+                <ul class="list-group list-group-flush small mb-3">
+                    <li class="list-group-item d-flex justify-content-between px-0 py-2 bg-transparent">
+                        <span class="text-muted"><i class="bi bi-receipt me-1"></i> Invoice:</span>
+                        <strong class="text-dark text-truncate ms-2" style="max-width: 170px;" id="preview-pay-inv">—</strong>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between px-0 py-2 bg-transparent">
+                        <span class="text-muted"><i class="bi bi-credit-card me-1"></i> Mode:</span>
+                        <strong class="text-dark" id="preview-pay-method">—</strong>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between px-0 py-2 bg-transparent">
+                        <span class="text-muted"><i class="bi bi-calendar me-1"></i> Date:</span>
+                        <span class="text-dark" id="preview-pay-date">—</span>
+                    </li>
+                </ul>
+
+                <!-- Helpful Hint -->
+                <div class="alert alert-light border rounded-3 p-3 mb-0 small">
+                    <div class="fw-semibold text-dark mb-1 d-flex align-items-center gap-1">
+                        <i class="bi bi-shield-check text-success"></i> Auto-reconciliation:
+                    </div>
+                    <div class="text-muted" style="font-size: 0.82rem;">
+                        Recording this payment will automatically deduct the receivable balance and notify both client and finance team.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
 </div>
+
+<!-- Real-time Preview Script -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const invSelect = document.getElementById('id_invoice');
+    const amtInput = document.getElementById('id_amount');
+    const dateInput = document.getElementById('id_payment_date');
+    const methodSelect = document.getElementById('id_method');
+
+    const previewInv = document.getElementById('preview-pay-inv');
+    const previewAmt = document.getElementById('preview-pay-amount');
+    const previewDate = document.getElementById('preview-pay-date');
+    const previewMethod = document.getElementById('preview-pay-method');
+    const previewMethodBadge = document.getElementById('preview-method-badge');
+
+    function updatePaymentPreview() {
+        if (invSelect && invSelect.selectedIndex > 0) {
+            previewInv.textContent = invSelect.options[invSelect.selectedIndex].text;
+        } else {
+            previewInv.textContent = '—';
+        }
+
+        if (amtInput && amtInput.value) {
+            const val = parseFloat(amtInput.value) || 0;
+            previewAmt.textContent = '₹' + val.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        } else {
+            previewAmt.textContent = '₹0.00';
+        }
+
+        if (dateInput && dateInput.value) {
+            previewDate.textContent = dateInput.value;
+        } else {
+            previewDate.textContent = '—';
+        }
+
+        if (methodSelect && methodSelect.selectedIndex > 0) {
+            const methodText = methodSelect.options[methodSelect.selectedIndex].text;
+            previewMethod.textContent = methodText;
+            previewMethodBadge.textContent = methodText;
+        } else {
+            previewMethod.textContent = '—';
+            previewMethodBadge.textContent = 'Verified';
+        }
+    }
+
+    [invSelect, amtInput, dateInput, methodSelect].forEach(el => {
+        if (el) {
+            el.addEventListener('input', updatePaymentPreview);
+            el.addEventListener('change', updatePaymentPreview);
+        }
+    });
+
+    updatePaymentPreview();
+});
+</script>
 {% endblock %}

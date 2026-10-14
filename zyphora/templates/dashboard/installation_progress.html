@@ -85,7 +85,7 @@
 
                     {% if request.user.role != 'staff' %}
                         <small class="text-muted ms-2">
-                            Assigned to: {{ task.assigned_to.employee.name|default:"Unassigned" }}
+                            Assigned to: {{ task.assigned_to.employee.name|default:task.assigned_to.username|default:"Unassigned" }}
                         </small>
                     {% endif %}
                 </div>
@@ -103,7 +103,7 @@
                             {% for staff in staff_users %}
                                 <option value="{{ staff.id }}"
                                     {% if task.assigned_to and task.assigned_to.id == staff.id %}selected{% endif %}>
-                                    {{ staff.employee.name }}
+                                    {{ staff.username }}{% if staff.employee.name and staff.employee.name != staff.username %} ({{ staff.employee.name }}){% endif %}
                                 </option>
                             {% endfor %}
                         </select>

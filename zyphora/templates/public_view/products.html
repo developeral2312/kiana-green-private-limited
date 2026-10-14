@@ -1,0 +1,360 @@
+{% extends 'public_view/base.html' %}
+{% load static %}
+
+{% block code %}
+
+<!-- ================= 1. HERO SECTION ================= -->
+<section class="kiana-hero" style="background-image: url('{% static 'images/products_hero_new.jpg' %}'); min-height: 75vh; display: flex; align-items: center; padding-top: 100px; background-size: cover; background-position: center;">
+  <div class="container text-center py-5 mt-5">
+    <div class="d-flex align-items-center justify-content-center gap-2 mb-3">
+      <span class="kiana-hero-subtitle-line"></span>
+      <span class="kiana-hero-subtitle text-white fw-bold">PRODUCTS & HARDWARE</span>
+      <span class="kiana-hero-subtitle-line"></span>
+    </div>
+    
+    <!-- Badges/Pills -->
+    <div class="d-flex justify-content-center gap-2 mb-4 flex-wrap">
+      <span class="badge bg-success px-4 py-2 rounded-pill fs-6 fw-semibold">Solar Panels</span>
+      <span class="badge bg-transparent border border-light px-4 py-2 rounded-pill fs-6 text-white fw-semibold">Inverters</span>
+      <span class="badge bg-transparent border border-light px-4 py-2 rounded-pill fs-6 text-white fw-semibold">BOM Kits</span>
+      <span class="badge bg-transparent border border-light px-4 py-2 rounded-pill fs-6 text-white fw-semibold">Batteries</span>
+    </div>
+
+    <h1 class="kiana-hero-title mx-auto text-white mb-4" style="max-width: 950px; font-weight: 800; font-size: 4.0rem; text-shadow: 0 2px 4px rgba(0,0,0,0.3);">
+      Integrated Solar Hardware & End-To-End Site Architectures
+    </h1>
+    <p class="kiana-hero-text mx-auto mb-5 text-white fw-medium fs-5" style="text-shadow: 0 1px 3px rgba(0,0,0,0.3); max-width: 800px;">
+      We source Tier-1 solar panels, high-efficiency string & hybrid inverters, customized BOS kits, and high-capacity battery energy storage systems built to last.
+    </p>
+  </div>
+</section>
+
+<!-- ================= 2. PRODUCTS LIST ================= -->
+<section class="py-5 bg-white">
+  <div class="container py-5 my-3">
+    
+    <!-- PRODUCT 1: SOLAR MODULES -->
+    <div class="row align-items-center g-5 mb-5 pb-5 border-bottom">
+      <div class="col-lg-6">
+        <div class="position-relative">
+          <img src="{% static 'images/tech_3.jpg' %}" alt="Solar Modules" class="img-fluid rounded-4 shadow-sm w-100" style="object-fit: cover; height: 400px;">
+          <span class="badge bg-white text-dark border shadow-sm position-absolute" style="bottom: 20px; left: 20px; font-size: 0.9rem;">Mono PERC / N-Type</span>
+        </div>
+      </div>
+      <div class="col-lg-6 ps-lg-5">
+        <div class="d-flex align-items-center gap-2 mb-3">
+          <span style="display: inline-block; width: 24px; height: 2px; background-color: var(--kg-primary);"></span>
+          <span class="fw-bold text-success text-uppercase" style="letter-spacing: 1.5px; font-size: 0.85rem;">TIER-1 BRANDS</span>
+        </div>
+        <h3 class="display-6 fw-bold mb-4" style="color: #0f172a;">High-Efficiency Solar Modules</h3>
+        
+        <div class="mb-4 d-flex flex-column gap-3">
+          <div class="d-flex gap-3">
+            <i class="bi bi-lightning-charge text-success fs-5"></i>
+            <div>
+              <h6 class="fw-bold mb-1">Highest Efficiency:</h6>
+              <p class="text-muted mb-0">N-Type TOPCon & Monocrystalline cells (22%+ conversion rate).</p>
+            </div>
+          </div>
+          <div class="d-flex gap-3">
+            <i class="bi bi-shield-check text-success fs-5"></i>
+            <div>
+              <h6 class="fw-bold mb-1">Proven Reliability:</h6>
+              <p class="text-muted mb-0">PID & LID resistant, excellent low-light performance.</p>
+            </div>
+          </div>
+          <div class="d-flex gap-3">
+            <i class="bi bi-award text-success fs-5"></i>
+            <div>
+              <h6 class="fw-bold mb-1">Extended Warranty:</h6>
+              <p class="text-muted mb-0">12-25 Years Product & 25-30 Years Linear Power.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="d-flex gap-4 mb-4 pb-2 border-bottom">
+          <div>
+            <span class="text-success small fw-bold text-uppercase d-block mb-1">Wafer Sizes</span>
+            <span class="fw-semibold text-dark fs-6">M10 (182mm) & G12 (210mm)</span>
+          </div>
+          <div>
+            <span class="text-success small fw-bold text-uppercase d-block mb-1">Power Output</span>
+            <span class="fw-semibold text-dark fs-6">540W - 650W+</span>
+          </div>
+          <div>
+            <span class="text-success small fw-bold text-uppercase d-block mb-1">Approvals</span>
+            <span class="fw-semibold text-dark fs-6">Tier-1, ALMM, BIS, IEC, CE</span>
+          </div>
+        </div>
+        
+        <a href="#" class="btn btn-kiana-primary px-4 py-2 rounded-2 fw-bold text-white shadow-sm">Explore Modules &rarr;</a>
+      </div>
+    </div>
+
+    <!-- PRODUCT 2: INVERTERS -->
+    <div class="row align-items-center g-5 mb-5 pb-5 border-bottom">
+      <div class="col-lg-6">
+        <div class="position-relative">
+          <img src="{% static 'images/product-inverters-hd.jpg' %}" alt="Smart Solar Inverters" class="img-fluid rounded-4 shadow-sm w-100" style="object-fit: cover; height: 400px;">
+          <span class="badge bg-white text-dark border shadow-sm position-absolute" style="bottom: 20px; left: 20px; font-size: 0.9rem;">String & Hybrid Solutions</span>
+        </div>
+      </div>
+      <div class="col-lg-6 ps-lg-5">
+        <div class="d-flex align-items-center gap-2 mb-3">
+          <span style="display: inline-block; width: 24px; height: 2px; background-color: var(--kg-primary);"></span>
+          <span class="fw-bold text-success text-uppercase" style="letter-spacing: 1.5px; font-size: 0.85rem;">RELIABLE CONVERSION</span>
+        </div>
+        <h3 class="display-6 fw-bold mb-4" style="color: #0f172a;">Smart Solar Inverters</h3>
+        
+        <div class="mb-4 d-flex flex-column gap-3">
+          <div class="d-flex gap-3">
+            <i class="bi bi-cpu text-success fs-5"></i>
+            <div>
+              <h6 class="fw-bold mb-1">Technology:</h6>
+              <p class="text-muted mb-0">Transformerless, MPPT optimization (Single/Dual/Multi).</p>
+            </div>
+          </div>
+          <div class="d-flex gap-3">
+            <i class="bi bi-wifi text-success fs-5"></i>
+            <div>
+              <h6 class="fw-bold mb-1">Smart O&M:</h6>
+              <p class="text-muted small mb-0">Wi-Fi/4G monitoring, remote firmware updates.</p>
+            </div>
+          </div>
+          <div class="d-flex gap-3">
+            <i class="bi bi-check-circle text-success fs-5"></i>
+            <div>
+              <h6 class="fw-bold mb-1">Compliance:</h6>
+              <p class="text-muted small mb-0">IEC 62109, IEC 61727, IEC 62116, Anti-Islanding.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="d-flex gap-4 mb-4 pb-2 border-bottom">
+          <div>
+            <span class="text-success small fw-bold text-uppercase d-block mb-1">Efficiency</span>
+            <span class="fw-semibold text-dark fs-6">Max efficiency > 98%</span>
+          </div>
+          <div>
+            <span class="text-success small fw-bold text-uppercase d-block mb-1">System Types</span>
+            <span class="fw-semibold text-dark fs-6">On-Grid, Off-Grid, Hybrid</span>
+          </div>
+          <div>
+            <span class="text-success small fw-bold text-uppercase d-block mb-1">Warranty</span>
+            <span class="fw-semibold text-dark fs-6">Standard 5-7 Years</span>
+          </div>
+        </div>
+        
+        <a href="#" class="btn btn-kiana-primary px-4 py-2 rounded-2 fw-bold text-white shadow-sm">Explore Inverters &rarr;</a>
+      </div>
+    </div>
+
+    <!-- PRODUCT 3: BESS -->
+    <div class="row align-items-center g-5">
+      <div class="col-lg-6">
+        <div class="position-relative">
+          <img src="{% static 'images/product-bess-hd.jpg' %}" alt="Lithium Energy Storage" class="img-fluid rounded-4 shadow-sm w-100" style="object-fit: cover; height: 400px;">
+          <span class="badge bg-white text-dark border shadow-sm position-absolute" style="bottom: 20px; left: 20px; font-size: 0.9rem;">Lithium-Ion / LiFePO4</span>
+        </div>
+      </div>
+      <div class="col-lg-6 ps-lg-5">
+        <div class="d-flex align-items-center gap-2 mb-3">
+          <span style="display: inline-block; width: 24px; height: 2px; background-color: var(--kg-primary);"></span>
+          <span class="fw-bold text-success text-uppercase" style="letter-spacing: 1.5px; font-size: 0.85rem;">NEXT-GEN STORAGE</span>
+        </div>
+        <h3 class="display-6 fw-bold mb-4" style="color: #0f172a;">Lithium Energy Storage (BESS)</h3>
+        
+        <div class="mb-4 d-flex flex-column gap-3">
+          <div class="d-flex gap-3">
+            <i class="bi bi-battery-charging text-success fs-5"></i>
+            <div>
+              <h6 class="fw-bold mb-1">Battery Technology:</h6>
+              <p class="text-muted small mb-0">LiFePO4 (LFP) with advanced Battery Management System (BMS).</p>
+            </div>
+          </div>
+          <div class="d-flex gap-3">
+            <i class="bi bi-arrow-repeat text-success fs-5"></i>
+            <div>
+              <h6 class="fw-bold mb-1">Deep Cycle:</h6>
+              <p class="text-muted small mb-0">> 6000 cycles at 80% DoD, designed for 10-15 years operational life.</p>
+            </div>
+          </div>
+          <div class="d-flex gap-3">
+            <i class="bi bi-layers text-success fs-5"></i>
+            <div>
+              <h6 class="fw-bold mb-1">Scalable Architecture:</h6>
+              <p class="text-muted small mb-0">Rack-mounted or stackable solutions.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="d-flex gap-4 mb-4 pb-2 border-bottom">
+          <div>
+            <span class="text-success small fw-bold text-uppercase d-block mb-1">Capacity Range</span>
+            <span class="fw-semibold text-dark fs-6">5kWh to MWh-scale</span>
+          </div>
+          <div>
+            <span class="text-success small fw-bold text-uppercase d-block mb-1">Safety</span>
+            <span class="fw-semibold text-dark fs-6">IP65 rated, thermal mgmt</span>
+          </div>
+          <div>
+            <span class="text-success small fw-bold text-uppercase d-block mb-1">Compatibility</span>
+            <span class="fw-semibold text-dark fs-6">All major hybrid inverters</span>
+          </div>
+        </div>
+        
+        <a href="#" class="btn btn-kiana-primary px-4 py-2 rounded-2 fw-bold text-white shadow-sm">Explore Storage &rarr;</a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ================= 3. BALANCE OF SYSTEM (BOS) ================= -->
+<section class="py-5" style="background-color: #f9fbf9;">
+  <div class="container py-5 my-3">
+    <div class="text-center mx-auto mb-5 pb-2" style="max-width: 700px;">
+      <div class="d-flex align-items-center justify-content-center gap-2 mb-3">
+        <span style="display: inline-block; width: 24px; height: 2px; background-color: var(--kg-primary);"></span>
+        <span class="fw-bold text-success text-uppercase" style="letter-spacing: 1.5px; font-size: 0.85rem;">CORE INFRASTRUCTURE</span>
+        <span style="display: inline-block; width: 24px; height: 2px; background-color: var(--kg-primary);"></span>
+      </div>
+      <h2 class="display-5 fw-bold mb-3" style="color: #0f172a;">Balance of System (BOS)</h2>
+    </div>
+
+    <div class="row justify-content-center g-4">
+      <div class="col-lg-6 col-md-6">
+        <div class="p-4 bg-white border rounded-3 shadow-sm d-flex flex-column align-items-center text-center h-100">
+          <div class="mb-3 text-success fs-1"><i class="bi bi-buildings"></i></div>
+          <h5 class="fw-bold text-dark mb-2">Mounting Structures</h5>
+          <p class="text-muted small mb-0">Hot-dip Galvanized iron or Aluminum profiles. Designed for 150+ kmph wind speeds.</p>
+        </div>
+      </div>
+      <div class="col-lg-6 col-md-6">
+        <div class="p-4 bg-white border rounded-3 shadow-sm d-flex flex-column align-items-center text-center h-100">
+          <div class="mb-3 text-success fs-1"><i class="bi bi-plugin"></i></div>
+          <h5 class="fw-bold text-dark mb-2">Solar Cables</h5>
+          <p class="text-muted small mb-0">UV-resistant, flame-retardant DC cables & heavy-duty AC cables (Polycab/Havells).</p>
+        </div>
+      </div>
+      <div class="col-lg-6 col-md-6">
+        <div class="p-4 bg-white border rounded-3 shadow-sm d-flex flex-column align-items-center text-center h-100">
+          <div class="mb-3 text-success fs-1"><i class="bi bi-box-fill"></i></div>
+          <h5 class="fw-bold text-dark mb-2">Protection (AJB/ACDB)</h5>
+          <p class="text-muted small mb-0">IP65-rated enclosures with high-quality surge protection devices (SPDs) and MCBs.</p>
+        </div>
+      </div>
+      <div class="col-lg-6 col-md-6">
+        <div class="p-4 bg-white border rounded-3 shadow-sm d-flex flex-column align-items-center text-center h-100">
+          <div class="mb-3 text-success fs-1"><i class="bi bi-lightning"></i></div>
+          <h5 class="fw-bold text-dark mb-2">Earthing & Lightning</h5>
+          <p class="text-muted small mb-0">Chemical gel earthing electrodes & conventional lightning arresters for complete site safety.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 4. EVALUATION ================= -->
+<section class="py-5 bg-white">
+  <div class="container py-5 my-3">
+    <div class="text-center mx-auto mb-5 pb-2" style="max-width: 800px;">
+      <div class="d-flex align-items-center justify-content-center gap-2 mb-3">
+        <span style="display: inline-block; width: 24px; height: 2px; background-color: var(--kg-primary);"></span>
+        <span class="fw-bold text-success text-uppercase" style="letter-spacing: 1.5px; font-size: 0.85rem;">ENGINEERING STANDARDS</span>
+        <span style="display: inline-block; width: 24px; height: 2px; background-color: var(--kg-primary);"></span>
+      </div>
+      <h2 class="display-5 fw-bold mb-3" style="color: #0f172a;">5-Point Technical & Financial Evaluation</h2>
+      <p class="text-muted fs-6 mx-auto">
+        We don't just sell components. We design unified systems where every piece of hardware is verified for compatibility and maximum energy yield.
+      </p>
+    </div>
+
+    <div class="row g-5 justify-content-center">
+      <div class="col-lg-5">
+        <h5 class="fw-bold text-success mb-4 border-bottom pb-2">Technical Parameters</h5>
+        <div class="d-flex flex-column gap-4">
+          <div class="d-flex gap-3">
+            <div class="text-success fs-4 mt-n1"><i class="bi bi-check-circle-fill"></i></div>
+            <div>
+              <h6 class="fw-bold mb-1">1. Load Profiling & Sizing <span class="badge bg-light text-secondary border ms-2">Crucial</span></h6>
+              <p class="text-muted small mb-0">Analyzing hour-by-hour electrical consumption to prevent under/over sizing.</p>
+            </div>
+          </div>
+          <div class="d-flex gap-3">
+            <div class="text-success fs-4 mt-n1"><i class="bi bi-check-circle-fill"></i></div>
+            <div>
+              <h6 class="fw-bold mb-1">2. Shadow & Site Analysis <span class="badge bg-light text-secondary border ms-2">PVsyst/Sketchup</span></h6>
+              <p class="text-muted small mb-0">3D modeling to determine optimal tilt, azimuth, and string design.</p>
+            </div>
+          </div>
+          <div class="d-flex gap-3">
+            <div class="text-success fs-4 mt-n1"><i class="bi bi-check-circle-fill"></i></div>
+            <div>
+              <h6 class="fw-bold mb-1">3. Voltage Drop & Cable Sizing <span class="badge bg-light text-secondary border ms-2">IEC Standards</span></h6>
+              <p class="text-muted small mb-0">Calculating the exact DC and AC cable thickness to minimize line losses (<2%).</p>
+            </div>
+          </div>
+          <div class="d-flex gap-3">
+            <div class="text-success fs-4 mt-n1"><i class="bi bi-check-circle-fill"></i></div>
+            <div>
+              <h6 class="fw-bold mb-1">4. Structural Stability Check <span class="badge bg-light text-secondary border ms-2">STAAD.Pro</span></h6>
+              <p class="text-muted small mb-0">Wind load calculations and structural weight-bearing capacity verification.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-lg-5">
+        <h5 class="fw-bold text-success mb-4 border-bottom pb-2">Financial & ROI Metrics</h5>
+        <div class="d-flex flex-column gap-4">
+          <div class="d-flex gap-3">
+            <div class="text-success fs-4 mt-n1"><i class="bi bi-check-circle-fill"></i></div>
+            <div>
+              <h6 class="fw-bold mb-1">1. Yield Estimation (PR) <span class="badge bg-light text-secondary border ms-2">Performance Ratio</span></h6>
+              <p class="text-muted small mb-0">Accurate projections of monthly and annual energy generation (kWh).</p>
+            </div>
+          </div>
+          <div class="d-flex gap-3">
+            <div class="text-success fs-4 mt-n1"><i class="bi bi-check-circle-fill"></i></div>
+            <div>
+              <h6 class="fw-bold mb-1">2. Tariff & Savings Modeling <span class="badge bg-light text-secondary border ms-2">Net-Metering</span></h6>
+              <p class="text-muted small mb-0">Factoring in grid electricity costs, fixed charges, and export tariffs.</p>
+            </div>
+          </div>
+          <div class="d-flex gap-3">
+            <div class="text-success fs-4 mt-n1"><i class="bi bi-check-circle-fill"></i></div>
+            <div>
+              <h6 class="fw-bold mb-1">3. Payback Period Calculation <span class="badge bg-light text-secondary border ms-2">ROI</span></h6>
+              <p class="text-muted small mb-0">Detailed calculation of break-even points, usually between 3-5 years.</p>
+            </div>
+          </div>
+          <div class="d-flex gap-3">
+            <div class="text-success fs-4 mt-n1"><i class="bi bi-check-circle-fill"></i></div>
+            <div>
+              <h6 class="fw-bold mb-1">4. LCOE <span class="badge bg-light text-secondary border ms-2">Long-Term Cost</span></h6>
+              <p class="text-muted small mb-0">Cost per unit of electricity generated over the 25-year lifetime of the plant.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 5. CTA ================= -->
+<section class="py-5" style="background-color: var(--kg-primary);">
+  <div class="container py-5 my-3 text-center">
+    <div class="mx-auto" style="max-width: 800px;">
+      <h2 class="display-6 fw-bold mb-4 text-white">Book Your Complimentary Site Visit & ROI Assessment</h2>
+      <p class="text-white opacity-75 fs-5 mb-5 mx-auto" style="max-width: 700px;">
+        Our technical experts will visit your site, analyze your energy bills, and provide a customized technical and financial proposal.
+      </p>
+      <a href="{% url 'contact' %}" class="btn btn-outline-light px-5 py-3 rounded-2 fw-bold fs-5 shadow-sm" style="border-width: 2px;">
+        Get Free Quote
+      </a>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

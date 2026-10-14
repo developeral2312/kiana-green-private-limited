@@ -1,63 +1,97 @@
 {% extends 'public_view/base.html' %}
 {% load static %}
 
-{% block link %}
-<link rel="stylesheet" href="/static/css/public_view/contact.css">
-{% endblock %}
-
 {% block code %}
-
-<!-- Hero Section -->
-<section class="kiana-contact-hero text-center d-flex align-items-center justify-content-center">
-    <div>
-        <h1 class="kiana-title">Contact Kiana Green Private Limited</h1>
-        <p class="kiana-subtitle">
-            Let’s Build Your Smart Solar Future
-        </p>
+<div class="py-5" style="background-color: #f9fbf9; min-height: 100vh;">
+  <div class="container py-5 mt-4" style="max-width: 850px;">
+    
+    <!-- Section Title -->
+    <div class="text-center mb-5">
+      <div class="d-flex align-items-center justify-content-center gap-2 mb-3">
+        <span style="display: inline-block; width: 24px; height: 2px; background-color: #15803d;"></span>
+        <span style="color: #15803d; font-weight: 700; letter-spacing: 1.5px; font-size: 0.85rem; text-transform: uppercase;">CONTACT US</span>
+      </div>
+      <h1 class="display-6 fw-bold mb-3" style="color: #0c6839;">Let's Talk About Your Project</h1>
+      <p class="text-muted fs-6">Share a few details and our team will get back to you within 24 hours.</p>
     </div>
-</section>
 
-<!-- Contact Section -->
-<section class="container py-5">
-    <div class="row">
+    <!-- Contact Form Card -->
+    <div class="card border-0 rounded-4 shadow-sm p-4 p-md-5 mb-4">
+      <form method="POST" action="{% url 'contact' %}">
+        {% csrf_token %}
+        
+        <div class="row g-4 mb-4">
+          <!-- Name -->
+          <div class="col-md-6">
+            <label class="form-label fw-bold text-muted mb-2" style="font-size: 0.75rem; letter-spacing: 0.5px;">NAME</label>
+            <input type="text" name="name" class="form-control bg-light border-0 px-3 py-2 text-muted" placeholder="Your full name" style="font-size: 0.9rem;" required>
+          </div>
 
-        <!-- Contact Info -->
-        <div class="col-lg-5 mb-4">
-            <div class="contact-info-card p-4">
-                <h3 class="mb-3">Get in Touch</h3>
-                <p><strong>Company:</strong> Kiana Green Private Limited</p>
-                <p><strong>Location:</strong> H-61, Kiana Green, Noida, Uttarpradesh - 201301</p>
-                <p><strong>Phone:</strong> +91 87966 27007</p>
-                <p><strong>Email:</strong> info@kianagreen.com</p>
+          <!-- Phone -->
+          <div class="col-md-6">
+            <label class="form-label fw-bold text-muted mb-2" style="font-size: 0.75rem; letter-spacing: 0.5px;">PHONE</label>
+            <input type="tel" name="phone" class="form-control bg-light border-0 px-3 py-2 text-muted" placeholder="+91 XXXXX XXXXX" style="font-size: 0.9rem;" required>
+          </div>
 
-                <hr>
+          <!-- Email -->
+          <div class="col-md-6">
+            <label class="form-label fw-bold text-muted mb-2" style="font-size: 0.75rem; letter-spacing: 0.5px;">EMAIL</label>
+            <input type="email" name="email" class="form-control bg-light border-0 px-3 py-2 text-muted" placeholder="you@example.com" style="font-size: 0.9rem;">
+          </div>
 
-                <p>
-                    We provide solar installation, leakproof solar roofing,
-                    subsidy assistance, and AMC services across India.
-                </p>
-            </div>
+          <!-- City -->
+          <div class="col-md-6">
+            <label class="form-label fw-bold text-muted mb-2" style="font-size: 0.75rem; letter-spacing: 0.5px;">CITY</label>
+            <input type="text" name="location" class="form-control bg-light border-0 px-3 py-2 text-muted" placeholder="Your city" style="font-size: 0.9rem;" required>
+          </div>
+
+          <!-- Message -->
+          <div class="col-12">
+            <label class="form-label fw-bold text-muted mb-2" style="font-size: 0.75rem; letter-spacing: 0.5px;">MESSAGE</label>
+            <textarea name="notes" class="form-control bg-light border-0 px-3 py-2 text-muted" rows="4" placeholder="Tell us about your project & requirements" style="font-size: 0.9rem; resize: none;"></textarea>
+          </div>
         </div>
 
-        <!-- Contact Form -->
-        <div class="col-lg-7">
-            <div class="contact-form-card p-4">
-                <h3 class="mb-4">Request a Free Consultation</h3>
-
-                <form method="post">
-                    {% csrf_token %}
-
-                    {{form}}
-                    
-                    <input type="submit"
-                            class="btn kiana-btn w-100"
-                            value="Send Request">
-
-                </form>
-            </div>
-        </div>
-
+        <!-- Submit Button -->
+        <button type="submit" class="btn w-100 py-3 text-white fw-bold rounded-2" style="background-color: #0c6839; font-size: 0.95rem;">
+          Send Message
+        </button>
+      </form>
     </div>
-</section>
 
+    <!-- Map Section -->
+    <div class="mb-4 rounded-4 overflow-hidden shadow-sm border border-light" style="height: 250px;">
+      <iframe 
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14008.114827184247!2d77.37130245!3d28.62892975!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390ce5456ef36d9f%3A0x3b7191b128613608!2sSector%2063%2C%20Noida%2C%20Uttar%20Pradesh!5e1!3m2!1sen!2sin!4v1714470000000!5m2!1sen!2sin" 
+        width="100%" 
+        height="100%" 
+        style="border:0;" 
+        allowfullscreen="" 
+        loading="lazy" 
+        referrerpolicy="no-referrer-when-downgrade">
+      </iframe>
+    </div>
+
+    <!-- Contact Info Cards -->
+    <div class="row g-4">
+      <div class="col-md-6">
+        <div class="card border-0 rounded-4 shadow-sm p-4 text-center">
+          <div class="d-flex flex-column align-items-center gap-2">
+            <i class="bi bi-telephone text-success fs-5"></i>
+            <span class="fw-bold" style="color: #1e293b; font-size: 0.9rem;">+91 877 031 3216</span>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="card border-0 rounded-4 shadow-sm p-4 text-center">
+          <div class="d-flex flex-column align-items-center gap-2">
+            <i class="bi bi-envelope text-success fs-5"></i>
+            <span class="fw-bold" style="color: #1e293b; font-size: 0.9rem;">info@kianagreen.com</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
 {% endblock %}

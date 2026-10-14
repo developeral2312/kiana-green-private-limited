@@ -1,0 +1,83 @@
+{% extends 'dashboard/dashboard.html' %}
+
+{% block content %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb mb-0">
+    <li class="breadcrumb-item"><a href="{% url 'admin' %}">Dashboard</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'partner_list' %}">Partners</a></li>
+    <li class="breadcrumb-item active">Master Dealer Stock</li>
+  </ol>
+</nav>
+
+<div class="container mt-4">
+    <!-- Header -->
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+        <div>
+            <h4 class="page-title fw-bold text-purple mb-1">
+                <i class="bi bi-boxes"></i> Master Dealer Stock
+            </h4>
+            <p class="text-muted mb-0">Track and manage inventory across all distributed dealers.</p>
+        </div>
+    </div>
+
+    <!-- Stats Row -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-3">
+            <div class="card shadow-sm border-0 rounded-4 h-100">
+                <div class="card-body d-flex align-items-center">
+                    <div class="bg-purple rounded-circle p-3 d-flex align-items-center justify-content-center" style="width: 60px; height: 60px; background-color: rgba(111, 66, 193, 0.1);">
+                        <i class="bi bi-boxes fs-3" style="color: #6f42c1;"></i>
+                    </div>
+                    <div class="ms-3">
+                        <h6 class="text-muted fw-bold mb-1 text-uppercase small">Active Stock Entries</h6>
+                        <h2 class="mb-0 fw-bold text-dark">{{ stocks.count }}</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Table -->
+    <div class="card shadow-sm border-0">
+        <div class="card-body p-0 table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th class="ps-4">Material</th>
+                        <th>Category</th>
+                        <th>Dealer Name</th>
+                        <th>Available Quantity</th>
+                        <th>Last Updated</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for stock in stocks %}
+                    <tr>
+                        <td class="ps-4 fw-bold text-dark">{{ stock.material.name }}</td>
+                        <td>{{ stock.material.get_category_display }}</td>
+                        <td>
+                            <a href="{% url 'partner_detail' stock.partner.id %}" class="text-decoration-none fw-semibold">
+                                {{ stock.partner.name }}
+                            </a>
+                        </td>
+                        <td>
+                            <span class="badge bg-primary fs-6 rounded-pill px-3 py-2 shadow-sm">
+                                {{ stock.quantity }} {{ stock.material.unit }}
+                            </span>
+                        </td>
+                        <td class="text-muted">{{ stock.last_updated|date:"M d, Y, h:i a" }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center py-5 text-muted">
+                            <i class="bi bi-box-seam fs-1 d-block mb-2"></i>
+                            No stock has been assigned to any dealer yet.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

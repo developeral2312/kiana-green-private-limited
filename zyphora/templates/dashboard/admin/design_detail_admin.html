@@ -258,6 +258,32 @@
                 <i class="bi bi-check-lg me-1"></i> Finalize Project Cost
             </button>
         </form>
+        {% else %}
+        <div class="row g-2 mb-3">
+            <div class="col-12 col-sm-4">
+                <div class="border rounded p-2 text-center bg-light">
+                    <div class="small text-muted">System Cost</div>
+                    <div class="fw-semibold">₹{{ project.project_costing.system_costing }}</div>
+                </div>
+            </div>
+            <div class="col-12 col-sm-4">
+                <div class="border rounded p-2 text-center bg-light">
+                    <div class="small text-muted">KSEB Cost</div>
+                    <div class="fw-semibold">₹{{ project.project_costing.kseb_cost }}</div>
+                </div>
+            </div>
+            <div class="col-12 col-sm-4">
+                <div class="border rounded p-2 text-center bg-light">
+                    <div class="small text-muted">Total Cost</div>
+                    <div class="fw-semibold text-primary">₹{{ project.project_costing.estimated_cost }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="{% url 'edit_project_costing' project.id %}" class="btn btn-sm btn-outline-primary">
+                <i class="bi bi-sliders me-1"></i> Open Advanced Costing Engine
+            </a>
+        </div>
         {% endif %}
     </div>
 </div>

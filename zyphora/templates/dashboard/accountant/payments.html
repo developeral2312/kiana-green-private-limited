@@ -2,60 +2,98 @@
 
 {% block content %}
 
-<div class="container mt-4">
+<!-- Breadcrumbs -->
+<nav aria-label="breadcrumb" class="mb-3">
+    <ol class="breadcrumb mb-0">
+        <li class="breadcrumb-item"><a href="{% url request.user.role %}">{{ request.user.role|title }} Dashboard</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Payments</li>
+    </ol>
+</nav>
 
-    <!-- Breadcrumbs -->
-    <nav aria-label="breadcrumb" class="mb-3">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{% url request.user.role %}">{{ request.user.role|title }} Dashboard</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Payments</li>
-        </ol>
-    </nav>
-
-    <!-- Header + Add Payment Button -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h4 class="text-primary"><i class="bi bi-cash-stack me-2"></i>Payments</h4>
-        <a href="{% url 'create_payment' %}" class="btn btn-primary btn-lg">
-            <i class="bi bi-plus-lg me-1"></i> Add Payment
-        </a>
-    </div>
-
-    <!-- Payments Table -->
-    <div class="card shadow-sm">
-        <div class="card-body p-0">
-            <div class="table-responsive">
-                <table class="table table-hover mb-0 align-middle">
-                    <thead class="table-light">
-                        <tr>
-                            <th>Invoice</th>
-                            <th>Amount</th>
-                            <th>Method</th>
-                            <th>Date</th>
-                            <th>Received By</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for payment in payments %}
-                        <tr>
-                            <td><strong>{{ payment.invoice }}</strong></td>
-                            <td>₹{{ payment.amount|floatformat:2 }}</td>
-                            <td>{{ payment.method }}</td>
-                            <td>{{ payment.payment_date|date:"d M Y" }}</td>
-                            <td>{{ payment.received_by }}</td>
-                        </tr>
-                        {% empty %}
-                        <tr>
-                            <td colspan="5" class="text-center text-muted py-4">
-                                No payments recorded yet
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+<!-- Executive Hero Card -->
+<div class="executive-hero-card mb-4">
+    <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+        <div class="d-flex align-items-center gap-3">
+            <div class="hero-icon-box">
+                <i class="bi bi-cash-stack"></i>
+            </div>
+            <div>
+                <div class="d-flex align-items-center gap-2">
+                    <h3 class="hero-heading mb-0">Payments Received</h3>
+                    <span class="hero-count-badge">{{ payments|length }} Payments</span>
+                </div>
+                <p class="hero-subtext mb-0">Complete ledger of customer transactions, receipts & settled balances</p>
             </div>
         </div>
-    </div>
 
+        <a href="{% url 'create_payment' %}" class="btn-hero-action">
+            <i class="bi bi-plus-lg"></i> Record Payment
+        </a>
+    </div>
+</div>
+
+<!-- Payments Table Card -->
+<div class="card shadow-sm border-0 mb-4 overflow-hidden">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th>Invoice</th>
+                        <th>Amount Paid</th>
+                        <th>Payment Method</th>
+                        <th>Payment Date</th>
+                        <th>Received By</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for payment in payments %}
+                    <tr>
+                        <td>
+                            <div class="d-flex align-items-center gap-2">
+                                <div class="hero-icon-box" style="width: 32px; height: 32px; font-size: 0.95rem; border-radius: 8px;">
+                                    <i class="bi bi-receipt"></i>
+                                </div>
+                                <span class="fw-bold font-monospace text-dark">{{ payment.invoice }}</span>
+                            </div>
+                        </td>
+
+                        <td>
+                            <span class="fw-bold text-success fs-6">₹{{ payment.amount|floatformat:2 }}</span>
+                        </td>
+
+                        <td>
+                            <span class="badge bg-light text-dark border">
+                                <i class="bi bi-credit-card me-1"></i>{{ payment.method }}
+                            </span>
+                        </td>
+
+                        <td>
+                            <span class="text-secondary small">{{ payment.payment_date|date:"d M Y" }}</span>
+                        </td>
+
+                        <td>
+                            <span class="fw-medium text-dark small">{{ payment.received_by }}</span>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center p-5">
+                            <div class="hero-icon-box mx-auto mb-3" style="width: 56px; height: 56px; font-size: 1.6rem;">
+                                <i class="bi bi-cash-stack"></i>
+                            </div>
+                            <h6 class="fw-bold text-dark mt-2">No Payments Recorded Yet</h6>
+                            <p class="text-muted mb-3 small">Recorded customer payments will appear here.</p>
+                            <a href="{% url 'create_payment' %}" class="btn-hero-action">
+                                <i class="bi bi-plus-lg"></i> Record Payment
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 
 {% endblock %}

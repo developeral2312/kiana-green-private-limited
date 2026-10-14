@@ -1,56 +1,209 @@
-{% extends 'public_view/base.html' %}
-
-
-{% block link %}
-<link rel="stylesheet" href="/static/css/public_view/savings_calculator.css">
-{% endblock %}
-
-{% block code %}
-
-<!-- Hero Section -->
-<div class="calculator-hero text-center py-5">
-    <div class="container">
-        <h1>Calculate Your Solar Savings</h1>
-        <p>Discover how much you can save with Kiana Green Private Limited in Kerala!</p>
+{% load static %}
+<section class="solar-calc-section" id="solar-calculator">
+  <div class="container text-center mx-auto" style="max-width: 1050px;">
+    
+    <!-- Section Title -->
+    <div class="d-flex align-items-center justify-content-center gap-2 mb-3">
+      <span style="display: inline-block; width: 24px; height: 2px; background-color: var(--kg-accent-lime, #10b981);"></span>
+      <span class="text-white fw-bold text-uppercase" style="letter-spacing: 1.5px; font-size: 0.8rem;">FINANCIAL ESTIMATOR</span>
+      <span style="display: inline-block; width: 24px; height: 2px; background-color: var(--kg-accent-lime, #10b981);"></span>
     </div>
-</div>
+    <h2 class="display-6 fw-bold text-white mb-3" style="line-height: 1.25;">Calculate Your Solar Savings & Govt. Subsidy</h2>
+    <p class="text-light opacity-75 mb-5 fs-6 mx-auto" style="max-width: 720px;">
+      Under PM Surya Ghar Muft Bijli Yojana, eligible homes get up to ₹78,000 direct subsidy. Enter your monthly electricity bill to calculate your payback and 25-year returns.
+    </p>
 
-<!-- Calculator Form -->
-<div class="calculator-section container py-5">
-    <form method="POST" action="">
-        {% csrf_token %}
-        
-        <!-- Monthly Electricity Bill -->
-        <div class="form-group">
-            <label for="monthly_bill">Current Monthly Electricity Bill (₹)</label>
-            <input type="number" id="monthly_bill" name="monthly_bill" placeholder="e.g. 3000" required>
+    <!-- Top Highlight Banners -->
+    <div class="row g-4 mb-5 text-start">
+      <!-- Expert Help -->
+      <div class="col-md-6">
+        <div class="highlight-card-blue d-flex align-items-center gap-3 h-100 shadow-sm" style="border-radius: 16px; border: 1px solid rgba(255,255,255,0.08);">
+          <div class="rounded-circle d-flex align-items-center justify-content-center bg-white shadow-sm flex-shrink-0" style="width: 60px; height: 60px; font-size: 1.6rem; color: #0284c7;">
+            <i class="bi bi-headset"></i>
+          </div>
+          <div>
+            <h6 class="fw-bold text-dark mb-1">Talk to a Solar Specialist</h6>
+            <p class="text-muted small mb-1">Get customized technical guidance and DISCOM approval assistance.</p>
+            <a href="tel:+918770313216" class="text-primary fw-bold text-decoration-none small d-inline-flex align-items-center gap-1">
+              Call Solar Desk: +91 87703 13216 &rarr;
+            </a>
+          </div>
         </div>
+      </div>
 
-        <!-- Proposed Solar System Size -->
-        <div class="form-group">
-            <label for="system_size">Proposed Solar System Size (kW)</label>
-            <input type="number" step="0.1" id="system_size" name="system_size" placeholder="e.g. 5" required>
+      <!-- Free Survey -->
+      <div class="col-md-6">
+        <div class="highlight-card-green d-flex align-items-center gap-3 h-100 shadow-sm" style="border-radius: 16px; border: 1px solid rgba(255,255,255,0.08);">
+          <div class="rounded-circle d-flex align-items-center justify-content-center bg-white shadow-sm flex-shrink-0" style="width: 60px; height: 60px; font-size: 1.6rem; color: #059669;">
+            <i class="bi bi-geo-alt-fill"></i>
+          </div>
+          <div>
+            <h6 class="fw-bold text-dark mb-1">Free 3D Shadow Rooftop Survey</h6>
+            <p class="text-muted small mb-1">Certified engineer visits your premises within 24 hours.</p>
+            <a href="{% url 'contact' %}" class="text-success fw-bold text-decoration-none small d-inline-flex align-items-center gap-1">
+              Book Zero-Cost Site Inspection &rarr;
+            </a>
+          </div>
         </div>
-
-        <!-- Electricity Tariff (Kerala Default) -->
-        <div class="form-group">
-            <label for="tariff">Electricity Tariff (₹/kWh)</label>
-            <input type="number" step="0.01" id="tariff" name="tariff" value="7" required>
-        </div>
-
-        <button type="submit">Calculate Savings</button>
-    </form>
-
-    <!-- Result Section -->
-    {% if savings %}
-    <div class="result text-center mt-4">
-        <h2>Estimated Annual Savings: ₹{{ savings }}</h2>
-        <p>Switching to solar can save you this much every year in Kerala!</p>
-        <a href="{% url 'contact' %}" class="btn btn-primary mt-3">
-            Book a Free Consultation
-        </a>
+      </div>
     </div>
-    {% endif %}
-</div>
 
-{% endblock %}
+    <!-- Main Calculator Box -->
+    <div class="calc-box-card text-start mx-auto shadow-lg" style="max-width: 820px; border-radius: 24px; border: 1px solid rgba(255,255,255,0.12);">
+      
+      <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
+        <h4 class="fw-bold text-white mb-0">Solar Investment & Subsidy Calculator</h4>
+        <span class="badge bg-success bg-opacity-25 text-success border border-success border-opacity-50 px-3 py-2 rounded-pill small">
+          <i class="bi bi-shield-check me-1"></i> PM Surya Ghar Compatible
+        </span>
+      </div>
+
+      <!-- Monthly Bill Input & Slider -->
+      <div class="mb-4">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <label class="text-light opacity-75 small fw-bold text-uppercase">Monthly Electricity Bill</label>
+          <span class="text-warning fw-bold fs-5" id="billValueDisplay">₹4,800</span>
+        </div>
+        <div class="bg-dark bg-opacity-50 border border-light border-opacity-15 rounded-3 p-3 mb-2 d-flex align-items-center">
+          <span class="fs-5 text-white fw-bold me-2">₹</span>
+          <input type="number" id="billInput" class="form-control bg-transparent border-0 text-white fs-4 fw-bold p-0 shadow-none" value="4800" min="500" max="100000" step="100">
+        </div>
+        <input type="range" class="form-range" id="billRange" min="1000" max="40000" step="200" value="4800">
+        <div class="d-flex justify-content-between text-muted" style="font-size: 0.75rem;">
+          <span>₹1,000 / mo</span>
+          <span>₹20,000 / mo</span>
+          <span>₹40,000+ / mo</span>
+        </div>
+      </div>
+
+      <!-- Calculated System Specs (4-Col Grid) -->
+      <div class="row g-3 mb-4">
+        <div class="col-6 col-md-3">
+          <div class="p-3 rounded-3 bg-dark bg-opacity-40 border border-light border-opacity-10 text-center">
+            <small class="text-light opacity-50 d-block text-uppercase fw-bold mb-1" style="font-size: 0.68rem;">RECOMMENDED SIZE</small>
+            <span class="fs-5 fw-bold text-white" id="capacityDisplay">3.2 kW</span>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="p-3 rounded-3 bg-dark bg-opacity-40 border border-light border-opacity-10 text-center">
+            <small class="text-light opacity-50 d-block text-uppercase fw-bold mb-1" style="font-size: 0.68rem;">ROOF SPACE</small>
+            <span class="fs-5 fw-bold text-white" id="spaceDisplay">~320 sq.ft</span>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="p-3 rounded-3 bg-dark bg-opacity-40 border border-light border-opacity-10 text-center">
+            <small class="text-light opacity-50 d-block text-uppercase fw-bold mb-1" style="font-size: 0.68rem;">GOVT. SUBSIDY</small>
+            <span class="fs-5 fw-bold text-warning" id="subsidyDisplay">₹78,000</span>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="p-3 rounded-3 bg-dark bg-opacity-40 border border-light border-opacity-10 text-center">
+            <small class="text-light opacity-50 d-block text-uppercase fw-bold mb-1" style="font-size: 0.68rem;">EST. PAYBACK</small>
+            <span class="fs-5 fw-bold text-info" id="paybackDisplay">3.1 Yrs</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Monthly & Annual Savings Highlights -->
+      <div class="row g-3 mb-4">
+        <div class="col-md-6">
+          <div class="p-3 rounded-3 border border-success border-opacity-30 bg-success bg-opacity-10 d-flex justify-content-between align-items-center">
+            <div>
+              <span class="text-white fw-bold d-block">Monthly Savings</span>
+              <small class="text-light opacity-75" style="font-size: 0.75rem;">Bill reduced up to 90%</small>
+            </div>
+            <span class="fs-4 fw-bold text-success" id="monthlySavingsDisplay">₹4,320</span>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="p-3 rounded-3 border border-warning border-opacity-30 bg-warning bg-opacity-10 d-flex justify-content-between align-items-center">
+            <div>
+              <span class="text-white fw-bold d-block">25-Yr Lifetime Savings</span>
+              <small class="text-light opacity-75" style="font-size: 0.75rem;">Guaranteed performance</small>
+            </div>
+            <span class="fs-4 fw-bold text-warning" id="lifetimeSavingsDisplay">₹12,96,000</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Button -->
+      <a href="{% url 'contact' %}" class="btn cyan-btn w-100 py-3 text-center d-flex align-items-center justify-content-center gap-2 mb-2 fs-6">
+        <i class="bi bi-patch-check-fill"></i> Claim Your ₹78,000 Subsidy & Book Free Site Visit
+      </a>
+      <p class="text-light opacity-50 text-center lh-sm mb-0" style="font-size: 0.7rem;">
+        *Calculations based on average solar irradiance of 4.5 kWh/m²/day and prevailing DISCOM net-metering tariffs. Actual generation may vary based on rooftop azimuth and tilt.
+      </p>
+    </div>
+
+  </div>
+</section>
+
+<!-- Live Reactive Solar Calculator Script -->
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const billInput = document.getElementById('billInput');
+    const billRange = document.getElementById('billRange');
+    const billValueDisplay = document.getElementById('billValueDisplay');
+    const capacityDisplay = document.getElementById('capacityDisplay');
+    const spaceDisplay = document.getElementById('spaceDisplay');
+    const subsidyDisplay = document.getElementById('subsidyDisplay');
+    const paybackDisplay = document.getElementById('paybackDisplay');
+    const monthlySavingsDisplay = document.getElementById('monthlySavingsDisplay');
+    const lifetimeSavingsDisplay = document.getElementById('lifetimeSavingsDisplay');
+
+    function calculateSolar(bill) {
+      if (bill < 500) bill = 500;
+      
+      // Typical residential tariff ~ ₹7.5 per unit
+      const monthlyUnits = bill / 7.5;
+      // 1 kW produces approx 120 units per month in India
+      const recommendedKw = Math.max(1, (monthlyUnits / 120));
+      const roundedKw = Math.round(recommendedKw * 10) / 10;
+      const roofSpace = Math.round(roundedKw * 100);
+
+      // PM Surya Ghar Subsidy slab
+      let subsidy = 0;
+      if (roundedKw <= 1) {
+        subsidy = 30000;
+      } else if (roundedKw <= 2) {
+        subsidy = 60000;
+      } else {
+        subsidy = 78000;
+      }
+
+      // Savings (typically 90% reduction)
+      const monthlySavings = Math.round(bill * 0.90);
+      const lifetimeSavings = monthlySavings * 12 * 25;
+      
+      // Payback period
+      const grossCost = roundedKw * 65000;
+      const netCost = Math.max(15000, grossCost - subsidy);
+      const annualSavings = monthlySavings * 12;
+      const paybackYears = (netCost / annualSavings).toFixed(1);
+
+      if (billValueDisplay) billValueDisplay.textContent = '₹' + bill.toLocaleString('en-IN');
+      if (capacityDisplay) capacityDisplay.textContent = roundedKw.toFixed(1) + ' kW';
+      if (spaceDisplay) spaceDisplay.textContent = '~' + roofSpace.toLocaleString('en-IN') + ' sq.ft';
+      if (subsidyDisplay) subsidyDisplay.textContent = '₹' + subsidy.toLocaleString('en-IN');
+      if (paybackDisplay) paybackDisplay.textContent = paybackYears + ' Yrs';
+      if (monthlySavingsDisplay) monthlySavingsDisplay.textContent = '₹' + monthlySavings.toLocaleString('en-IN');
+      if (lifetimeSavingsDisplay) lifetimeSavingsDisplay.textContent = '₹' + lifetimeSavings.toLocaleString('en-IN');
+    }
+
+    if (billInput && billRange) {
+      billInput.addEventListener('input', function() {
+        let val = parseInt(billInput.value) || 0;
+        billRange.value = val;
+        calculateSolar(val);
+      });
+
+      billRange.addEventListener('input', function() {
+        let val = parseInt(billRange.value);
+        billInput.value = val;
+        calculateSolar(val);
+      });
+
+      calculateSolar(4800);
+    }
+  });
+</script>

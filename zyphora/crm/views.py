@@ -18,16 +18,14 @@ from .forms import *
 
 from projects.models import Task
 
-
-
-
-# ======================================================
-#              USER REVIEW MANAGEMENT
-# ======================================================
-# This section handles customer/user reviews submitted
-# through the website. Admin can view, approve, or delete
-# reviews to ensure only appropriate feedback is displayed
-# publicly on the website.
+def notify_lead_updates(lead, title, message, request):
+    admins = CustomUser.objects.filter(role='admin')
+    for admin in admins:
+        if admin != request.user:
+            create_notification(recipient=admin, title=title, message=message, link=reverse('view_lead', kwargs={'lid': lead.id}), category='crm', sender=request.user)
+    
+    if lead.assigned_to and lead.assigned_to != request.user:
+        create_notification(recipient=lead.assigned_to, title=title, message=message, link=reverse('view_lead', kwargs={'lid': lead.id}), category='crm', sender=request.user)
 
 
 @login_required(login_url='/users/login')
@@ -84,14 +82,6 @@ def reply_review(request, rid):
             messages.error(request, "Missing required fields or reviewer email.")
             
     return redirect('review')
-
-
-# ======================================================
-# LEAD MANAGEMENT
-# ======================================================
-# This section manages potential customer leads generated
-# from contact forms, service inquiries, or website forms.
-# Admin or staff can view, update status, assign, or delete leads.
 
 
 
@@ -171,17 +161,18 @@ def add_lead(request):
             LeadActivity.objects.create(
                 lead=lead,
                 title="Lead Created",
-                description=f"Lead added manually by {{request.user.username}}",
+                description=f"Lead added manually by {request.user.username}",
                 created_by=request.user
             )
-            admins = CustomUser.objects.filter(role='admin')
-            for admin in admins:
-                create_notification(
-                    recipient=admin,
-                    title="New Lead Added",
-                    message=f"{lead.name} has been added to CRM",
-                    link=reverse('view_lead', kwargs={'lid': lead.id})
-                )
+            notify_admins_and_assigned(
+                sender=request.user,
+                instance=lead,
+                title="New Lead Added",
+                message=f"{lead.name} has been added to CRM",
+                link=reverse('view_lead', kwargs={'lid': lead.id}),
+                admin_cat="crm",
+                emp_cat="lead"
+            )
             return redirect(lead_list)
     else: 
         form = LeadForm()
@@ -289,7 +280,6 @@ def mark_site_visit_done(request, vid):
 
 @login_required(login_url='/users/login')
 def update_lead(request, lid):
-
     lead = Lead.objects.select_related(
         "assigned_to"
     ).prefetch_related(
@@ -330,6 +320,7 @@ def update_lead(request, lid):
                             description=f"Status changed to {lead.get_status_display()}",
                             created_by=request.user
                         )
+                        notify_lead_updates(lead, "Status Updated", f"{lead.name} status changed to {lead.get_status_display()}", request)
 
                     if old_priority != lead.priority:
                         LeadActivity.objects.create(
@@ -338,6 +329,7 @@ def update_lead(request, lid):
                             description=f"Priority changed to {lead.get_priority_display()}",
                             created_by=request.user
                         )
+                        notify_lead_updates(lead, "Priority Updated", f"{lead.name} priority changed to {lead.get_priority_display()}", request)
 
                     if old_assigned != lead.assigned_to:
 
@@ -349,6 +341,7 @@ def update_lead(request, lid):
                             description=f"Assigned to {assigned_name}",
                             created_by=request.user
                         )
+                        notify_lead_updates(lead, "Lead Assigned", f"{lead.name} assigned to {assigned_name}", request)
 
             # -------- SITE VISIT --------
             elif form_type == "site_visit":
@@ -423,7 +416,6 @@ def update_lead(request, lid):
                         created_by=request.user
                     )
 
-                    # CREATE TASK FOR ASSIGNED USER
                     if lead.assigned_to:
 
                         task, created = Task.objects.get_or_create(
@@ -657,7 +649,7 @@ def universal_search(request):
     # 1. Search Leads
     leads = Lead.objects.filter(Q(phone__icontains=q) | Q(name__icontains=q) | Q(email__icontains=q))[:5]
     for l in leads:
-        results.append({"type": "Lead", "title": l.name, "subtitle": l.phone, "url": f"/crm/lead/{l.id}/"})
+        results.append({"type": "Lead (Customer 360)", "title": l.name, "subtitle": l.phone, "url": f"/crm/customer-360/{l.phone}/"})
         
     # 2. Search Projects
     projects = Project.objects.filter(Q(project_id__icontains=q) | Q(title__icontains=q))[:5]
@@ -674,9 +666,9 @@ def universal_search(request):
 @login_required(login_url='/users/login')
 def customer_360(request, phone):
     """ Customer 360 Degree View """
-    if request.user.role not in ['admin', 'sales']:
+    if request.user.role not in ['admin', 'sales', 'manager']:
         messages.error(request, "You do not have permission to view Customer 360.")
-        return redirect(f'/{request.user.role}')
+        return redirect('dashboard')
         
     leads = Lead.objects.filter(phone=phone).prefetch_related('activities', 'followups')
     projects = Project.objects.filter(lead__phone=phone)
@@ -693,3 +685,87 @@ def customer_360(request, phone):
         "revenue_value": sum(i.total_amount for i in invoices if i.status == 'paid')
     }
     return render(request, 'crm/customer_360.html', context)
+
+
+# ===============================
+# FEATURE 20: REFERRAL ENGINE
+# ===============================
+
+@login_required(login_url='/users/login')
+def referral_list(request):
+    referrals = Referral.objects.all().order_by('-created_at')
+    
+    # Auto-update status based on Lead status
+    for ref in referrals:
+        if ref.status == 'pending' and ref.referred_lead and ref.referred_lead.status == 'converted':
+            ref.status = 'converted'
+            ref.save()
+            
+    context = {
+        'referrals': referrals
+    }
+    return render(request, 'dashboard/crm/referral_list.html', context)
+
+@login_required(login_url='/users/login')
+def mark_referral_paid(request, ref_id):
+    ref = get_object_or_404(Referral, id=ref_id)
+    if ref.status == 'converted':
+        ref.status = 'paid'
+        # Assume a fixed commission for now if not set
+        if ref.commission_amount == 0:
+            ref.commission_amount = 5000.00
+        ref.save()
+        messages.success(request, f"Commission of Rs. {ref.commission_amount} marked as paid to {ref.referrer_name}")
+    return redirect('referral_list')
+
+
+# ===============================
+# FEATURE 18: ESCALATION MATRIX
+# ===============================
+from datetime import timedelta
+
+@login_required(login_url='/users/login')
+def escalation_dashboard(request):
+    """
+    Shows Leads and Tasks that have breached Turnaround Time (TAT) and highlights them.
+    TAT Rule: 
+    - Lead in 'new' for > 2 days -> L1 Escalated
+    - Lead in 'contacted' for > 7 days -> L2 Escalated
+    """
+    now = timezone.now()
+    
+    # Analyze Leads
+    leads = Lead.objects.all()
+    escalated_leads = []
+    
+    for lead in leads:
+        days_since_update = (now - lead.updated_at).days
+        breached = False
+        level = 0
+        
+        if lead.status == 'new' and days_since_update > 2:
+            breached = True
+            level = 1
+        elif lead.status == 'contacted' and days_since_update > 7:
+            breached = True
+            level = 2
+        elif lead.status == 'site_visit_scheduled' and days_since_update > 10:
+            breached = True
+            level = 3
+            
+        if breached:
+            # Auto escalate in DB if not already
+            if lead.escalation_level < level:
+                lead.escalation_level = level
+                lead.escalated_at = now
+                lead.save(update_fields=['escalation_level', 'escalated_at'])
+                
+            escalated_leads.append(lead)
+            
+    # Sort by escalation level descending
+    escalated_leads.sort(key=lambda x: x.escalation_level, reverse=True)
+            
+    context = {
+        'escalated_leads': escalated_leads,
+    }
+    return render(request, 'dashboard/crm/escalation_dashboard.html', context)

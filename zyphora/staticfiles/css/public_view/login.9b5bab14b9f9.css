@@ -1,0 +1,203 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+* { box-sizing: border-box; }
+
+body, html {
+    margin: 0; padding: 0; height: 100%;
+    font-family: 'Inter', sans-serif;
+    background: url("/static/images/login-tech-bg.f8f4ff6fc756.jpg") center/cover no-repeat fixed;
+    background-color: #000;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: -1;
+}
+
+.login-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+    padding-top: 80px; /* Offset for the header */
+}
+
+/* Glassmorphism Split Card */
+.split-card {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    max-width: 1000px;
+    min-height: 550px;
+    
+    background: rgba(0, 0, 0, 0.4); /* Pura Pardarshi (Glass base) */
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 20px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+}
+
+/* LEFT PANEL */
+.card-left {
+    flex: 1;
+    background: rgba(0, 0, 0, 0.2); /* Slightly darker glass for contrast */
+    padding: 60px;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.left-content {
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.hero-title {
+    font-size: 2.1rem;
+    font-weight: 700;
+    color: #ffffff;
+    line-height: 1.25;
+    margin-bottom: 15px;
+}
+
+.hero-subtitle {
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.6;
+    margin-bottom: auto;
+    max-width: 95%;
+}
+
+.stats-row {
+    display: flex;
+    gap: 30px;
+    margin-top: 40px;
+}
+
+.stat-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-right: 6px;
+}
+
+.stat-label {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.7);
+    font-weight: 500;
+}
+
+/* RIGHT PANEL */
+.card-right {
+    flex: 1;
+    background: transparent;
+    padding: 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.form-container {
+    max-width: 360px;
+    width: 100%;
+}
+
+.form-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 35px;
+}
+
+.input-label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 8px;
+}
+
+.custom-input {
+    background: rgba(0, 0, 0, 0.3) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    color: #ffffff !important;
+    border-radius: 10px;
+    padding: 14px 16px;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+    box-shadow: none !important;
+}
+
+.custom-input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.custom-input:focus {
+    border-color: #059669 !important;
+    background: rgba(0, 0, 0, 0.5) !important;
+    box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.2) !important;
+    outline: none;
+}
+
+.forgot-link {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.6);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.forgot-link:hover {
+    color: #ffffff;
+}
+
+.sign-in-btn {
+    background: linear-gradient(135deg, #059669, #0f766e);
+    border: none;
+    color: #ffffff;
+    font-weight: 600;
+    padding: 14px;
+    border-radius: 10px;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 15px rgba(5, 150, 105, 0.3);
+}
+
+.sign-in-btn:hover {
+    background: linear-gradient(135deg, #047857, #0f766e);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(5, 150, 105, 0.5);
+    color: #ffffff;
+}
+
+.error-msg {
+    background-color: rgba(239, 68, 68, 0.2);
+    color: #ffb3b3;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    text-align: center;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+@media (max-width: 991px) {
+    .split-card {
+        flex-direction: column;
+        height: auto;
+    }
+    .card-left, .card-right {
+        width: 100%;
+        padding: 40px 30px;
+    }
+    .card-left {
+        border-right: none;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .hero-title { font-size: 1.8rem; }
+    .form-container { margin: 0 auto; }
+}

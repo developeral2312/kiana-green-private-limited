@@ -50,5 +50,13 @@ urlpatterns = [
     path("reports/cashflow/", cash_flow_summary, name="cash_flow_summary"),
     path("reports/gst-tax/", gst_tax_reports, name="gst_tax_reports"),
 
-    path("costing/",project_costing,name="project_costing")
+    path("costing/",project_costing,name="project_costing"),
+    path("costing/edit/<int:project_id>/", edit_project_costing, name="edit_project_costing"),
+    
+    # COMMISSIONS
+    path("commissions/", commission_list, name="commission_list"),
+    
+    # LOANS & FINANCING
+    path("loans/", loan_dashboard, name="loan_dashboard"),
+    path("loans/<int:loan_id>/status/", update_loan_status, name="update_loan_status"),
 ]

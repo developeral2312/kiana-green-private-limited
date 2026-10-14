@@ -1,105 +1,109 @@
 {% extends 'dashboard/dashboard.html' %}
+{% load static %}
 
 {% block content %}
 
-<!-- Breadcrumb -->
+<!-- Breadcrumbs -->
 <nav aria-label="breadcrumb" class="mb-3">
     <ol class="breadcrumb mb-0">
         <li class="breadcrumb-item">
-            <a href="{% url request.user.role %}">
-                {{ request.user.role|title }} Dashboard
-            </a>
+            <a href="{% url request.user.role %}">{{ request.user.role|title }} Dashboard</a>
         </li>
         <li class="breadcrumb-item active">Material Requests</li>
     </ol>
 </nav>
 
-<div class="container mt-4">
-
-    <!-- Header -->
-    <div class="mb-3 d-flex flex-wrap align-items-center justify-content-between gap-2">
-        <div>
-            <h4 class="fw-bold text-primary">My Material Requests</h4>
-            <p class="{% if request.user.is_dark_mode %}text-light-50{% else %}text-muted{% endif %} mb-0">
-                Track the status of materials requested for your projects
-            </p>
+<!-- Executive Hero Card -->
+<div class="executive-hero-card mb-4">
+    <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+        <div class="d-flex align-items-center gap-3">
+            <div class="hero-icon-box">
+                <i class="bi bi-box-seam"></i>
+            </div>
+            <div>
+                <div class="d-flex align-items-center gap-2">
+                    <h3 class="hero-heading mb-0">Material Requisitions</h3>
+                    <span class="hero-count-badge">{{ requests|length }} Requests</span>
+                </div>
+                <p class="hero-subtext mb-0">Track warehouse equipment allocations requested for your assigned solar sites</p>
+            </div>
         </div>
-        <a href="{% url 'request_material' %}" class="btn btn-primary btn-sm d-flex align-items-center">
-            <i class="bi bi-plus-circle me-1"></i> Request Material
+
+        <a href="{% url 'request_material' %}" class="btn-hero-action">
+            <i class="bi bi-plus-lg"></i> Request Material
         </a>
     </div>
+</div>
 
-    <!-- Card -->
-    <div class="card shadow-sm border-0 {% if request.user.is_dark_mode %}bg-dark text-light{% endif %}">
-
-        <div class="card-body p-0">
-
-            {% if requests %}
-
-            <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0 {% if request.user.is_dark_mode %}table-dark{% endif %}">
-                    <thead class="{% if request.user.is_dark_mode %}table-secondary text-dark-75{% else %}table-light{% endif %}">
-                        <tr>
-                            <th>Project</th>
-                            <th>Material</th>
-                            <th>Quantity</th>
-                            <th>Requested On</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
+<!-- Table Card -->
+<div class="card shadow-sm border-0 mb-4 overflow-hidden">
+    <div class="card-body p-0">
+        {% if requests %}
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th>Project</th>
+                        <th>Material</th>
+                        <th>Requested Quantity</th>
+                        <th>Requested On</th>
+                        <th class="text-end pe-3">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
                     {% for req in requests %}
-                    <tr class="{% if req.status == 'pending' %}table-warning{% elif req.status == 'rejected' %}table-danger-subtle{% endif %}">
-
-                        <!-- Project -->
-                        <td class="fw-semibold">{{ req.project }}</td>
-
-                        <!-- Material -->
-                        <td>{{ req.material }}</td>
-
-                        <!-- Quantity -->
-                        <td class="fw-semibold">{{ req.quantity }}</td>
-
-                        <!-- Date -->
-                        <td>{{ req.allocated_date|date:"d M Y, H:i" }}</td>
-
-                        <!-- Status -->
+                    <tr>
                         <td>
-                            <span class="badge px-3 py-2
-                                {% if req.status == 'pending' %}bg-warning-subtle text-dark
-                                {% elif req.status == 'approved' %}bg-success-subtle text-success
-                                {% elif req.status == 'rejected' %}bg-danger-subtle text-danger
+                            <div class="d-flex align-items-center gap-2">
+                                <div class="hero-icon-box" style="width: 32px; height: 32px; font-size: 0.95rem; border-radius: 8px;">
+                                    <i class="bi bi-folder2-open"></i>
+                                </div>
+                                <span class="fw-bold text-dark">{{ req.project }}</span>
+                            </div>
+                        </td>
+
+                        <td>
+                            <span class="fw-semibold text-dark">{{ req.material }}</span>
+                        </td>
+
+                        <td>
+                            <span class="badge bg-light text-dark border fw-bold fs-6">{{ req.quantity }}</span>
+                        </td>
+
+                        <td>
+                            <span class="text-secondary small">{{ req.allocated_date|date:"d M Y, H:i" }}</span>
+                        </td>
+
+                        <td class="text-end pe-3">
+                            <span class="badge 
+                                {% if req.status == 'pending' %}bg-warning
+                                {% elif req.status == 'approved' %}bg-success
+                                {% elif req.status == 'rejected' %}bg-danger
                                 {% endif %}">
+                                {% if req.status == 'pending' %}<i class="bi bi-clock-history"></i>{% endif %}
+                                {% if req.status == 'approved' %}<i class="bi bi-check-circle"></i>{% endif %}
+                                {% if req.status == 'rejected' %}<i class="bi bi-x-circle"></i>{% endif %}
                                 {{ req.status|title }}
                             </span>
                         </td>
-
                     </tr>
                     {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-
-            {% else %}
-
-            <!-- Empty State -->
-            <div class="text-center p-5">
-                <i class="bi bi-box-seam fs-1 {% if request.user.is_dark_mode %}text-light-50{% else %}text-muted{% endif %}"></i>
-                <h6 class="mt-3">No Requests Yet</h6>
-                <p class="{% if request.user.is_dark_mode %}text-light-50{% else %}text-muted{% endif %} mb-3">
-                    You haven’t requested any materials yet.
-                </p>
-                <a href="{% url 'request_material' %}" class="btn btn-primary">
-                    <i class="bi bi-plus-circle me-1"></i> Request Material
-                </a>
-            </div>
-
-            {% endif %}
-
+                </tbody>
+            </table>
         </div>
+        {% else %}
+        <div class="text-center p-5">
+            <div class="hero-icon-box mx-auto mb-3" style="width: 56px; height: 56px; font-size: 1.6rem;">
+                <i class="bi bi-box-seam"></i>
+            </div>
+            <h6 class="fw-bold text-dark mt-2">No Material Requests Found</h6>
+            <p class="text-muted mb-3 small">Need additional panels, inverters or wiring? Submit a requisition.</p>
+            <a href="{% url 'request_material' %}" class="btn-hero-action">
+                <i class="bi bi-plus-lg"></i> Request Material
+            </a>
+        </div>
+        {% endif %}
     </div>
-
 </div>
 
 {% endblock %}

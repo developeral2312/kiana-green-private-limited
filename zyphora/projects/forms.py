@@ -57,7 +57,15 @@ class ProjectMediaForm(forms.ModelForm):
         self.user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
 
+        for field_name, field in self.fields.items():
+            if isinstance(field, forms.ModelChoiceField):
+                field.empty_label = f"Select {field.label or field_name.replace('_', ' ').title()}"
+
         project_id = self.data.get('project') or self.initial.get('project')
+
+        if self.user and 'project' in self.fields:
+            from projects.access import get_user_accessible_projects
+            self.fields['project'].queryset = get_user_accessible_projects(self.user)
 
         if self.user and 'installation_task' in self.fields:
             qs = self.fields['installation_task'].queryset.filter(assigned_to=self.user)
@@ -79,31 +87,45 @@ class ProjectMediaForm(forms.ModelForm):
 
 # ---------------- Task Form ----------------
 class TaskForm(forms.ModelForm):
+    due_date = forms.DateField(
+        required=False,
+        widget=forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}, format='%Y-%m-%d'),
+        input_formats=['%Y-%m-%d', '%d/%m/%Y', '%d-%m-%Y', '%m/%d/%Y', '%Y/%m/%d']
+    )
+
     class Meta:
         model = Task
-        exclude = ['status', 'created_at']
+        fields = ['title', 'description', 'assigned_to', 'due_date', 'status']
         widgets = {
-            'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter task title'}),
+            'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter task title', 'required': 'required'}),
             'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Task description'}),
             'assigned_to': forms.Select(attrs={'class': 'form-select'}),
-            'assigned_by': forms.Select(attrs={'class': 'form-select'}),
-            'due_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+            'status': forms.Select(attrs={'class': 'form-select'}),
         }
 
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
+
+        # For newly created tasks, status is optional and defaults to 'new'
+        if not self.instance.pk:
+            if 'status' in self.fields:
+                self.fields['status'].required = False
+                self.fields['status'].initial = 'new'
+
+        # Restrict assignment dropdown based on role
         if user:
-            self.fields['assigned_by'].initial = user
-            self.fields['assigned_by'].widget = forms.HiddenInput()
-            if not (user.is_superuser or user.role == "engineer"):
-                self.fields.pop('assigned_to')
+            if not (user.is_superuser or user.role in ['admin', 'manager', 'director', 'engineer']):
+                self.fields.pop('assigned_to', None)
             else:
-                self.fields['assigned_to'].queryset = CustomUser.objects.all()
+                self.fields['assigned_to'].queryset = CustomUser.objects.filter(is_active=True).order_by('first_name', 'username')
+                self.fields['assigned_to'].required = True
+        else:
+            if 'assigned_to' in self.fields:
+                self.fields['assigned_to'].queryset = CustomUser.objects.filter(is_active=True).order_by('first_name', 'username')
+
         if 'assigned_to' in self.fields:
             self.fields['assigned_to'].empty_label = 'Select User'
-        if 'assigned_by' in self.fields:
-            self.fields['assigned_by'].empty_label = 'Select User'
 
 
 # ---------------- Service Forms ----------------
@@ -120,9 +142,13 @@ class ServiceRequestForm(forms.ModelForm):
         }
     
     def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
         if 'project' in self.fields:
             self.fields['project'].empty_label = 'Select Project'
+            if self.user:
+                from projects.access import get_user_accessible_projects
+                self.fields['project'].queryset = get_user_accessible_projects(self.user)
         if 'assigned_to' in self.fields:
             self.fields['assigned_to'].empty_label = 'Select User'
         if 'requested_by' in self.fields:
@@ -163,6 +189,15 @@ class InstallationIssueForm(forms.ModelForm):
             'image': forms.FileInput(attrs={'class': 'form-control'}),
         }
 
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user', None)
+        super().__init__(*args, **kwargs)
+        if 'project' in self.fields:
+            self.fields['project'].empty_label = 'Select Project'
+            if self.user:
+                from projects.access import get_user_accessible_projects
+                self.fields['project'].queryset = get_user_accessible_projects(self.user)
+
 
 # ---------------- Work Report ----------------
 class WorkReportForm(forms.ModelForm):
@@ -187,4 +222,29 @@ class WorkReportForm(forms.ModelForm):
             'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Describe the work done...'}),
             'before_image': forms.FileInput(attrs={'class': 'form-control'}),
             'after_image': forms.FileInput(attrs={'class': 'form-control'}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user', None)
+        super().__init__(*args, **kwargs)
+        if 'project' in self.fields:
+            self.fields['project'].empty_label = 'Select Project'
+            if self.user:
+                from projects.access import get_user_accessible_projects
+                self.fields['project'].queryset = get_user_accessible_projects(self.user)
+
+
+class EquipmentSerialForm(forms.ModelForm):
+    class Meta:
+        model = EquipmentSerial
+        fields = ['category', 'brand', 'model_name', 'serial_number', 'installation_date', 'warranty_months', 'status', 'notes']
+        widgets = {
+            'category': forms.Select(attrs={'class': 'form-select'}),
+            'brand': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'e.g. Waaree, Luminous'}),
+            'model_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'e.g. 540W Mono PERC'}),
+            'serial_number': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter Serial No.'}),
+            'installation_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+            'warranty_months': forms.NumberInput(attrs={'class': 'form-control'}),
+            'status': forms.Select(attrs={'class': 'form-select'}),
+            'notes': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
         }

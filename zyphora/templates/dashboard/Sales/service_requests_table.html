@@ -1,35 +1,77 @@
-<table class="table table-striped mt-3">
-    <thead>
-        <tr>
-            <th>Title</th>
-            <th>Project</th>
-            <th>Status</th>
-            <th>Requested By</th>
-            <th>Assigned To</th>
-            <th>Action</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for sr in requests %}
-        <tr>
-            <td>{{ sr.title }}</td>
-            <td>{{ sr.project.title }}</td>
-            <td>
-                {% if sr.status == 'pending' %}<span class="badge bg-warning">Pending</span>{% endif %}
-                {% if sr.status == 'in_progress' %}<span class="badge bg-primary">In Progress</span>{% endif %}
-                {% if sr.status == 'completed' %}<span class="badge bg-success">Completed</span>{% endif %}
-                {% if sr.status == 'cancelled' %}<span class="badge bg-danger">Cancelled</span>{% endif %}
-            </td>
-            <td>{{ sr.requested_by }}</td>
-            <td>{{ sr.assigned_to }}</td>
-            <td>
-                {% if sr.status == 'pending' and not sr.assigned_to %}
-                <a href="{% url 'redirect_service_request' sr.id %}" class="btn btn-sm btn-outline-success">Assign</a>
-                {% endif %}
-            </td>
-        </tr>
-        {% empty %}
-        <tr><td colspan="6" class="text-center">No requests in this status.</td></tr>
-        {% endfor %}
-    </tbody>
-</table>
+<div class="card shadow-sm border-0 mb-4 overflow-hidden">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th>Ticket Title</th>
+                        <th>Project</th>
+                        <th>Status</th>
+                        <th>Requested By</th>
+                        <th>Assigned To</th>
+                        <th class="text-end pe-3">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for sr in requests %}
+                    <tr>
+                        <td>
+                            <div class="d-flex align-items-center gap-2">
+                                <div class="hero-icon-box" style="width: 32px; height: 32px; font-size: 0.95rem; border-radius: 8px;">
+                                    <i class="bi bi-wrench"></i>
+                                </div>
+                                <span class="fw-bold text-dark">{{ sr.title }}</span>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="fw-semibold text-secondary">{{ sr.project.title }}</span>
+                        </td>
+                        <td>
+                            {% if sr.status == 'pending' %}
+                                <span class="badge bg-warning"><i class="bi bi-clock-history"></i> Pending</span>
+                            {% elif sr.status == 'in_progress' %}
+                                <span class="badge bg-primary"><i class="bi bi-gear"></i> In Progress</span>
+                            {% elif sr.status == 'completed' %}
+                                <span class="badge bg-success"><i class="bi bi-check-circle"></i> Completed</span>
+                            {% elif sr.status == 'cancelled' %}
+                                <span class="badge bg-danger"><i class="bi bi-x-circle"></i> Cancelled</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <span class="text-secondary small">{{ sr.requested_by }}</span>
+                        </td>
+                        <td>
+                            {% if sr.assigned_to %}
+                                <span class="badge bg-light text-dark border">
+                                    <i class="bi bi-person me-1"></i>{{ sr.assigned_to }}
+                                </span>
+                            {% else %}
+                                <span class="badge bg-warning text-dark">Unassigned</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-end pe-3">
+                            {% if sr.status == 'pending' and not sr.assigned_to %}
+                            <a href="{% url 'redirect_service_request' sr.id %}" class="btn btn-sm btn-outline-success d-inline-flex align-items-center gap-1 px-3 py-1" style="border-radius: 8px;">
+                                <i class="bi bi-person-plus"></i> Assign
+                            </a>
+                            {% else %}
+                            <span class="text-muted small">-</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center p-5">
+                            <div class="hero-icon-box mx-auto mb-3" style="width: 48px; height: 48px; font-size: 1.4rem;">
+                                <i class="bi bi-inbox"></i>
+                            </div>
+                            <h6 class="fw-bold text-dark mt-1">No Service Requests Found</h6>
+                            <p class="text-muted mb-0 small">No requests in this status category.</p>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

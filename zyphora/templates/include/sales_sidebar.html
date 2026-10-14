@@ -8,19 +8,20 @@
     <!-- ===== HEADER (LOGO + TOGGLE) ===== -->
     <div class="sidebar-header d-flex align-items-center justify-content-between px-3 py-2">
 
-        <!-- Logo -->
-                <!-- Custom HTML Text Logo -->
-        <div class="sidebar-logo d-flex flex-column align-items-center justify-content-center" style="width: 90px; margin: 0 auto; padding: 5px 0;">
-    <img src="{% static 'images/logo1.png' %}" 
-         class="img-fluid" 
-         alt="Logo" 
-         style="width: 100%; height: auto;">
-    
-    <div style="width: 100%; text-align-last: justify; font-weight: 800; color: #2ecc71; font-size: 0.85rem; letter-spacing: 1px; margin-top: 2px; line-height: 1;">GREEN</div>
-</div>
+        <!-- Logo Full (Expanded State) -->
+        <a href="{% url 'dashboard' %}" class="sidebar-logo-full text-decoration-none d-flex align-items-center">
+            <img src="{% static 'images/kiana-green-logo.png' %}" alt="Kiana Green Logo"
+                style="max-height: 42px; width: auto; object-fit: contain;">
+        </a>
+
+        <!-- Logo Mini (Collapsed State) -->
+        <a href="{% url 'dashboard' %}" class="sidebar-logo-mini text-decoration-none d-none align-items-center justify-content-center" title="Dashboard">
+            <img src="{% static 'images/favicon.png' %}" alt="Zyphora"
+                style="width: 36px; height: 36px; object-fit: contain; border-radius: 8px;">
+        </a>
 
         <!-- Sidebar Toggle: ONLY on desktop. On mobile, hamburger in topnavbar is used. -->
-        <label for="sidebarToggleCheckbox" class="toggle-btn d-none d-lg-flex">
+        <label for="sidebarToggleCheckbox" class="toggle-btn d-none d-lg-flex align-items-center justify-content-center" title="Toggle Sidebar">
             <i class="bi bi-chevron-left arrow-icon"></i>
         </label>
 
@@ -36,8 +37,20 @@
                data-bs-toggle="tooltip"
                data-bs-placement="right"
                title="Dashboard">
-                <i class="bi bi-speedometer2 nav-icon text-primary"></i>
+                <i class="bi bi-grid-1x2-fill nav-icon"></i>
                 <span class="link-text ms-2">Dashboard</span>
+            </a>
+        </li>
+
+        <!-- ================= APPROVAL ENGINE ================= -->
+        <li class="nav-item">
+            <a href="{% url 'approval_dashboard' %}"
+               class="nav-link d-flex align-items-center {% if request.resolver_match.url_name == 'approval_dashboard' %}active{% endif %}"
+               data-bs-toggle="tooltip"
+               data-bs-placement="right"
+               title="Approvals">
+                <i class="bi bi-shield-check nav-icon"></i>
+                <span class="link-text ms-2">Approval Engine</span>
             </a>
         </li>
 
@@ -50,10 +63,10 @@
                data-bs-toggle="collapse"
                href="#salesTaskMenu">
                 <div class="d-flex align-items-center">
-                    <i class="bi bi-list-check nav-icon text-warning"></i>
+                    <i class="bi bi-list-task nav-icon"></i>
                     <span class="link-text ms-2">
                         Tasks
-                        {% if task_count %}<span class="badge bg-warning rounded-pill">{{ task_count }}</span>{% endif %}
+                        {% if task_count %}<span class="badge bg-secondary rounded-pill">{{ task_count }}</span>{% endif %}
                     </span>
                 </div>
             </a>
@@ -65,13 +78,15 @@
                     </a></li>
                     <li><a class="nav-link" href="{% url 'my_tasks' %}?filter=pending">
                         Pending Tasks
-                        {% if pending %}<span class="badge bg-warning rounded-pill">{{ pending }}</span>{% endif %}
+                        {% if pending %}<span class="badge bg-warning text-dark rounded-pill">{{ pending }}</span>{% endif %}
                     </a></li>
                     <li><a class="nav-link" href="{% url 'my_tasks' %}?filter=overdue">
                         Overdue Tasks
                         {% if overdue %}<span class="badge bg-danger rounded-pill">{{ overdue }}</span>{% endif %}
                     </a></li>
                     <li><a class="nav-link" href="{% url 'my_tasks' %}?filter=completed">Completed Tasks</a></li>
+                    <li class="mt-2"><a class="nav-link" href="{% url 'assigned_tasks' %}">Assigned Tasks</a></li>
+                    <li><a class="nav-link" href="{% url 'create_task' %}">Create Task</a></li>
                 </ul>
             </div>
         </li>
@@ -82,7 +97,7 @@
             <a class="nav-link d-flex align-items-center justify-content-between" 
                data-bs-toggle="collapse" href="#crmMenu">
                 <div class="d-flex align-items-center">
-                    <i class="bi bi-person-lines-fill nav-icon text-primary"></i>
+                    <i class="bi bi-people-fill nav-icon"></i>
                     <span class="link-text ms-2">
                         Leads
                         {% if total_leads %}<span class="badge bg-primary rounded-pill">{{ total_leads }}</span>{% endif %}
@@ -94,6 +109,26 @@
                     <li><a href="{% url 'lead_list' %}" class="nav-link">All Leads</a></li>
                     <li><a href="{% url 'add_lead' %}" class="nav-link">Add Lead</a></li>
                     <li><a href="{% url 'followups' %}" class="nav-link">Follow-ups</a></li>
+                    <li><a href="{% url 'referral_list' %}" class="nav-link">Referrals</a></li>
+                    <li><a href="{% url 'escalation_dashboard' %}" class="nav-link">Escalation Matrix</a></li>
+                </ul>
+            </div>
+        </li>
+
+        <!-- PROJECTS SECTION -->
+        <li class="sidebar-heading mt-3 text-muted small text-uppercase">Projects</li>
+        <li class="nav-item">
+            <a class="nav-link d-flex align-items-center justify-content-between" 
+               data-bs-toggle="collapse" href="#salesProjectMenu">
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-kanban nav-icon"></i>
+                    <span class="link-text ms-2">Projects</span>
+                </div>
+            </a>
+            <div class="collapse submenu" id="salesProjectMenu" data-bs-parent="#sidebarMenu">
+                <ul class="nav flex-column ms-4">
+                    <li><a href="{% url 'project_list' %}" class="nav-link">All Projects</a></li>
+                    <li><a href="{% url 'gallery_projects' %}" class="nav-link">Project Gallery</a></li>
                 </ul>
             </div>
         </li>
@@ -104,7 +139,7 @@
             <a class="nav-link d-flex align-items-center justify-content-between" 
                data-bs-toggle="collapse" href="#serviceRequestMenu">
                 <div class="d-flex align-items-center">
-                    <i class="bi bi-tools nav-icon text-success"></i>
+                    <i class="bi bi-tools nav-icon"></i>
                     <span class="link-text ms-2">Service Requests</span>
                 </div>
             </a>
@@ -123,7 +158,7 @@
             <a class="nav-link d-flex align-items-center justify-content-between" 
                data-bs-toggle="collapse" href="#financeMenu">
                 <div class="d-flex align-items-center">
-                    <i class="bi bi-cash-coin nav-icon text-danger"></i>
+                    <i class="bi bi-wallet2 nav-icon"></i>
                     <span class="link-text ms-2">Expenses</span>
                 </div>
             </a>
@@ -139,7 +174,7 @@
         <!-- ================= NOTIFICATIONS ================= -->
         <li class="nav-item mt-3">
             <a href="{% url 'notifications' %}" class="nav-link d-flex align-items-center">
-                <i class="bi bi-bell nav-icon text-danger"></i>
+                <i class="bi bi-bell nav-icon"></i>
                 <span class="link-text ms-2">Notifications</span>
             </a>
         </li>
@@ -147,7 +182,7 @@
         <!-- ================= PROFILE ================= -->        
         <li class="nav-item mt-3">
             <a href="{% url 'profile' %}" class="nav-link d-flex align-items-center">
-                <i class="bi bi-person-circle nav-icon text-primary"></i>
+                <i class="bi bi-person-circle nav-icon"></i>
                 <span class="link-text ms-2">My Profile</span>
             </a>
         </li>

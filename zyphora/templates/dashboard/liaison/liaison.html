@@ -2,135 +2,216 @@
 {% load static %}
 
 {% block link %}
+<link rel="stylesheet" href="{% static 'css/dashboard/admin/admin.css' %}?v=2">
 <link rel="stylesheet" href="{% static 'css/dashboard/engineer/engineer.css' %}">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 {% endblock %}
 
 {% block content %}
-<div class="container-fluid">
+<div class="admin-dashboard-container">
+    <div class="container-fluid px-0">
 
-    <!-- KPI SECTION -->
-    <div class="row g-4">
-        <div class="col-12 col-sm-6 col-lg-3">
-            <div class="kpi-card assigned text-center">
-                <div class="kpi-icon"><i class="bi bi-folder-fill"></i></div>
-                <div class="kpi-value">{{ assigned_projects }}</div>
-                <div class="kpi-label">Assigned Projects</div>
+        <!-- ================= TOP EXECUTIVE WELCOME BANNER (SLIM) ================= -->
+        <div class="executive-hero-banner">
+            <div class="d-flex align-items-center flex-wrap gap-2">
+                <div class="hero-live-badge">
+                    <span class="live-pulse-dot"></span>
+                    <span>LIAISON GOVT EPC</span>
+                </div>
+                <h5 class="fw-bold text-dark mb-0 d-flex align-items-center gap-2" style="font-size: 1.05rem;">
+                    <i class="bi bi-file-earmark-check text-primary"></i>Statutory Liaison & DISCOM Approvals
+                </h5>
+                <span class="text-muted small d-none d-lg-inline ms-1" style="font-size: 0.76rem;">• DISCOM net-metering, CEIG sanctions, subsidies & authority clearances</span>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+                <a href="{% url 'licensing_list' %}" class="btn btn-outline-primary btn-sm rounded-pill px-3 py-1 fw-semibold shadow-xs" style="font-size: 0.78rem;">
+                    <i class="bi bi-folder2-open me-1"></i>Licensing List
+                </a>
+                <a href="{% url 'project_list' %}" class="btn btn-primary btn-sm rounded-pill px-3 py-1 fw-semibold text-white shadow-xs" style="font-size: 0.78rem;">
+                    <i class="bi bi-kanban me-1"></i>Projects
+                </a>
             </div>
         </div>
 
-        <div class="col-12 col-sm-6 col-lg-3">
-            <div class="kpi-card ongoing text-center">
-                <div class="kpi-icon"><i class="bi bi-hourglass-split"></i></div>
-                <div class="kpi-value">{{ licensing_in_progress }}</div>
-                <div class="kpi-label">Licensing In Progress</div>
+        <!-- ================= KPI SECTION ================= -->
+        <div class="dashboard-section-bar">
+            <i class="bi bi-check2-circle text-primary"></i>Statutory Progress & Milestones
+        </div>
+
+        <div class="row g-3 align-items-stretch mb-4">
+            <div class="col-12 col-sm-6 col-lg-3 d-flex">
+                <div class="white-premium-card w-100">
+                    <div class="card-top-bar bar-blue"></div>
+                    <div class="card-head-split">
+                        <div>
+                            <div class="card-label-sub">Assigned Projects</div>
+                            <div class="card-value-hero text-primary">{{ assigned_projects }}</div>
+                        </div>
+                        <div class="card-icon-pill icon-pill-blue">
+                            <i class="bi bi-kanban"></i>
+                        </div>
+                    </div>
+                    <div class="card-meta-pill pill-sub-blue">
+                        <i class="bi bi-buildings me-1"></i>Active Sites
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-sm-6 col-lg-3 d-flex">
+                <div class="white-premium-card w-100">
+                    <div class="card-top-bar bar-amber"></div>
+                    <div class="card-head-split">
+                        <div>
+                            <div class="card-label-sub">Licensing In Progress</div>
+                            <div class="card-value-hero text-dark">{{ licensing_in_progress }}</div>
+                        </div>
+                        <div class="card-icon-pill icon-pill-amber">
+                            <i class="bi bi-hourglass-split"></i>
+                        </div>
+                    </div>
+                    <div class="card-meta-pill pill-sub-amber">
+                        <i class="bi bi-file-earmark-text me-1"></i>DISCOM / CEIG
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-sm-6 col-lg-3 d-flex">
+                <div class="white-premium-card w-100">
+                    <div class="card-top-bar bar-emerald"></div>
+                    <div class="card-head-split">
+                        <div>
+                            <div class="card-label-sub">Licensing Completed</div>
+                            <div class="card-value-hero text-success">{{ licensing_completed }}</div>
+                        </div>
+                        <div class="card-icon-pill icon-pill-emerald">
+                            <i class="bi bi-check-circle-fill"></i>
+                        </div>
+                    </div>
+                    <div class="card-meta-pill pill-sub-emerald">
+                        <i class="bi bi-patch-check me-1"></i>Approved & Cleared
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-sm-6 col-lg-3 d-flex">
+                <div class="white-premium-card w-100">
+                    <div class="card-top-bar bar-rose"></div>
+                    <div class="card-head-split">
+                        <div>
+                            <div class="card-label-sub">Pending Tasks</div>
+                            <div class="card-value-hero text-danger">{{ pending_tasks }}</div>
+                        </div>
+                        <div class="card-icon-pill icon-pill-rose">
+                            <i class="bi bi-list-check"></i>
+                        </div>
+                    </div>
+                    <div class="card-meta-pill pill-sub-rose">
+                        <i class="bi bi-clock-history me-1"></i>Submissions Due
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="col-12 col-sm-6 col-lg-3">
-            <div class="kpi-card completed text-center">
-                <div class="kpi-icon"><i class="bi bi-check-circle-fill"></i></div>
-                <div class="kpi-value">{{ licensing_completed }}</div>
-                <div class="kpi-label">Licensing Completed</div>
+        <!-- ================= CHARTS ================= -->
+        <div class="row g-4 mb-4">
+            <!-- Licensing Step Chart -->
+            <div class="col-md-6">
+                <div class="white-premium-panel h-100">
+                    <div class="panel-header-wrap">
+                        <h6 class="panel-heading">
+                            <i class="bi bi-pie-chart-fill text-primary"></i>Licensing Step Distribution
+                        </h6>
+                    </div>
+                    <div class="chart-container position-relative" style="height: 270px;">
+                        <canvas id="licensingChart"></canvas>
+                        <div class="empty-state text-center text-muted py-5" id="licensingEmpty">
+                            <i class="bi bi-inbox fs-3 d-block mb-1"></i>No licensing data
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Task Status Chart -->
+            <div class="col-md-6">
+                <div class="white-premium-panel h-100">
+                    <div class="panel-header-wrap">
+                        <h6 class="panel-heading">
+                            <i class="bi bi-bar-chart-fill text-success"></i>Task Status Overview
+                        </h6>
+                    </div>
+                    <div class="chart-container position-relative" style="height: 270px;">
+                        <canvas id="taskChart"></canvas>
+                        <div class="empty-state text-center text-muted py-5" id="taskEmpty">
+                            <i class="bi bi-inbox fs-3 d-block mb-1"></i>No task data
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="col-12 col-sm-6 col-lg-3">
-            <div class="kpi-card pending text-center">
-                <div class="kpi-icon"><i class="bi bi-list-check"></i></div>
-                <div class="kpi-value">{{ pending_tasks }}</div>
-                <div class="kpi-label">Pending Licensing Tasks</div>
+        <!-- ================= TASKS + DEADLINES ================= -->
+        <div class="row g-4 align-items-stretch mb-4">
+            <!-- Today's Tasks -->
+            <div class="col-lg-6 d-flex">
+                <div class="white-premium-panel w-100">
+                    <div class="panel-header-wrap">
+                        <h6 class="panel-heading">
+                            <i class="bi bi-list-check text-primary"></i>Today's Licensing Tasks
+                        </h6>
+                        <span class="badge bg-primary rounded-pill">{{ todays_tasks|length }}</span>
+                    </div>
+
+                    {% for task in todays_tasks %}
+                    <div class="d-flex justify-content-between align-items-center p-3 mb-2 rounded" style="background: #ffffff; border: 1px solid #e2e8f0;">
+                        <div>
+                            <strong class="text-dark">{{ task.get_step_display }}</strong>
+                            <small class="text-muted d-block">{{ task.project.title }}</small>
+                        </div>
+                        <span class="badge
+                            {% if task.status == 'new' %} bg-primary
+                            {% elif task.status == 'in_progress' %} bg-warning text-dark
+                            {% elif task.status == 'completed' %} bg-success
+                            {% elif task.status == 'overdue' %} bg-danger
+                            {% endif %}">
+                            {{ task.status|title }}
+                        </span>
+                    </div>
+                    {% empty %}
+                    <div class="text-center py-5 text-muted">
+                        <i class="bi bi-check-circle fs-3 text-success d-block mb-1"></i>No licensing tasks scheduled today
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Upcoming Deadlines -->
+            <div class="col-lg-6 d-flex">
+                <div class="white-premium-panel w-100">
+                    <div class="panel-header-wrap">
+                        <h6 class="panel-heading">
+                            <i class="bi bi-calendar-event text-amber"></i>Upcoming Deadlines
+                        </h6>
+                        <span class="badge bg-warning text-dark rounded-pill">{{ upcoming_tasks|length }}</span>
+                    </div>
+
+                    {% for task in upcoming_tasks %}
+                    <div class="d-flex justify-content-between align-items-center p-3 mb-2 rounded" style="background: #ffffff; border: 1px solid #e2e8f0;">
+                        <div>
+                            <strong class="text-dark">{{ task.get_step_display }}</strong>
+                            <small class="text-muted d-block"><i class="bi bi-clock me-1"></i>Due: {{ task.due_date|date:"M d, Y" }}</small>
+                        </div>
+                        <span class="badge bg-warning text-dark">Due Soon</span>
+                    </div>
+                    {% empty %}
+                    <div class="text-center py-5 text-muted">
+                        <i class="bi bi-calendar-check fs-3 text-muted d-block mb-1"></i>No upcoming deadlines
+                    </div>
+                    {% endfor %}
+                </div>
             </div>
         </div>
+
     </div>
-
-    <!-- CHARTS -->
-    <div class="row mt-4 g-4">
-
-        <!-- Licensing Step Chart -->
-        <div class="col-md-6">
-            <div class="dashboard-card">
-                <h6>Licensing Step Distribution</h6>
-                <div class="chart-container position-relative">
-                    <canvas id="licensingChart"></canvas>
-                    <div class="empty-state text-center" id="licensingEmpty">
-                        <i class="bi bi-bar-chart fs-3"></i><br>
-                        No licensing data
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Task Status Chart -->
-        <div class="col-md-6">
-            <div class="dashboard-card">
-                <h6>Task Status Overview</h6>
-                <div class="chart-container position-relative">
-                    <canvas id="taskChart"></canvas>
-                    <div class="empty-state text-center" id="taskEmpty">
-                        <i class="bi bi-bar-chart-line fs-3"></i><br>
-                        No task data
-                    </div>
-                </div>
-            </div>
-        </div>
-
-    </div>
-
-    <!-- TASKS + DEADLINES -->
-    <div class="row mt-4 g-4">
-
-        <!-- Today's Tasks -->
-        <div class="col-md-6">
-            <div class="dashboard-card">
-                <h6>Today's Licensing Tasks</h6>
-                {% for task in todays_tasks %}
-                <div class="list-item d-flex justify-content-between align-items-center mb-2">
-                    <div>
-                        <strong>{{ task.get_step_display }}</strong><br>
-                        <small class="text-muted">{{ task.project.title }}</small>
-                    </div>
-                    <span class="badge
-                        {% if task.status == 'new' %} bg-primary
-                        {% elif task.status == 'in_progress' %} bg-warning text-dark
-                        {% elif task.status == 'completed' %} bg-success
-                        {% elif task.status == 'overdue' %} bg-danger
-                        {% endif %}">
-                        {{ task.status|title }}
-                    </span>
-                </div>
-                {% empty %}
-                <div class="empty-list text-center py-3">
-                    <i class="bi bi-inbox fs-4"></i><br>
-                    No tasks today
-                </div>
-                {% endfor %}
-            </div>
-        </div>
-
-        <!-- Upcoming Deadlines -->
-        <div class="col-md-6">
-            <div class="dashboard-card">
-                <h6>Upcoming Deadlines</h6>
-                {% for task in upcoming_tasks %}
-                <div class="list-item d-flex justify-content-between align-items-center mb-2">
-                    <div>
-                        <strong>{{ task.get_step_display }}</strong><br>
-                        <small class="text-muted">{{ task.due_date|date:"M d, Y" }}</small>
-                    </div>
-                    <span class="badge bg-warning text-dark">Due Soon</span>
-                </div>
-                {% empty %}
-                <div class="empty-list text-center py-3">
-                    <i class="bi bi-calendar-x fs-4"></i><br>
-                    No upcoming deadlines
-                </div>
-                {% endfor %}
-            </div>
-        </div>
-
-    </div>
-
 </div>
 
 <!-- CHART SCRIPT -->
@@ -142,8 +223,9 @@ const statusLabels = {{ status_labels|safe }};
 const statusCounts = {{ status_counts|safe }};
 
 // Licensing Chart
-if (stepCounts.length > 0) {
-    document.getElementById('licensingEmpty').style.display = 'none';
+if (stepCounts && stepCounts.length > 0) {
+    const el = document.getElementById('licensingEmpty');
+    if (el) el.style.display = 'none';
 
     new Chart(document.getElementById('licensingChart'), {
         type: 'doughnut',
@@ -152,23 +234,30 @@ if (stepCounts.length > 0) {
             datasets: [{
                 data: stepCounts,
                 backgroundColor: [
-                    '#0d6efd', '#ffc107', '#198754', '#dc3545', '#6f42c1'
-                ]
+                    '#2563eb', '#f59e0b', '#10b981', '#ef4444', '#8b5cf6'
+                ],
+                borderWidth: 2,
+                borderColor: '#ffffff'
             }]
         },
         options: {
             responsive: true,
             maintainAspectRatio: false,
             plugins: {
-                legend: { position: 'bottom' }
-            }
+                legend: { 
+                    position: 'bottom',
+                    labels: { boxWidth: 12, font: { weight: 600 } }
+                }
+            },
+            cutout: '70%'
         }
     });
 }
 
 // Task Status Chart
-if (statusCounts.length > 0) {
-    document.getElementById('taskEmpty').style.display = 'none';
+if (statusCounts && statusCounts.length > 0) {
+    const el = document.getElementById('taskEmpty');
+    if (el) el.style.display = 'none';
 
     new Chart(document.getElementById('taskChart'), {
         type: 'bar',
@@ -177,14 +266,20 @@ if (statusCounts.length > 0) {
             datasets: [{
                 label: 'Tasks',
                 data: statusCounts,
-                borderRadius: 8,
-                backgroundColor: '#0d6efd'
+                borderRadius: 6,
+                backgroundColor: '#2563eb'
             }]
         },
         options: {
             responsive: true,
             maintainAspectRatio: false,
-            scales: { y: { beginAtZero: true } }
+            plugins: {
+                legend: { display: false }
+            },
+            scales: { 
+                x: { grid: { display: false }, ticks: { font: { size: 11 } } },
+                y: { grid: { color: '#f1f5f9' }, beginAtZero: true, ticks: { font: { size: 11 } } } 
+            }
         }
     });
 }

@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.forms import inlineformset_factory
 from django.db.models.functions import TruncMonth, Cast
@@ -42,7 +43,7 @@ def invoice_overdue(request):
 
 @login_required(login_url='/users/login')
 def create_invoice(request):
-    form = InvoiceForm(request.POST or None)
+    form = InvoiceForm(request.POST or None, user=request.user)
     if form.is_valid():
         invoice = form.save()
         # Notifications
@@ -72,7 +73,7 @@ def create_invoice(request):
 @login_required(login_url='/users/login')
 def update_invoice(request, pk):
     invoice = get_object_or_404(Invoice, pk=pk)
-    form = InvoiceForm(request.POST or None, instance=invoice)
+    form = InvoiceForm(request.POST or None, instance=invoice, user=request.user)
     if form.is_valid():
         invoice = form.save()
         # Notifications
@@ -135,6 +136,14 @@ def create_payment(request):
     form = PaymentForm(request.POST or None)
     if form.is_valid():
         payment = form.save()
+        inv = payment.invoice
+        total_received = Payment.objects.filter(invoice=inv).aggregate(total=Sum('amount'))['total'] or 0
+        if total_received >= inv.total_amount:
+            inv.status = 'paid'
+            inv.save()
+
+        messages.success(request, f"Payment of ₹{payment.amount} recorded successfully for Invoice {inv.invoice_number}!")
+
         # Notifications
         admins = CustomUser.objects.filter(role='admin')
         accountants = CustomUser.objects.filter(role='accountant')
@@ -211,7 +220,7 @@ def rejected_expenses(request):
 @login_required(login_url='/users/login')
 def create_expense(request):
     # Main expense form
-    form = ExpenseForm(request.POST or None)
+    form = ExpenseForm(request.POST or None, user=request.user)
 
     # Inline formsets
     ItemFormSet = inlineformset_factory(
@@ -601,7 +610,7 @@ def project_profit_report(request):
 
     for project in projects:
         # Safely get estimated cost
-        estimated = getattr(project.project_costing, 'estimated_cost', 0)
+        estimated = getattr(project.project_costing, 'total_cost', 0)
 
         # Actual expenses
         actual = project.expense_reports.aggregate(total=Sum('items__amount'))['total'] or 0
@@ -677,26 +686,187 @@ def gst_tax_reports(request):
 
 @login_required(login_url='/users/login')
 def project_costing(request):
-    projects = Project.objects.all()
+    from projects.access import get_user_accessible_projects
+    projects = get_user_accessible_projects(request.user)
 
     costing_data = []
+    total_est = Decimal('0')
+    total_rev = Decimal('0')
+    total_profit = Decimal('0')
 
     for project in projects:
         costing, created = ProjectCosting.objects.get_or_create(
             project=project,
-            defaults={"system_costing": 0}
+            defaults={"total_cost": 0, "selling_price": 0}
         )
+
+        est = costing.total_cost or Decimal('0')
+        rev = costing.selling_price or Decimal('0')
+        profit = costing.gross_margin or Decimal('0')
+
+        total_est += est
+        total_rev += rev
+        total_profit += profit
 
         costing_data.append({
             "project": project,
-            "estimated_cost": costing.estimated_cost,
-            "actual_cost": costing.actual_cost,
-            "revenue": costing.revenue,
-            "profit": costing.profit,
+            "costing": costing,
+            "estimated_cost": est,
+            "actual_cost": est,
+            "revenue": rev,
+            "profit": profit,
         })
 
+    margin_pct = (total_profit / total_rev * 100) if total_rev > 0 else 0
+
     context = {
-        "costing_data": costing_data
+        "costing_data": costing_data,
+        "total_projects": len(costing_data),
+        "total_est": total_est,
+        "total_rev": total_rev,
+        "total_profit": total_profit,
+        "margin_pct": round(margin_pct, 1),
     }
 
     return render(request, "dashboard/admin/project_costing.html", context)
+
+
+# ---------------- COMMISSIONS ---------------- #
+
+@login_required(login_url='/users/login')
+def commission_list(request):
+    commissions = CommissionPayout.objects.select_related('user', 'partner', 'project').all().order_by('-created_at')
+    
+    total_pending = commissions.filter(status='pending').aggregate(Sum('amount'))['amount__sum'] or 0
+    total_paid = commissions.filter(status='paid').aggregate(Sum('amount'))['amount__sum'] or 0
+
+    context = {
+        'commissions': commissions,
+        'total_pending': total_pending,
+        'total_paid': total_paid
+    }
+    return render(request, 'finance/commission_list.html', context)
+
+
+# ---------------- LOANS & FINANCING ---------------- #
+
+@login_required(login_url='/users/login')
+def loan_dashboard(request):
+    if request.method == 'POST':
+        project_id = request.POST.get('project_id')
+        financier_id = request.POST.get('financier_id')
+        applicant_name = request.POST.get('applicant_name', '').strip()
+        loan_amount_raw = request.POST.get('loan_amount')
+        interest_rate_raw = request.POST.get('interest_rate')
+        tenure_months_raw = request.POST.get('tenure_months')
+        
+        try:
+            loan_amount = Decimal(str(loan_amount_raw)) if loan_amount_raw else Decimal('0')
+            interest_rate = Decimal(str(interest_rate_raw)) if interest_rate_raw else Decimal('0')
+            tenure_months = int(tenure_months_raw) if tenure_months_raw else 0
+            
+            loan = LoanApplication.objects.create(
+                project_id=project_id,
+                financier_id=financier_id if financier_id else None,
+                applicant_name=applicant_name,
+                loan_amount=loan_amount,
+                interest_rate=interest_rate,
+                tenure_months=tenure_months
+            )
+            
+            loan.calculate_emi()
+            loan.generate_schedule()
+            messages.success(request, f"Loan application for '{applicant_name}' (₹{loan_amount:,.2f}) created successfully! Monthly EMI: ₹{loan.emi_amount:,.2f}.")
+            return redirect('loan_dashboard')
+        except Exception as e:
+            messages.error(request, f"Error creating loan application: {str(e)}")
+            return redirect('loan_dashboard')
+
+    loans = LoanApplication.objects.select_related('project', 'financier').all().order_by('-applied_on')
+    from projects.access import get_user_accessible_projects
+    projects = get_user_accessible_projects(request.user)
+    financiers = Financier.objects.all()
+    
+    total_loans = loans.count()
+    total_disbursed = loans.filter(status='disbursed').aggregate(Sum('loan_amount'))['loan_amount__sum'] or 0
+    total_applied = loans.aggregate(Sum('loan_amount'))['loan_amount__sum'] or 0
+    pending_count = loans.filter(status='pending').count()
+    
+    context = {
+        'loans': loans,
+        'projects': projects,
+        'financiers': financiers,
+        'total_loans': total_loans,
+        'total_applied': total_applied,
+        'total_disbursed': total_disbursed,
+        'pending_count': pending_count,
+    }
+    return render(request, 'finance/loan_dashboard.html', context)
+
+
+@login_required(login_url='/users/login')
+def edit_project_costing(request, project_id):
+    project = get_object_or_404(Project, pk=project_id)
+    costing, created = ProjectCosting.objects.get_or_create(project=project)
+    
+    if request.method == "POST":
+        form = ProjectCostingForm(request.POST, instance=costing)
+        if form.is_valid():
+            costing = form.save(commit=False)
+            costing.updated_by = request.user
+            costing.save()
+            messages.success(request, f"Project Costing & Margin for '{project.title}' updated successfully.")
+            return redirect("project_costing")
+    else:
+        form = ProjectCostingForm(instance=costing)
+        
+    context = {
+        "form": form,
+        "project": project,
+        "costing": costing
+    }
+    return render(request, "dashboard/finance/project_costing.html", context)
+
+
+@login_required(login_url='/users/login')
+def update_loan_status(request, loan_id):
+    loan = get_object_or_404(LoanApplication, id=loan_id)
+    if request.method == 'POST':
+        new_status = request.POST.get('status')
+        if new_status in dict(LoanApplication.STATUS_CHOICES):
+            loan.status = new_status
+            if new_status == 'approved' and not loan.approved_on:
+                loan.approved_on = timezone.now().date()
+            elif new_status == 'disbursed':
+                if not loan.disbursed_on:
+                    loan.disbursed_on = timezone.now().date()
+                loan.generate_schedule()
+            loan.save()
+            messages.success(request, f"Loan #{loan.id} for {loan.applicant_name} updated to '{loan.get_status_display()}'.")
+    return redirect('loan_dashboard')
+
+
+# ===============================
+# FEATURE 25: P&L ANALYTICS
+# ===============================
+
+@login_required(login_url='/users/login')
+def project_profit_report(request):
+    costings = ProjectCosting.objects.select_related('project').all()
+    
+    total_revenue = sum(c.selling_price for c in costings)
+    total_cost = sum(c.total_cost for c in costings)
+    gross_profit = sum(c.gross_margin for c in costings)
+    
+    avg_margin = 0
+    if total_revenue > 0:
+        avg_margin = (gross_profit / total_revenue) * 100
+        
+    context = {
+        'costings': costings,
+        'total_revenue': total_revenue,
+        'total_cost': total_cost,
+        'gross_profit': gross_profit,
+        'avg_margin': avg_margin
+    }
+    return render(request, 'dashboard/finance/pl_dashboard.html', context)

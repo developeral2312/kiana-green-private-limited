@@ -1,103 +1,71 @@
 {% load static %}
-<style>
-  .kiana-footer {
-    background-color: #00234b;
-    color: #e2e8f0;
-    font-family: 'Rubik', sans-serif;
-  }
-  .kiana-footer a {
-    color: #e2e8f0;
-    text-decoration: none;
-    transition: color 0.3s ease;
-  }
-  .kiana-footer a:hover {
-    color: #f28b00;
-  }
-  .kiana-footer h6 {
-    color: #ffffff;
-    font-weight: 600;
-    margin-bottom: 1.2rem;
-  }
-  .kiana-footer .social-icon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 35px;
-    height: 35px;
-    border-radius: 50%;
-    background-color: rgba(255,255,255,0.1);
-    color: #ffffff;
-    margin-right: 10px;
-    transition: background-color 0.3s;
-  }
-  .kiana-footer .social-icon:hover {
-    background-color: #f28b00;
-  }
-</style>
-
-<footer class="kiana-footer pt-5 mt-5">
+<footer class="kiana-footer pt-5">
   <div class="container text-start">
-    <div class="row">
+    <div class="row g-4 pb-4">
       <!-- Column 1: Logo and About -->
-      <div class="col-md-12 col-lg-4 mb-4 pe-lg-5">
-        <div class="mb-4" style="width: 110px;">
-  <img src="{% static 'images/logo1.png' %}" alt="Kiana Logo" style="width: 100%; height: auto;">
-  <div style="width: 100%; text-align: right; font-weight: 800; color: #f28b00; font-size: 1.25rem; letter-spacing: 1.5px; margin-top: 2px; padding-right: 2px;">GREEN</div>
-</div>
-        <p style="font-size: 0.95rem; line-height: 1.6;">
+      <div class="col-lg-4 col-md-12 pe-lg-4">
+        <div class="mb-3">
+          <img src="https://www.kianagreen.com/assets/footer-kiana-green-logo.png" alt="Kiana Green Logo" style="height: 48px; width: auto;">
+        </div>
+        <p class="text-light-emerald mb-4">
           Powering a sustainable future with smart solar solutions for homes, businesses & industries across India.
         </p>
-        <div class="mt-4">
-          <a href="#" class="social-icon"><i class="bi bi-facebook"></i></a>
-          <a href="#" class="social-icon"><i class="bi bi-linkedin"></i></a>
-          <a href="#" class="social-icon"><i class="bi bi-instagram"></i></a>
+        <div class="d-flex gap-2">
+          <a href="#" class="social-btn"><i class="bi bi-facebook"></i></a>
+          <a href="#" class="social-btn"><i class="bi bi-linkedin"></i></a>
+          <a href="#" class="social-btn"><i class="bi bi-instagram"></i></a>
         </div>
       </div>
 
       <!-- Column 2: Quick Links -->
-      <div class="col-md-6 col-lg-2 mb-4">
-        <h6>Quick Links</h6>
-        <p class="mb-2"><a href="{% url 'home' %}">Home</a></p>
-        <p class="mb-2"><a href="{% url 'about' %}">About Us</a></p>
-        <p class="mb-2"><a href="{% url 'services' %}">Solutions</a></p>
-        <p class="mb-2"><a href="{% url 'projects' %}">Projects</a></p>
-        <p class="mb-2"><a href="{% url 'contact' %}">Contact Us</a></p>
+      <div class="col-lg-2 col-md-3 col-6">
+        <h6 class="footer-title">Quick Links</h6>
+        <ul class="list-unstyled footer-links">
+          <li><a href="{% url 'home' %}">Home</a></li>
+          <li><a href="{% url 'about' %}">About Us</a></li>
+          <li><a href="{% url 'services' %}">Solutions</a></li>
+          <li><a href="{% url 'projects' %}">Projects</a></li>
+          <li><a href="{% url 'contact' %}">Contact Us</a></li>
+        </ul>
       </div>
 
       <!-- Column 3: Solutions -->
-      <div class="col-md-6 col-lg-2 mb-4">
-        <h6>Solutions</h6>
-        <p class="mb-2"><a href="#">Residential Solar</a></p>
-        <p class="mb-2"><a href="#">Commercial Solar</a></p>
-        <p class="mb-2"><a href="#">Industrial Solar</a></p>
-        <p class="mb-2"><a href="#">Solar EPC</a></p>
-        <p class="mb-2"><a href="#">Operations & Maintenance</a></p>
+      <div class="col-lg-2 col-md-3 col-6">
+        <h6 class="footer-title">Solutions</h6>
+        <ul class="list-unstyled footer-links">
+          <li><a href="#">Residential Solar</a></li>
+          <li><a href="#">Commercial Solar</a></li>
+          <li><a href="#">Industrial Solar</a></li>
+          <li><a href="#">Solar EPC</a></li>
+          <li><a href="#">Operations & Maintenance</a></li>
+        </ul>
       </div>
 
       <!-- Column 4: Company -->
-      <div class="col-md-6 col-lg-2 mb-4">
-        <h6>Company</h6>
-        <p class="mb-2"><a href="{% url 'about' %}">About Us</a></p>
-        <p class="mb-2"><a href="#">Careers</a></p>
-        <p class="mb-2"><a href="{% url 'blog' %}">Blog</a></p>
-        <p class="mb-2"><a href="#">News & Updates</a></p>
-        <p class="mb-2"><a href="#">Privacy Policy</a></p>
+      <div class="col-lg-2 col-md-3 col-6">
+        <h6 class="footer-title">Company</h6>
+        <ul class="list-unstyled footer-links">
+          <li><a href="{% url 'about' %}">About Us</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="{% url 'blog' %}">Blog</a></li>
+          <li><a href="#">News & Updates</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+        </ul>
       </div>
 
       <!-- Column 5: Contact Us -->
-      <div class="col-md-6 col-lg-2 mb-4">
-        <h6>Contact Us</h6>
-        <p style="font-size: 0.9rem; line-height: 1.6; margin-bottom: 0.5rem;">
-          H-61, Kiana Green,<br>Noida, Uttarpradesh - 201301
-        </p>
-        <p style="font-size: 0.9rem; margin-bottom: 0.5rem;">+91 87966 27007</p>
-        <p style="font-size: 0.9rem; margin-bottom: 0;">info@kianagreen.com</p>
+      <div class="col-lg-2 col-md-3 col-6">
+        <h6 class="footer-title">Contact Us</h6>
+        <address class="text-light-emerald mb-0" style="font-size: 0.9rem;">
+          H-61, Kiana Green,<br>Noida, Uttarpradesh - 201301<br><br>
+          <a href="tel:+918770313216" class="text-white text-decoration-none">+91 877 031 3216</a><br>
+          <a href="mailto:info@kianagreen.com" class="text-white text-decoration-none">info@kianagreen.com</a>
+        </address>
       </div>
-
     </div>
-  </div>
 
-  <div class="text-center p-3 mt-4" style="background-color: rgba(0,0,0,0.2); font-size: 0.85rem; border-top: 1px solid rgba(255,255,255,0.05);">
-    © 2026 Kiana Green Pvt Ltd. All rights reserved.
+    <div class="py-3 text-center" style="border-top: 1px solid rgba(255,255,255,0.05);">
+      <small class="text-light-emerald">© 2026 Kiana Green Pvt. Ltd. All Rights Reserved.</small>
+    </div>
   </div>
 </footer>

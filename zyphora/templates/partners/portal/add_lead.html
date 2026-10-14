@@ -1,0 +1,68 @@
+{% extends 'dashboard/dashboard.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4 mb-5">
+    
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'partner_portal_dashboard' %}" class="text-decoration-none">Partner Portal</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Submit Lead</li>
+        </ol>
+    </nav>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-lg border-0 rounded-4">
+                <div class="card-header bg-success text-white py-4 text-center rounded-top-4">
+                    <h3 class="mb-1 fw-bold"><i class="fas fa-paper-plane me-2"></i> Submit a New Lead</h3>
+                    <p class="mb-0 opacity-75">Enter the customer's details below to route them directly to our CRM.</p>
+                </div>
+                <div class="card-body p-5">
+                    
+                    <form method="POST">
+                        {% csrf_token %}
+                        
+                        <div class="row g-4">
+                            <div class="col-md-12">
+                                <label class="form-label fw-bold">Customer Full Name <span class="text-danger">*</span></label>
+                                <input type="text" name="customer_name" class="form-control form-control-lg bg-light" required placeholder="e.g. Rahul Sharma">
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Phone Number <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light">+91</span>
+                                    <input type="text" name="phone" class="form-control form-control-lg bg-light" required placeholder="9876543210" pattern="[0-9]{10}">
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Email Address</label>
+                                <input type="email" name="email" class="form-control form-control-lg bg-light" placeholder="customer@example.com">
+                            </div>
+
+                            <div class="col-12">
+                                <label class="form-label fw-bold">Additional Notes / Requirements</label>
+                                <textarea name="notes" class="form-control bg-light" rows="4" placeholder="Any specific requirements? E.g., Looking for a 5kW On-Grid system for their home..."></textarea>
+                            </div>
+                        </div>
+
+                        <div class="mt-5 text-center">
+                            <button type="submit" class="btn btn-success btn-lg fw-bold px-5 py-3 rounded-pill shadow-sm w-100">
+                                Submit Lead to Zyphora <i class="fas fa-arrow-right ms-2"></i>
+                            </button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+            
+            <div class="text-center mt-4 text-muted small">
+                <i class="fas fa-info-circle me-1"></i> Submitted leads are instantly pushed to the main CRM pipeline. Your sales manager will be notified automatically.
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

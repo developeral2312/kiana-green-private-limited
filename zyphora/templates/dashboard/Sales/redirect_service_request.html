@@ -12,7 +12,7 @@
         <label for="engineer" class="form-label">Assign to Engineer</label>
         <select name="engineer" id="engineer" class="form-select" required>
             {% for eng in engineers %}
-            <option value="{{ eng.id }}">{{ eng.user.get_full_name }}</option>
+            <option value="{{ eng.id }}">{{ eng.user.username }}{% if eng.name and eng.name != eng.user.username %} ({{ eng.name }}){% endif %}</option>
             {% endfor %}
         </select>
     </div>

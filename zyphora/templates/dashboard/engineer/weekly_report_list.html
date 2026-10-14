@@ -3,7 +3,7 @@
 
 <!-- Breadcrumb -->
 <nav aria-label="breadcrumb" class="mb-3">
-  <ol class="breadcrumb">
+  <ol class="breadcrumb mb-0">
     <li class="breadcrumb-item">
         <a href="{% url request.user.role %}">
             {{ request.user.role|title }} Dashboard
@@ -13,143 +13,129 @@
   </ol>
 </nav>
 
-<div class="container-fluid">
+<div class="admin-dashboard-container">
+    <div class="container-fluid px-0">
 
-    <!-- Header -->
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <div>
-            <h4 class="fw-bold mb-1 text-primary">
-                <i class="bi bi-calendar-week me-2"></i> Weekly Summary
-            </h4>
-            <p class="text-muted mb-0">
-                Automatically generated weekly work summaries
-            </p>
+        <!-- Executive Hero Card -->
+        <div class="executive-hero-card mb-4">
+            <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="hero-icon-box">
+                        <i class="bi bi-calendar-week"></i>
+                    </div>
+                    <div>
+                        <div class="d-flex align-items-center gap-2">
+                            <h3 class="hero-heading mb-0">Weekly Summary Reports</h3>
+                            <span class="hero-count-badge">{{ reports|length }} Reports</span>
+                        </div>
+                        <p class="hero-subtext mb-0">Automatically generated engineering execution summaries & weekly progress</p>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
 
-    <!-- Filters -->
-    <div class="card shadow-sm border-0 mb-3">
-        <div class="card-body">
-            <form method="GET" class="row g-2">
-
+        <!-- Filters -->
+        <div class="filter-toolbar-card mb-4">
+            <form method="GET" class="row g-2 align-items-center">
                 <div class="col-md-4">
                     <input type="date" name="date"
                            value="{{ filters.date }}"
-                           class="form-control">
+                           class="form-control" placeholder="Filter by date">
                 </div>
 
                 <div class="col-md-4">
                     <input type="text" name="project"
                            value="{{ filters.project }}"
                            class="form-control"
-                           placeholder="Project ID">
+                           placeholder="Filter by Project ID / Name">
                 </div>
 
                 <div class="col-md-2">
-                    <button class="btn btn-outline-primary w-100">
-                        <i class="bi bi-funnel"></i> Filter
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="bi bi-funnel me-1"></i> Filter
                     </button>
                 </div>
 
                 <div class="col-md-2">
-                    <a href="" class="btn btn-outline-secondary w-100">
+                    <a href="{% url 'weekly_report_list' %}" class="btn btn-outline-secondary w-100">
                         Reset
                     </a>
                 </div>
-
             </form>
         </div>
-    </div>
 
-    <!-- Reports -->
-    <div class="card shadow-sm border-0">
-        <div class="table-responsive">
-
-            <table class="table table-hover align-middle mb-0">
-
-                <thead class="table-light">
-                    <tr>
-                        <th>Week</th>
-                        <th>Project</th>
-                        <th>Summary</th>
-                        <th>Progress</th>
-                        <th>Status</th>
-                        <th width="120">Action</th>
-                    </tr>
-                </thead>
-
-                <tbody>
-
-                    {% for r in reports %}
-                    <tr>
-
-                        <!-- Week -->
-                        <td>
-                            <strong>{{ r.date }}</strong><br>
-                            <small class="text-muted">
-                                Weekly Report
-                            </small>
-                        </td>
-
-                        <!-- Project -->
-                        <td>
-                            {{ r.project.title }}
-                        </td>
-
-                        <!-- Summary -->
-                        <td>
-                            <small class="text-muted">
-                                {{ r.description|truncatewords:15 }}
-                            </small>
-                        </td>
-
-                        <!-- Progress -->
-                        <td>
-                            <div class="progress" style="height: 6px;">
-                                <div class="progress-bar"
-                                     role="progressbar"
-                                     style="width: {{ r.progress }}%">
-                                </div>
-                            </div>
-                            <small>{{ r.progress }}%</small>
-                        </td>
-
-                        <!-- Status -->
-                        <td>
-                            <span class="badge
-                                {% if r.status == 'completed' %}bg-success
-                                {% elif r.status == 'in_progress' %}bg-warning text-dark
-                                {% else %}bg-secondary{% endif %}">
-                                {{ r.get_status_display }}
-                            </span>
-                        </td>
-
-                        <!-- Action -->
-                        <td>
-                            <a href="{% url 'daily_report_detail' r.id %}"
-                               class="btn btn-sm btn-info text-white">
-                                <i class="bi bi-eye"></i>
-                            </a>
-                        </td>
-
-                    </tr>
-
-                    {% empty %}
-                    <tr>
-                        <td colspan="6" class="text-center py-4 text-muted">
-                            <i class="bi bi-calendar-x fs-4 d-block mb-2"></i>
-                            No weekly reports available
-                        </td>
-                    </tr>
-                    {% endfor %}
-
-                </tbody>
-
-            </table>
-
+        <!-- Reports Table -->
+        <div class="card shadow-sm border-0 mb-4 overflow-hidden">
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th>Week</th>
+                                <th>Project</th>
+                                <th>Summary</th>
+                                <th>Progress</th>
+                                <th>Status</th>
+                                <th class="text-end pe-3">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for r in reports %}
+                            <tr>
+                                <td>
+                                    <strong class="text-dark">{{ r.date }}</strong><br>
+                                    <small class="text-muted">Weekly Log</small>
+                                </td>
+                                <td>
+                                    <span class="fw-semibold text-dark">{{ r.project.title }}</span>
+                                </td>
+                                <td>
+                                    <span class="text-muted small">
+                                        {{ r.description|truncatewords:15 }}
+                                    </span>
+                                </td>
+                                <td style="min-width: 120px;">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <div class="progress flex-grow-1" style="height: 6px; background-color: #f1f5f9; border-radius: 4px;">
+                                            <div class="progress-bar bg-success"
+                                                 role="progressbar"
+                                                 style="width: {{ r.progress }}%">
+                                            </div>
+                                        </div>
+                                        <small class="fw-bold text-dark">{{ r.progress }}%</small>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="badge
+                                        {% if r.status == 'completed' %}bg-success
+                                        {% elif r.status == 'in_progress' %}bg-warning text-dark
+                                        {% else %}bg-secondary{% endif %}">
+                                        {{ r.get_status_display }}
+                                    </span>
+                                </td>
+                                <td class="text-end pe-3">
+                                    <a href="{% url 'daily_report_detail' r.id %}"
+                                       class="btn-action-circle btn-action-view" title="View Weekly Report">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="6" class="text-center py-5 text-muted">
+                                    <i class="bi bi-calendar-x fs-3 d-block mb-2"></i>
+                                    <h6>No Weekly Reports Found</h6>
+                                    <p class="mb-0 text-muted small">Weekly summaries will be listed here once recorded.</p>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
-    </div>
 
+    </div>
 </div>
 
 {% endblock %}

@@ -102,9 +102,9 @@ def populate_completed():
     ProjectCosting.objects.get_or_create(
         project=project,
         defaults={
-            'design_costing': dc,
-            'system_costing': Decimal('300000.00'),
-            'kseb_cost': Decimal('15000.00'),
+            'panels_cost': Decimal('300000.00'),
+            'installation_overhead': Decimal('15000.00'),
+            'selling_price': Decimal('350000.00'),
             'client_approved': True,
             'proposal_sent': True
         }

@@ -2,147 +2,221 @@
 {% load static %}
 
 {% block link %}
-
+<link rel="stylesheet" href="{% static 'css/dashboard/admin/admin.css' %}?v=2">
 <link rel="stylesheet" href="{% static 'css/dashboard/staff.css' %}">
 {% endblock %}
 
 {% block content %}
 
-<div class="container-fluid mt-4">
+<div class="admin-dashboard-container">
+    <div class="container-fluid px-0">
 
-<!-- KPI CARDS -->
-<div class="row g-3 mb-4">
-
-    <div class="col-md-3">
-        <div class="card text-white bg-primary p-3">
-            <h5>Total Tasks</h5>
-            <h3>{{ total_tasks }}</h3>
-        </div>
-    </div>
-
-    <div class="col-md-3">
-        <div class="card text-white bg-success p-3">
-            <h5>Completed Tasks</h5>
-            <h3>{{ completed_tasks }}</h3>
-        </div>
-    </div>
-
-    <div class="col-md-3">
-        <div class="card text-white bg-warning p-3">
-            <h5>Pending Tasks</h5>
-            <h3>{{ pending_tasks }}</h3>
-        </div>
-    </div>
-
-    <div class="col-md-3">
-        <div class="card text-white bg-info p-3">
-            <h5>Assigned Projects</h5>
-            <h3>{{ assigned_projects }}</h3>
-        </div>
-    </div>
-
-</div>
-
-<!-- CHARTS -->
-<div class="row mt-4">
-
-    <div class="col-md-6">
-        <div class="card p-3">
-            <h5>Task Status Overview</h5>
-
-            <div style="height:300px;">
-                <canvas id="taskStatusChart"></canvas>
+        <!-- ================= TOP EXECUTIVE WELCOME BANNER (SLIM) ================= -->
+        <div class="executive-hero-banner">
+            <div class="d-flex align-items-center flex-wrap gap-2">
+                <div class="hero-live-badge">
+                    <span class="live-pulse-dot"></span>
+                    <span>STAFF FIELD OPS</span>
+                </div>
+                <h5 class="fw-bold text-dark mb-0 d-flex align-items-center gap-2" style="font-size: 1.05rem;">
+                    <i class="bi bi-person-badge text-primary"></i>Field Staff & Technicians
+                </h5>
+                <span class="text-muted small d-none d-lg-inline ms-1" style="font-size: 0.76rem;">• Installation tasks, daily milestones, and project execution</span>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+                <a href="{% url 'installation_progress' %}" class="btn btn-outline-primary btn-sm rounded-pill px-3 py-1 fw-semibold shadow-xs" style="font-size: 0.78rem;">
+                    <i class="bi bi-gear-wide-connected me-1"></i>Installations
+                </a>
+                <a href="{% url 'assigned_tasks' %}" class="btn btn-primary btn-sm rounded-pill px-3 py-1 fw-semibold text-white shadow-xs" style="font-size: 0.78rem;">
+                    <i class="bi bi-list-task me-1"></i>My Tasks
+                </a>
             </div>
         </div>
-    </div>
 
-    <div class="col-md-6">
-        <div class="card p-3">
-            <h5>Project Progress Overview</h5>
-
-            <div style="height:300px;">
-                <canvas id="projectProgressChart"></canvas>
-            </div>
+        <!-- ================= KPI SECTION ================= -->
+        <div class="dashboard-section-bar">
+            <i class="bi bi-kanban text-primary"></i>Work Execution & Task Progress
         </div>
-    </div>
 
-</div>
-
-<!-- TASKS + PROJECTS -->
-<div class="row mt-4">
-
-    <!-- TASKS -->
-    <div class="col-lg-6">
-        <div class="card shadow-sm mb-4">
-            <div class="card-header fw-bold">
-                My Tasks
-            </div>
-
-            <div class="card-body">
-                {% for task in tasks %}
-                    <div class="mb-3 p-3 border rounded">
-                        <h6>{{ task.get_step_display }}({{ task.project.title }})</h6>
-
-                        <p class="mb-1">
-                            Due: {{ task.due_date }}
-                        </p>
-
-                        <p class="mb-1">
-                            Status: {{ task.get_status_display }}
-                        </p>
-
-                        {% if task.due_date and task.due_date < today %}
-                            <span class="badge bg-danger">Overdue</span>
-                        {% else %}
-                            <span class="badge bg-warning text-dark">
-                                {{ task.get_status_display }}
-                            </span>
-                        {% endif %}
-
-                        <button class="btn btn-sm btn-success mt-2">
-                            Mark as Completed
-                        </button>
+        <div class="row g-3 align-items-stretch mb-4">
+            <div class="col-12 col-sm-6 col-lg-3 d-flex">
+                <div class="white-premium-card w-100">
+                    <div class="card-top-bar bar-blue"></div>
+                    <div class="card-head-split">
+                        <div>
+                            <div class="card-label-sub">Total Tasks</div>
+                            <div class="card-value-hero text-primary">{{ total_tasks }}</div>
+                        </div>
+                        <div class="card-icon-pill icon-pill-blue">
+                            <i class="bi bi-list-task"></i>
+                        </div>
                     </div>
-                {% empty %}
-                    <p>No tasks assigned.</p>
-                {% endfor %}
+                    <div class="card-meta-pill pill-sub-blue">
+                        <i class="bi bi-check2-square me-1"></i>All Assigned
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-sm-6 col-lg-3 d-flex">
+                <div class="white-premium-card w-100">
+                    <div class="card-top-bar bar-emerald"></div>
+                    <div class="card-head-split">
+                        <div>
+                            <div class="card-label-sub">Completed Tasks</div>
+                            <div class="card-value-hero text-success">{{ completed_tasks }}</div>
+                        </div>
+                        <div class="card-icon-pill icon-pill-emerald">
+                            <i class="bi bi-check-circle-fill"></i>
+                        </div>
+                    </div>
+                    <div class="card-meta-pill pill-sub-emerald">
+                        <i class="bi bi-trophy me-1"></i>Done & Closed
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-sm-6 col-lg-3 d-flex">
+                <div class="white-premium-card w-100">
+                    <div class="card-top-bar bar-amber"></div>
+                    <div class="card-head-split">
+                        <div>
+                            <div class="card-label-sub">Pending Tasks</div>
+                            <div class="card-value-hero text-dark">{{ pending_tasks }}</div>
+                        </div>
+                        <div class="card-icon-pill icon-pill-amber">
+                            <i class="bi bi-hourglass-split"></i>
+                        </div>
+                    </div>
+                    <div class="card-meta-pill pill-sub-amber">
+                        <i class="bi bi-clock-history me-1"></i>In-Execution
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-sm-6 col-lg-3 d-flex">
+                <div class="white-premium-card w-100">
+                    <div class="card-top-bar bar-cyan"></div>
+                    <div class="card-head-split">
+                        <div>
+                            <div class="card-label-sub">Assigned Projects</div>
+                            <div class="card-value-hero text-primary">{{ assigned_projects }}</div>
+                        </div>
+                        <div class="card-icon-pill icon-pill-cyan">
+                            <i class="bi bi-kanban"></i>
+                        </div>
+                    </div>
+                    <div class="card-meta-pill pill-sub-cyan">
+                        <i class="bi bi-geo-alt me-1"></i>Field Sites
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
 
-    <!-- PROJECTS -->
-    <div class="col-lg-6">
-        <div class="card shadow-sm mb-4">
-            <div class="card-header fw-bold">
-                Assigned Projects
+        <!-- ================= CHARTS ================= -->
+        <div class="row g-4 mb-4">
+            <div class="col-md-6">
+                <div class="white-premium-panel h-100">
+                    <div class="panel-header-wrap">
+                        <h6 class="panel-heading">
+                            <i class="bi bi-pie-chart-fill text-primary"></i>Task Status Overview
+                        </h6>
+                    </div>
+                    <div style="height: 270px; position: relative;">
+                        <canvas id="taskStatusChart"></canvas>
+                    </div>
+                </div>
             </div>
 
-            <div class="card-body">
-                {% for project in projects %}
-                    <div class="mb-3">
-                        <strong>{{ project.title }}</strong>
+            <div class="col-md-6">
+                <div class="white-premium-panel h-100">
+                    <div class="panel-header-wrap">
+                        <h6 class="panel-heading">
+                            <i class="bi bi-bar-chart-fill text-success"></i>Project Progress Overview
+                        </h6>
+                    </div>
+                    <div style="height: 270px; position: relative;">
+                        <canvas id="projectProgressChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-                        <div class="progress mt-2">
-                            <div class="progress-bar bg-success"
+        <!-- ================= TASKS + PROJECTS ================= -->
+        <div class="row g-4 align-items-stretch mb-4">
+            <!-- TASKS -->
+            <div class="col-lg-6 d-flex">
+                <div class="white-premium-panel w-100">
+                    <div class="panel-header-wrap">
+                        <h6 class="panel-heading">
+                            <i class="bi bi-list-check text-primary"></i>My Assigned Tasks
+                        </h6>
+                        <span class="badge bg-primary rounded-pill">{{ tasks|length }}</span>
+                    </div>
+
+                    {% for task in tasks %}
+                    <div class="d-flex justify-content-between align-items-center p-3 mb-2 rounded" style="background: #ffffff; border: 1px solid #e2e8f0;">
+                        <div>
+                            <strong class="text-dark">{{ task.get_step_display }}</strong>
+                            <small class="text-muted d-block">{{ task.project.title }}</small>
+                            <small class="text-muted"><i class="bi bi-calendar-event me-1"></i>Due: {{ task.due_date|default:"No due date" }}</small>
+                        </div>
+                        <div class="text-end">
+                            {% if task.due_date and task.due_date < today %}
+                                <span class="badge bg-danger">Overdue</span>
+                            {% else %}
+                                <span class="badge 
+                                    {% if task.status == 'new' %}bg-primary
+                                    {% elif task.status == 'in_progress' %}bg-warning text-dark
+                                    {% elif task.status == 'completed' %}bg-success
+                                    {% else %}bg-secondary{% endif %}">
+                                    {{ task.get_status_display }}
+                                </span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="text-center py-5 text-muted">
+                        <i class="bi bi-check-circle fs-3 text-success d-block mb-1"></i>No tasks currently assigned
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- PROJECTS -->
+            <div class="col-lg-6 d-flex">
+                <div class="white-premium-panel w-100">
+                    <div class="panel-header-wrap">
+                        <h6 class="panel-heading">
+                            <i class="bi bi-buildings text-cyan"></i>Assigned Projects
+                        </h6>
+                        <span class="badge bg-primary rounded-pill">{{ projects|length }}</span>
+                    </div>
+
+                    {% for project in projects %}
+                    <div class="p-3 mb-2 rounded" style="background: #ffffff; border: 1px solid #e2e8f0;">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <strong class="text-dark">{{ project.title }}</strong>
+                            <span class="badge bg-light text-dark border">{{ project.progress_percent }}%</span>
+                        </div>
+                        <div class="progress" style="height: 7px; background-color: #f1f5f9; border-radius: 4px;">
+                            <div class="progress-bar bg-success rounded-pill"
                                  style="width: {{ project.progress_percent }}%">
-                                {{ project.progress_percent }}%
                             </div>
                         </div>
                     </div>
-                {% empty %}
-                    <p>No assigned projects.</p>
-                {% endfor %}
+                    {% empty %}
+                    <div class="text-center py-5 text-muted">
+                        <i class="bi bi-inbox fs-3 text-muted d-block mb-1"></i>No assigned projects
+                    </div>
+                    {% endfor %}
+                </div>
             </div>
         </div>
+
     </div>
-
-</div>
-
-
 </div>
 
 <!-- CHART JS -->
-
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
@@ -153,17 +227,26 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (ctx1) {
         new Chart(ctx1, {
-            type: 'pie',
+            type: 'doughnut',
             data: {
                 labels: ['Pending', 'Completed', 'Overdue'],
                 datasets: [{
                     data: [{{ pending_tasks }}, {{ completed_tasks }}, {{ overdue_tasks }}],
-                    backgroundColor: ['#ffc107','#198754','#dc3545']
+                    backgroundColor: ['#f59e0b','#10b981','#ef4444'],
+                    borderWidth: 2,
+                    borderColor: '#ffffff'
                 }]
             },
             options: {
                 responsive: true,
-                maintainAspectRatio: false
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: { boxWidth: 12, font: { weight: 600 } }
+                    }
+                },
+                cutout: '70%'
             }
         });
     }
@@ -172,55 +255,55 @@ document.addEventListener("DOMContentLoaded", function () {
     const ctx2 = document.getElementById('projectProgressChart');
 
     if (ctx2) {
-    new Chart(ctx2, {
-    type: 'bar',
-    data: {
-    labels: [{% for project in projects|slice:":8" %}'#{{ project.id }}',{% endfor %}],
-    datasets: [{
-    label: 'Progress (%)',
-    data: [{% for project in projects|slice:":8" %}{{ project.progress_percent }},{% endfor %}],
-    backgroundColor: '#0d6efd'
-    }]
-    },
-    options: {
-    responsive: true,
-    maintainAspectRatio: false,
-
-            plugins: {
-                legend: {
-                    display: false
-                },
-                tooltip: {
-                    callbacks: {
-                        title: function(context) {
-                            const titles = [
-                                {% for project in projects|slice:":8" %}
-                                    "{{ project.title }}",
-                                {% endfor %}
-                            ];
-                            return titles[context[0].dataIndex];
+        new Chart(ctx2, {
+            type: 'bar',
+            data: {
+                labels: [{% for project in projects|slice:":8" %}'#{{ project.id }}',{% endfor %}],
+                datasets: [{
+                    label: 'Progress (%)',
+                    data: [{% for project in projects|slice:":8" %}{{ project.progress_percent }},{% endfor %}],
+                    backgroundColor: '#2563eb',
+                    borderRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            title: function(context) {
+                                const titles = [
+                                    {% for project in projects|slice:":8" %}
+                                        "{{ project.title }}",
+                                    {% endfor %}
+                                ];
+                                return titles[context[0].dataIndex];
+                            }
                         }
                     }
-                }
-            },
-
-            scales: {
-                x: {
-                    ticks: {
-                        maxRotation: 0
-                    }
                 },
-                y: {
-                    beginAtZero: true,
-                    max: 100
+                scales: {
+                    x: {
+                        grid: { display: false },
+                        ticks: {
+                            maxRotation: 0,
+                            font: { size: 11 }
+                        }
+                    },
+                    y: {
+                        grid: { color: '#f1f5f9' },
+                        beginAtZero: true,
+                        max: 100,
+                        ticks: { font: { size: 11 } }
+                    }
                 }
             }
-        }
-    });
-
-
+        });
     }
-
 
 });
 </script>

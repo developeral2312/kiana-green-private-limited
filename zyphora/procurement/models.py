@@ -66,14 +66,33 @@ class Material(models.Model):
 class Vendor(models.Model):
 
     name = models.CharField(max_length=200)
-
+    contact_person = models.CharField(max_length=150, blank=True, null=True)
     phone = models.CharField(max_length=20)
-
     email = models.EmailField(blank=True, null=True)
+    gst_number = models.CharField(max_length=50, blank=True)
+    pan_number = models.CharField(max_length=20, blank=True, null=True)
+
+    # Business & Supply Details
+    category = models.CharField(
+        max_length=100, 
+        blank=True, 
+        null=True,
+        help_text="e.g. Solar Panels, Inverters, Structures, Cables, BOS"
+    )
+    payment_terms = models.CharField(
+        max_length=100, 
+        blank=True, 
+        null=True,
+        default="30 Days Credit",
+        help_text="e.g. 100% Advance, 15 Days Credit, 30 Days Credit"
+    )
+
+    # Bank Details for Payments
+    bank_name = models.CharField(max_length=150, blank=True, null=True)
+    bank_account_number = models.CharField(max_length=50, blank=True, null=True)
+    bank_ifsc = models.CharField(max_length=20, blank=True, null=True)
 
     address = models.TextField(blank=True)
-
-    gst_number = models.CharField(max_length=50, blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -356,35 +375,73 @@ class KitMaterial(models.Model):
     def __str__(self):
         return f"{self.quantity} x {self.material.name} for {self.kit.name}"
 
+
+
 # ===============================
-# PROCUREMENT INTELLIGENCE (RFQ)
+# FEATURE 13: PROCUREMENT INTELLIGENCE (RFQ)
 # ===============================
 class RequestForQuotation(models.Model):
     STATUS_CHOICES = (
         ('draft', 'Draft'),
-        ('published', 'Published'),
-        ('closed', 'Closed'),
+        ('published', 'Published / Open'),
+        ('evaluating', 'Evaluating Bids'),
+        ('closed', 'Closed (PO Awarded)'),
     )
-    title = models.CharField(max_length=255)
-    material = models.ForeignKey(Material, on_delete=models.CASCADE)
-    quantity_required = models.IntegerField()
-    deadline = models.DateField()
+    title = models.CharField(max_length=200)
+    project = models.ForeignKey('projects.Project', on_delete=models.CASCADE, null=True, blank=True)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='draft')
+    due_date = models.DateField()
     created_at = models.DateTimeField(auto_now_add=True)
+    created_by = models.ForeignKey('users.CustomUser', on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
-        return f"RFQ: {self.title}"
+        return f"RFQ-{self.id}: {self.title}"
+
+class RFQItem(models.Model):
+    rfq = models.ForeignKey(RequestForQuotation, on_delete=models.CASCADE, related_name='items')
+    material = models.ForeignKey(Material, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField()
+    target_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.material.name} x {self.quantity}"
 
 class VendorQuotation(models.Model):
-    rfq = models.ForeignKey(RequestForQuotation, on_delete=models.CASCADE, related_name="quotations")
-    vendor = models.ForeignKey(Vendor, on_delete=models.CASCADE)
-    quoted_price_per_unit = models.DecimalField(max_digits=10, decimal_places=2)
-    lead_time_days = models.IntegerField()
-    is_selected = models.BooleanField(default=False)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def total_price(self):
-        return self.quoted_price_per_unit * self.rfq.quantity_required
+    STATUS_CHOICES = (
+        ('submitted', 'Submitted'),
+        ('shortlisted', 'Shortlisted'),
+        ('rejected', 'Rejected'),
+        ('accepted', 'Accepted (L1)'),
+    )
+    rfq = models.ForeignKey(RequestForQuotation, on_delete=models.CASCADE, related_name='quotations')
+    vendor = models.ForeignKey(Vendor, on_delete=models.CASCADE, related_name='quotations')
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='submitted')
+    
+    total_amount = models.DecimalField(max_digits=12, decimal_places=2, default=0)
+    delivery_days = models.PositiveIntegerField(help_text="Expected delivery in days", default=7)
+    payment_terms = models.TextField(blank=True)
+    
+    is_l1 = models.BooleanField(default=False, help_text="System calculated Lowest Bidder")
+    submitted_at = models.DateTimeField(auto_now_add=True)
+    
+    def calculate_total(self):
+        total = sum([item.quantity * item.unit_price for item in self.items.all()])
+        self.total_amount = total
+        self.save()
 
     def __str__(self):
-        return f"{self.vendor.name} for {self.rfq.title}"
+        return f"Quote by {self.vendor.name} for RFQ-{self.rfq.id}"
+
+class QuotationItem(models.Model):
+    quotation = models.ForeignKey(VendorQuotation, on_delete=models.CASCADE, related_name='items')
+    rfq_item = models.ForeignKey(RFQItem, on_delete=models.CASCADE)
+    unit_price = models.DecimalField(max_digits=10, decimal_places=2)
+    
+    @property
+    def quantity(self):
+        return self.rfq_item.quantity
+        
+    @property
+    def subtotal(self):
+        return self.quantity * self.unit_price
+

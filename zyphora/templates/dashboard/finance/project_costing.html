@@ -1,0 +1,280 @@
+{% extends "dashboard/dashboard.html" %}
+{% load widget_tweaks %}
+{% block content %}
+<style>
+    .calculator-card {
+        border-radius: 15px;
+        border: none;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        background: #ffffff;
+        overflow: hidden;
+    }
+    .calculator-header {
+        background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+        padding: 25px 30px;
+        color: white;
+    }
+    .section-title {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #2a5298;
+        border-bottom: 2px solid #edf2f7;
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    .cost-input {
+        font-weight: 600;
+        color: #2d3748;
+        background-color: #f7fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+    }
+    .cost-input:focus {
+        border-color: #3182ce;
+        box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.1);
+        background-color: #ffffff;
+    }
+    .summary-card {
+        background: #f8f9fa;
+        border-radius: 12px;
+        padding: 20px;
+        border: 1px solid #e9ecef;
+    }
+    .summary-item {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 15px;
+        font-size: 1.1rem;
+    }
+    .summary-item.total {
+        font-size: 1.4rem;
+        font-weight: 800;
+        color: #1a202c;
+        border-top: 2px dashed #cbd5e0;
+        padding-top: 15px;
+        margin-top: 15px;
+    }
+    .profit-positive { color: #38a169; }
+    .profit-negative { color: #e53e3e; }
+    .field-label {
+        font-weight: 600;
+        color: #4a5568;
+        font-size: 0.95rem;
+    }
+</style>
+
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold mb-0 text-dark">Costing & Margin Calculator</h2>
+            <p class="text-muted">Calculate estimated costs and profit margin for <a href="{% url 'project_detail' project.id %}" class="fw-bold text-primary">{{ project.title }}</a></p>
+        </div>
+        <a href="{% url 'project_detail' project.id %}" class="btn btn-outline-secondary rounded-pill px-4">
+            <i class="fas fa-arrow-left me-2"></i> Back to Project
+        </a>
+    </div>
+
+    <form method="POST">
+        {% csrf_token %}
+        <div class="row">
+            <!-- COST INPUTS -->
+            <div class="col-lg-8 mb-4">
+                <div class="calculator-card h-100">
+                    <div class="calculator-header">
+                        <h4 class="mb-0"><i class="fas fa-calculator me-2"></i> Project Economics</h4>
+                        <p class="mb-0 opacity-75 small">Enter all estimated costs to generate the baseline pricing.</p>
+                    </div>
+                    <div class="card-body p-4">
+                        
+                        <!-- Material Costs -->
+                        <h5 class="section-title"><i class="fas fa-solar-panel me-2"></i> Material Costs (₹)</h5>
+                        <div class="row mb-4">
+                            <div class="col-md-4 mb-3">
+                                <label class="field-label">Solar Panels</label>
+                                {{ form.panels_cost }}
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="field-label">Inverter</label>
+                                {{ form.inverter_cost }}
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="field-label">Mounting Structure</label>
+                                {{ form.structure_cost }}
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="field-label">Balance of System (BOS)</label>
+                                {{ form.bos_cost }}
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="field-label">AC/DC Cables</label>
+                                {{ form.cable_cost }}
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="field-label">Earthing & Lightning</label>
+                                {{ form.earthing_lightning_cost }}
+                            </div>
+                        </div>
+
+                        <!-- Operational Costs -->
+                        <h5 class="section-title"><i class="fas fa-tools me-2"></i> Operational Costs (₹)</h5>
+                        <div class="row mb-4">
+                            <div class="col-md-4 mb-3">
+                                <label class="field-label">Labour Cost</label>
+                                {{ form.labour_cost }}
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="field-label">Logistics & Freight</label>
+                                {{ form.logistics_cost }}
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="field-label">Installation Overhead</label>
+                                {{ form.installation_overhead }}
+                            </div>
+                        </div>
+
+                        <!-- Taxes & Misc -->
+                        <h5 class="section-title"><i class="fas fa-percentage me-2"></i> Taxes & Contingency</h5>
+                        <div class="row mb-4">
+                            <div class="col-md-4 mb-3">
+                                <label class="field-label">Blended GST (%)</label>
+                                {{ form.gst_percentage }}
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="field-label">Sales Commission (₹)</label>
+                                {{ form.commission_cost }}
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="field-label">Contingency Fund (₹)</label>
+                                {{ form.contingency_cost }}
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- SUMMARY PANEL -->
+            <div class="col-lg-4 mb-4">
+                <div class="calculator-card h-100" style="background: linear-gradient(to bottom, #ffffff, #f8f9fa);">
+                    <div class="card-body p-4 d-flex flex-column">
+                        <h4 class="fw-bold mb-4 text-dark"><i class="fas fa-chart-pie text-primary me-2"></i> Summary & Margin</h4>
+                        
+                        <div class="mb-4">
+                            <label class="field-label text-primary">Target Selling Price (₹)</label>
+                            {{ form.selling_price }}
+                            <small class="text-muted d-block mt-1">Enter proposed selling price to client.</small>
+                        </div>
+
+                        <div class="summary-card mt-auto">
+                            <div class="summary-item text-muted">
+                                <span>Base Cost</span>
+                                <span id="calc-base-cost">₹0.00</span>
+                            </div>
+                            <div class="summary-item text-muted">
+                                <span>GST Amount</span>
+                                <span id="calc-gst-amount">₹0.00</span>
+                            </div>
+                            <div class="summary-item total">
+                                <span>Total Cost</span>
+                                <span id="calc-total-cost">₹0.00</span>
+                            </div>
+                            <div class="summary-item mt-4">
+                                <span class="fw-bold">Gross Margin</span>
+                                <span id="calc-gross-margin" class="fw-bold">₹0.00</span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="fw-bold">Margin %</span>
+                                <span id="calc-margin-perc" class="fw-bold">0.00%</span>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-lg w-100 mt-4 rounded-pill fw-bold shadow-sm">
+                            <i class="fas fa-save me-2"></i> Save Costing
+                        </button>
+
+                        {% if costing.updated_at %}
+                        <div class="text-center mt-3 text-muted small">
+                            Last updated on {{ costing.updated_at|date:"d M, H:i" }} by {{ costing.updated_by.username|title }}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const inputs = document.querySelectorAll('.cost-input');
+        
+        function parseValue(id) {
+            let val = document.getElementById(id).value;
+            return parseFloat(val) || 0;
+        }
+        
+        function formatMoney(amount) {
+            return '₹' + amount.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        }
+        
+        function calculateLive() {
+            // Material
+            let panels = parseValue('id_panels_cost');
+            let inv = parseValue('id_inverter_cost');
+            let struct = parseValue('id_structure_cost');
+            let bos = parseValue('id_bos_cost');
+            let cable = parseValue('id_cable_cost');
+            let earth = parseValue('id_earthing_lightning_cost');
+            
+            // Operational
+            let lab = parseValue('id_labour_cost');
+            let log = parseValue('id_logistics_cost');
+            let inst = parseValue('id_installation_overhead');
+            
+            // Other
+            let comm = parseValue('id_commission_cost');
+            let cont = parseValue('id_contingency_cost');
+            let gst_perc = parseValue('id_gst_percentage');
+            let sell = parseValue('id_selling_price');
+            
+            let base_cost = panels + inv + struct + bos + cable + earth + lab + log + inst + comm + cont;
+            let gst_amt = base_cost * (gst_perc / 100);
+            let total_cost = base_cost + gst_amt;
+            
+            let margin = sell - total_cost;
+            let margin_perc = sell > 0 ? (margin / sell) * 100 : 0;
+            
+            document.getElementById('calc-base-cost').textContent = formatMoney(base_cost);
+            document.getElementById('calc-gst-amount').textContent = formatMoney(gst_amt);
+            document.getElementById('calc-total-cost').textContent = formatMoney(total_cost);
+            
+            let marginEl = document.getElementById('calc-gross-margin');
+            let percEl = document.getElementById('calc-margin-perc');
+            
+            marginEl.textContent = formatMoney(margin);
+            percEl.textContent = margin_perc.toFixed(2) + '%';
+            
+            if (margin > 0) {
+                marginEl.className = 'fw-bold profit-positive';
+                percEl.className = 'fw-bold profit-positive';
+            } else if (margin < 0) {
+                marginEl.className = 'fw-bold profit-negative';
+                percEl.className = 'fw-bold profit-negative';
+            } else {
+                marginEl.className = 'fw-bold';
+                percEl.className = 'fw-bold';
+            }
+        }
+        
+        inputs.forEach(input => {
+            input.addEventListener('input', calculateLive);
+        });
+        
+        // Initial calc
+        calculateLive();
+    });
+</script>
+
+{% endblock %}

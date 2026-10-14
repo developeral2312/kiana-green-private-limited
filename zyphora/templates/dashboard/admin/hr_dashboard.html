@@ -1,0 +1,270 @@
+{% extends 'dashboard/dashboard.html' %}
+
+{% block content %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb mb-0">
+    <li class="breadcrumb-item"><a href="{% url 'admin' %}">Dashboard</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'emplist' %}">Employees</a></li>
+    <li class="breadcrumb-item active">HR & Attendance</li>
+  </ol>
+</nav>
+
+<div class="container mt-4">
+    <!-- Header -->
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+        <div>
+            <h4 class="page-title fw-bold text-primary mb-1">
+                <i class="bi bi-people-fill"></i> HR & Staff Management
+            </h4>
+            <p class="text-muted mb-0">Track employee attendance, approve leaves, and monitor performance KPIs.</p>
+        </div>
+        <div class="d-flex gap-2">
+            <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#markAttendanceModal">
+                <i class="bi bi-clock-history"></i> Mark My Attendance
+            </button>
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#applyLeaveModal">
+                <i class="bi bi-calendar-plus"></i> Apply for Leave
+            </button>
+        </div>
+    </div>
+
+    <!-- Stats Row -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 bg-white border-start border-primary border-4 h-100">
+                <div class="card-body">
+                    <h6 class="text-muted fw-bold mb-1">Total Employees</h6>
+                    <h2 class="mb-0 text-primary">{{ total_employees }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 bg-white border-start border-success border-4 h-100">
+                <div class="card-body">
+                    <h6 class="text-muted fw-bold mb-1">Present Today</h6>
+                    <h2 class="mb-0 text-success">{{ present_today }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 bg-white border-start border-warning border-4 h-100">
+                <div class="card-body">
+                    <h6 class="text-muted fw-bold mb-1">On Leave Today</h6>
+                    <h2 class="mb-0 text-warning">{{ on_leave }}</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Leave Requests Table (For Admin/HR) -->
+        <div class="col-lg-8 mb-4">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-header bg-white border-bottom-0 pt-4 pb-0">
+                    <h5 class="fw-bold text-dark mb-0">Recent Leave Requests</h5>
+                </div>
+                <div class="card-body p-0 mt-3">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th class="ps-4">Employee</th>
+                                    <th>Type</th>
+                                    <th>Dates</th>
+                                    <th>Days</th>
+                                    <th>Status</th>
+                                    {% if request.user.role == 'admin' or request.user.role == 'staff' %}
+                                    <th class="text-center pe-4">Action</th>
+                                    {% endif %}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for leave in leave_requests %}
+                                <tr>
+                                    <td class="ps-4">
+                                        <span class="fw-bold d-block">{{ leave.employee.name }}</span>
+                                        <small class="text-muted">{{ leave.employee.designation }}</small>
+                                    </td>
+                                    <td><span class="badge bg-secondary">{{ leave.get_leave_type_display }}</span></td>
+                                    <td>
+                                        <span class="d-block small">{{ leave.start_date|date:"M d" }} - {{ leave.end_date|date:"M d, Y" }}</span>
+                                    </td>
+                                    <td class="fw-bold">{{ leave.total_days }}</td>
+                                    <td>
+                                        {% if leave.status == 'pending' %}
+                                            <span class="badge bg-warning text-dark">Pending</span>
+                                        {% elif leave.status == 'approved' %}
+                                            <span class="badge bg-success">Approved</span>
+                                        {% else %}
+                                            <span class="badge bg-danger">Rejected</span>
+                                        {% endif %}
+                                    </td>
+                                    
+                                    {% if request.user.role == 'admin' or request.user.role == 'staff' %}
+                                    <td class="text-center pe-4">
+                                        {% if leave.status == 'pending' %}
+                                        <form method="POST" action="{% url 'approve_leave' leave.id %}" class="d-flex justify-content-center gap-1">
+                                            {% csrf_token %}
+                                            <button type="submit" name="action" value="approve" class="btn btn-sm btn-success" title="Approve"><i class="bi bi-check-lg"></i></button>
+                                            <button type="submit" name="action" value="reject" class="btn btn-sm btn-danger" title="Reject"><i class="bi bi-x-lg"></i></button>
+                                        </form>
+                                        {% else %}
+                                        <span class="text-muted small">Done</span>
+                                        {% endif %}
+                                    </td>
+                                    {% endif %}
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="6" class="text-center py-4 text-muted">No pending leave requests.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- My Info -->
+        <div class="col-lg-4 mb-4">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-header bg-white border-bottom-0 pt-4 pb-0">
+                    <h5 class="fw-bold text-dark mb-0">My Recent Attendance</h5>
+                </div>
+                <div class="card-body">
+                    {% if my_attendance %}
+                        <ul class="list-group list-group-flush">
+                        {% for att in my_attendance %}
+                            <li class="list-group-item px-0 d-flex justify-content-between align-items-center">
+                                <div>
+                                    <span class="fw-bold d-block">{{ att.date|date:"M d, Y" }}</span>
+                                    <small class="text-muted">
+                                        In: {{ att.sign_in|time:"H:i"|default:"-" }} | Out: {{ att.sign_out|time:"H:i"|default:"-" }}
+                                    </small>
+                                </div>
+                                {% if att.status == 'present' %}
+                                <span class="badge bg-success">Present</span>
+                                {% elif att.status == 'half_day' %}
+                                <span class="badge bg-warning text-dark">Half Day</span>
+                                {% else %}
+                                <span class="badge bg-secondary">{{ att.get_status_display }}</span>
+                                {% endif %}
+                            </li>
+                        {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p class="text-muted text-center py-3">No recent attendance records found.</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- My KPIs -->
+            <div class="card shadow-sm border-0 mt-4 h-100">
+                <div class="card-header bg-white border-bottom-0 pt-4 pb-0">
+                    <h5 class="fw-bold text-dark mb-0">My Performance KPIs</h5>
+                </div>
+                <div class="card-body">
+                    {% if my_kpis %}
+                        <div class="d-flex flex-column gap-3">
+                        {% for kpi in my_kpis %}
+                            <div class="border rounded p-3">
+                                <h6 class="fw-bold text-primary">{{ kpi.month|date:"F Y" }}</h6>
+                                <div class="d-flex justify-content-between mb-1 small">
+                                    <span class="text-muted">Target Sales</span>
+                                    <span class="fw-bold">₹{{ kpi.target_sales }}</span>
+                                </div>
+                                <div class="d-flex justify-content-between mb-1 small">
+                                    <span class="text-muted">Achieved Sales</span>
+                                    <span class="fw-bold text-success">₹{{ kpi.achieved_sales }}</span>
+                                </div>
+                                <div class="d-flex justify-content-between mb-1 small">
+                                    <span class="text-muted">Leads Converted</span>
+                                    <span class="fw-bold">{{ kpi.leads_converted }} / {{ kpi.leads_assigned }}</span>
+                                </div>
+                                <div class="progress mt-2" style="height: 6px;">
+                                    {% widthratio kpi.achieved_sales kpi.target_sales 100 as p %}
+                                    <div class="progress-bar bg-success" role="progressbar" style="width: {% if p > '100' %}100{% else %}{{ p }}{% endif %}%;"></div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="text-muted text-center py-3">No KPI records generated yet.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Mark Attendance Modal -->
+<div class="modal fade" id="markAttendanceModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content border-0 shadow">
+      <form action="{% url 'mark_attendance' %}" method="POST">
+        {% csrf_token %}
+        <div class="modal-header bg-light border-0">
+          <h5 class="modal-title fw-bold text-primary"><i class="bi bi-clock-history"></i> Mark Attendance</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body text-center py-4">
+            <p class="text-muted mb-4">Mark your attendance for today ({{ today|date:"M d, Y" }})</p>
+            <div class="d-grid gap-3">
+                <button type="submit" name="action" value="sign_in" class="btn btn-success btn-lg fw-bold shadow-sm">
+                    <i class="bi bi-box-arrow-in-right"></i> Sign In
+                </button>
+                <button type="submit" name="action" value="sign_out" class="btn btn-outline-danger btn-lg fw-bold shadow-sm">
+                    <i class="bi bi-box-arrow-left"></i> Sign Out
+                </button>
+            </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Apply Leave Modal -->
+<div class="modal fade" id="applyLeaveModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content border-0 shadow">
+      <form action="{% url 'apply_leave' %}" method="POST">
+        {% csrf_token %}
+        <div class="modal-header bg-light border-0">
+          <h5 class="modal-title fw-bold text-primary"><i class="bi bi-calendar-plus"></i> Apply for Leave</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="mb-3">
+                <label class="form-label fw-bold text-muted small">Leave Type</label>
+                <select name="leave_type" class="form-select bg-light" required>
+                    <option value="sick">Sick Leave</option>
+                    <option value="casual">Casual Leave</option>
+                    <option value="earned">Earned Leave</option>
+                    <option value="unpaid">Unpaid Leave</option>
+                </select>
+            </div>
+            <div class="row mb-3">
+                <div class="col-6">
+                    <label class="form-label fw-bold text-muted small">Start Date</label>
+                    <input type="date" name="start_date" class="form-control bg-light" required>
+                </div>
+                <div class="col-6">
+                    <label class="form-label fw-bold text-muted small">End Date</label>
+                    <input type="date" name="end_date" class="form-control bg-light" required>
+                </div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label fw-bold text-muted small">Reason</label>
+                <textarea name="reason" class="form-control bg-light" rows="3" required placeholder="Please explain..."></textarea>
+            </div>
+        </div>
+        <div class="modal-footer bg-light border-0">
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-primary fw-bold">Submit Request</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

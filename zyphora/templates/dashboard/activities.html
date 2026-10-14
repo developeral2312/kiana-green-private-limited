@@ -1,53 +1,81 @@
 {% extends 'dashboard/dashboard.html' %}
 {% load static %}
-{% block link %}
-<link rel="stylesheet" href="{% static 'css/dashboard/activities.css' %}">
-{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
 
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb mb-0">
-            <li class="breadcrumb-item">
-                <a href="{% url request.user.role %}">{{request.user.role|title}} Dashboard</a>
-            </li>
-            <li class="breadcrumb-item">
-                <a href="{% url 'project_list' %}">Projects</a>
-            </li>
-            <li class="breadcrumb-item active">
-                {{ project.title }} Timeline
-            </li>
-        </ol>
-    </nav>
+<!-- Breadcrumbs -->
+<nav aria-label="breadcrumb" class="mb-3">
+    <ol class="breadcrumb mb-0">
+        <li class="breadcrumb-item">
+            <a href="{% url request.user.role %}">{{ request.user.role|title }} Dashboard</a>
+        </li>
+        <li class="breadcrumb-item">
+            <a href="{% url 'project_list' %}">Projects</a>
+        </li>
+        <li class="breadcrumb-item active">
+            {{ project.title }} Timeline
+        </li>
+    </ol>
+</nav>
 
-    <h3 class="mt-3">{{ project.title }} Timeline</h3>
-
-    <div class="timeline">
-
-            {% for activity in activities %}
-            <div class="timeline-item">
-                <div class="timeline-dot"></div>
-                <div class="timeline-content">
-                    <div class="timeline-header">
-                        <strong>{{ activity.title }}</strong>
-                        <small class="text-muted float-end">
-                            {{ activity.created_at|date:"M d Y H:i" }}
-                            {% if activity.created_by %}
-                                by {{ activity.created_by.username }}
-                            {% endif %}
-                        </small>
-                    </div>
-                    <p class="mb-0 text-muted">{{ activity.description }}</p>
-                </div>
+<!-- Executive Hero Card -->
+<div class="executive-hero-card mb-4">
+    <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+        <div class="d-flex align-items-center gap-3">
+            <div class="hero-icon-box">
+                <i class="bi bi-clock-history"></i>
             </div>
-            {% empty %}
-            <p class="text-muted">No activity yet.</p>
-            {% endfor %}
-
+            <div>
+                <div class="d-flex align-items-center gap-2">
+                    <h3 class="hero-heading mb-0">{{ project.title }} Timeline</h3>
+                    <span class="hero-count-badge">{{ activities|length }} Events</span>
+                </div>
+                <p class="hero-subtext mb-0">Full audit log of engineering actions, status transitions & project milestones</p>
+            </div>
         </div>
 
-    <a href="{% url 'project_list' %}" class="btn btn-secondary mt-3">Back to All Projects</a>
-
+        <a href="{% url 'project_list' %}" class="btn btn-outline-primary px-3 py-2" style="border-radius: 10px; font-weight: 600;">
+            <i class="bi bi-arrow-left me-1"></i> Back to Projects
+        </a>
+    </div>
 </div>
+
+<!-- Timeline Card -->
+<div class="card shadow-sm border-0 mb-4 p-4">
+    {% if activities %}
+    <div class="position-relative ps-4" style="border-left: 2px solid #e2e8f0; margin-left: 12px;">
+        {% for activity in activities %}
+        <div class="position-relative mb-4 pb-2">
+            <!-- Timeline Pin -->
+            <div class="position-absolute rounded-circle bg-primary"
+                 style="width: 14px; height: 14px; left: -24px; top: 4px; border: 3px solid #ffffff; box-shadow: 0 0 0 2px #bfdbfe;">
+            </div>
+
+            <!-- Content Card -->
+            <div class="card shadow-sm border-0 p-3 bg-white" style="border-radius: 12px; border: 1px solid #f1f5f9 !important;">
+                <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-1">
+                    <h6 class="fw-bold text-dark mb-0">{{ activity.title }}</h6>
+                    <span class="badge bg-light text-secondary border small">
+                        <i class="bi bi-clock me-1"></i>{{ activity.created_at|date:"M d, Y • H:i" }}
+                        {% if activity.created_by %}
+                            by {{ activity.created_by.username }}
+                        {% endif %}
+                    </span>
+                </div>
+                <p class="text-secondary small mb-0">{{ activity.description }}</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-5">
+        <div class="hero-icon-box mx-auto mb-3" style="width: 56px; height: 56px; font-size: 1.6rem;">
+            <i class="bi bi-clock-history"></i>
+        </div>
+        <h6 class="fw-bold text-dark mt-2">No Activities Logged</h6>
+        <p class="text-muted small mb-0">Activities and updates for this project will appear here.</p>
+    </div>
+    {% endif %}
+</div>
+
 {% endblock %}

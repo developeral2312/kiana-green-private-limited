@@ -1,0 +1,30 @@
+/* ================= MAIN CONTENT FIX ================= */
+.main-content {
+    overflow-x: hidden;
+}
+
+
+
+/* ================= CHART CARD ================= */
+.card.shadow-sm {
+    padding: 20px;
+    border-radius: 14px;
+}
+
+/* ================= RESPONSIVE SAFETY ================= */
+.row {
+    flex-wrap: wrap;
+}
+
+[class*="col-"] {
+    max-width: 100%;
+}
+
+
+
+.card canvas {
+    width: 100% !important;
+    /* responsive width */
+    height: 300px !important;
+    /* fixed height */
+}

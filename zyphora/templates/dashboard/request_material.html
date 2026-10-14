@@ -5,7 +5,7 @@
 <nav aria-label="breadcrumb" class="mb-3">
   <ol class="breadcrumb">
     <li class="breadcrumb-item">
-        <a href="{% url request.user.role %}">{{ request.user.role|title }} Dashboard</a>
+        <a href="{% url 'dashboard' %}">{{ request.user.role|title }} Dashboard</a>
     </li>
     <li class="breadcrumb-item active">Inventory</li>
     <li class="breadcrumb-item active">Request Materials</li>
@@ -53,8 +53,13 @@
                             </td>
 
                             <td>
-                                {{ form.material }}
-                                <small class="text-danger">{{ form.material.errors }}</small>
+                                {{ form.material_name }}
+                                <datalist id="warehouse-materials-list">
+                                    {% for m in all_materials %}
+                                    <option value="{{ m.name }}">{{ m.name }} (Stock: {{ m.stock.quantity|default:0 }} {{ m.unit|default:'Units' }})</option>
+                                    {% endfor %}
+                                </datalist>
+                                <small class="text-danger">{{ form.material_name.errors }}</small>
                             </td>
 
                             <td>

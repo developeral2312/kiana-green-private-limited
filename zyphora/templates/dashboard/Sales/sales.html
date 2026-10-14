@@ -2,173 +2,235 @@
 {% load static %}
 
 {% block link %}
-<link rel="stylesheet" href="{% static 'css/dashboard/sales/sales.css' %}">
+<link rel="stylesheet" href="{% static 'css/dashboard/admin/admin.css' %}?v=2">
+<link rel="stylesheet" href="{% static 'css/dashboard/sales/sales.css' %}?v=2">
 {% endblock %}
 
 {% block content %}
 
-<div class="main-content">
-<div class="container-fluid">
+<div class="admin-dashboard-container">
+    <div class="container-fluid px-0">
 
-<!-- ================= KPI CARDS ================= -->
-
-<div class="row g-4 align-items-stretch">
-
-<div class="col-12 col-sm-6 col-lg-3 d-flex">
-    <div class="kpi-card leads w-100 text-center">
-        <div class="kpi-icon"><i class="bi bi-person-lines-fill"></i></div>
-        <div class="kpi-value">{{ total_leads|default:0 }}</div>
-        <div class="kpi-label">Total Leads</div>
-    </div>
-</div>
-
-<div class="col-12 col-sm-6 col-lg-3 d-flex">
-    <div class="kpi-card open w-100 text-center">
-        <div class="kpi-icon"><i class="bi bi-exclamation-circle-fill"></i></div>
-        <div class="kpi-value">{{ open_leads|default:0 }}</div>
-        <div class="kpi-label">Open Leads</div>
-    </div>
-</div>
-
-<div class="col-12 col-sm-6 col-lg-3 d-flex">
-    <div class="kpi-card closed w-100 text-center">
-        <div class="kpi-icon"><i class="bi bi-check-circle-fill"></i></div>
-        <div class="kpi-value">{{ closed_deals|default:0 }}</div>
-        <div class="kpi-label">Deals Closed</div>
-    </div>
-</div>
-
-<div class="col-12 col-sm-6 col-lg-3 d-flex">
-    <div class="kpi-card revenue w-100 text-center">
-        <div class="kpi-icon"><i class="bi bi-graph-up"></i></div>
-        <div class="kpi-value">{{ conversion_rate|default:0 }}%</div>
-        <div class="kpi-label">Conversion</div>
-    </div>
-</div>
-
-</div>
-
-
-<!-- ================= CHART + RECENT ================= -->
-
-<div class="row mt-4 g-4 align-items-stretch">
-
-<!-- Lead Funnel -->
-<div class="col-lg-6 d-flex">
-    <div class="dashboard-card w-100">
-        <h6 class="mb-3">Lead Funnel</h6>
-
-        <div class="chart-container">
-            <canvas id="leadFunnelChart"></canvas>
-            <div class="empty-state" id="funnelEmpty">No funnel data available</div>
-        </div>
-    </div>
-</div>
-
-<!-- Recent Leads -->
-<div class="col-lg-6 d-flex">
-    <div class="dashboard-card w-100">
-        <h6 class="mb-3">Recent Leads</h6>
-
-        <ul class="list-group custom-list">
-            {% for lead in recent_leads %}
-            <li class="list-item d-flex justify-content-between align-items-center">
-                <div>
-                    <strong>{{ lead.name }}</strong><br>
-                    <small class="text-muted">{{ lead.get_status_display }}</small>
+        <!-- ================= TOP EXECUTIVE WELCOME BANNER (SLIM) ================= -->
+        <div class="executive-hero-banner">
+            <div class="d-flex align-items-center flex-wrap gap-2">
+                <div class="hero-live-badge">
+                    <span class="live-pulse-dot"></span>
+                    <span>SALES & CRM</span>
                 </div>
-                <span class="badge bg-primary">{{ lead.score }}</span>
-            </li>
-            {% empty %}
-            <div class="empty-list">No recent leads</div>
-            {% endfor %}
-        </ul>
+                <h5 class="fw-bold text-dark mb-0 d-flex align-items-center gap-2" style="font-size: 1.05rem;">
+                    <i class="bi bi-graph-up-arrow text-primary"></i>Sales & Pipeline Intelligence
+                </h5>
+                <span class="text-muted small d-none d-lg-inline ms-1" style="font-size: 0.76rem;">• Customer lead conversions, sales follow-ups & deal pipelines</span>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+                <a href="{% url 'add_lead' %}" class="btn btn-outline-primary btn-sm rounded-pill px-3 py-1 fw-semibold shadow-xs" style="font-size: 0.78rem;">
+                    <i class="bi bi-person-plus me-1"></i>New Lead
+                </a>
+                <a href="{% url 'followup_list' %}" class="btn btn-primary btn-sm rounded-pill px-3 py-1 fw-semibold text-white shadow-xs" style="font-size: 0.78rem;">
+                    <i class="bi bi-calendar-check me-1"></i>Follow-Ups
+                </a>
+            </div>
+        </div>
+
+        <!-- ================= KPI CARDS ================= -->
+        <div class="dashboard-section-bar">
+            <i class="bi bi-funnel text-primary"></i>Lead Generation & Conversions
+        </div>
+        <div class="row g-3 mb-4">
+            <div class="col-12 col-sm-6 col-xl-3">
+                <div class="white-premium-card">
+                    <div class="card-top-bar bar-blue"></div>
+                    <div class="card-head-split">
+                        <div>
+                            <div class="card-label-sub">Total Leads</div>
+                            <div class="card-value-hero text-primary">{{ total_leads|default:0 }}</div>
+                        </div>
+                        <div class="card-icon-pill icon-pill-blue">
+                            <i class="bi bi-people-fill"></i>
+                        </div>
+                    </div>
+                    <div class="card-meta-pill pill-sub-blue">
+                        <i class="bi bi-inbox me-1"></i>All Inquiries
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-sm-6 col-xl-3">
+                <div class="white-premium-card">
+                    <div class="card-top-bar bar-amber"></div>
+                    <div class="card-head-split">
+                        <div>
+                            <div class="card-label-sub">Open Leads</div>
+                            <div class="card-value-hero text-dark">{{ open_leads|default:0 }}</div>
+                        </div>
+                        <div class="card-icon-pill icon-pill-amber">
+                            <i class="bi bi-hourglass-split"></i>
+                        </div>
+                    </div>
+                    <div class="card-meta-pill pill-sub-amber">
+                        <i class="bi bi-funnel me-1"></i>Pipeline In-Progress
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-sm-6 col-xl-3">
+                <div class="white-premium-card">
+                    <div class="card-top-bar bar-emerald"></div>
+                    <div class="card-head-split">
+                        <div>
+                            <div class="card-label-sub">Deals Closed</div>
+                            <div class="card-value-hero text-success">{{ closed_deals|default:0 }}</div>
+                        </div>
+                        <div class="card-icon-pill icon-pill-emerald">
+                            <i class="bi bi-check-circle-fill"></i>
+                        </div>
+                    </div>
+                    <div class="card-meta-pill pill-sub-emerald">
+                        <i class="bi bi-trophy me-1"></i>Won Deals
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-sm-6 col-xl-3">
+                <div class="white-premium-card">
+                    <div class="card-top-bar bar-cyan"></div>
+                    <div class="card-head-split">
+                        <div>
+                            <div class="card-label-sub">Conversion Rate</div>
+                            <div class="card-value-hero text-cyan">{{ conversion_rate|default:0 }}%</div>
+                        </div>
+                        <div class="card-icon-pill icon-pill-cyan">
+                            <i class="bi bi-graph-up-arrow"></i>
+                        </div>
+                    </div>
+                    <div class="card-meta-pill pill-sub-cyan">
+                        <i class="bi bi-percent me-1"></i>Win Ratio
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= CHART + RECENT ================= -->
+        <div class="row g-4 mb-4 align-items-stretch">
+            <!-- Lead Funnel -->
+            <div class="col-lg-6 d-flex">
+                <div class="white-premium-panel w-100">
+                    <div class="panel-header-wrap">
+                        <h6 class="panel-heading">
+                            <i class="bi bi-bar-chart-fill text-primary"></i>Lead Funnel Stage Breakdown
+                        </h6>
+                    </div>
+                    <div class="chart-container" style="position: relative; height: 260px;">
+                        <canvas id="leadFunnelChart"></canvas>
+                        <div class="empty-state text-center text-muted py-5" id="funnelEmpty">
+                            <i class="bi bi-inbox fs-3 d-block mb-1"></i>No funnel data available
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Leads -->
+            <div class="col-lg-6 d-flex">
+                <div class="white-premium-panel w-100">
+                    <div class="panel-header-wrap">
+                        <h6 class="panel-heading">
+                            <i class="bi bi-clock-history text-success"></i>Recent Leads Activity
+                        </h6>
+                        <a href="{% url 'lead_list' %}" class="small text-decoration-none fw-semibold">View All</a>
+                    </div>
+
+                    {% for lead in recent_leads %}
+                    <div class="d-flex justify-content-between align-items-center p-3 mb-2 bg-light rounded" style="border: 1px solid #f1f5f9;">
+                        <div class="d-flex align-items-center gap-2">
+                            <div class="hero-icon-box" style="width: 34px; height: 34px; font-size: 0.95rem; border-radius: 8px;">
+                                <i class="bi bi-person"></i>
+                            </div>
+                            <div>
+                                <strong class="text-dark">{{ lead.name }}</strong><br>
+                                <small class="text-muted">{{ lead.get_status_display }}</small>
+                            </div>
+                        </div>
+                        <span class="badge bg-primary">{{ lead.score }}</span>
+                    </div>
+                    {% empty %}
+                    <div class="text-center py-5 text-muted">
+                        <i class="bi bi-people fs-3 text-muted d-block mb-1"></i>No recent leads logged
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= LIST SECTIONS ================= -->
+        <div class="row g-4 align-items-stretch">
+            <!-- Top Leads -->
+            <div class="col-lg-6 d-flex">
+                <div class="white-premium-panel w-100">
+                    <div class="panel-header-wrap">
+                        <h6 class="panel-heading">
+                            <i class="bi bi-star-fill text-warning"></i>High Potential Leads
+                        </h6>
+                    </div>
+
+                    {% for lead in top_leads %}
+                    <div class="d-flex justify-content-between align-items-center p-3 mb-2 bg-light rounded" style="border: 1px solid #f1f5f9;">
+                        <span class="fw-semibold text-dark">{{ lead.name }}</span>
+                        <span class="badge bg-success">Score: {{ lead.score }}</span>
+                    </div>
+                    {% empty %}
+                    <div class="text-center py-5 text-muted">
+                        <i class="bi bi-star fs-3 text-muted d-block mb-1"></i>No prioritized leads available
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Drop-off -->
+            <div class="col-lg-6 d-flex">
+                <div class="white-premium-panel w-100">
+                    <div class="panel-header-wrap">
+                        <h6 class="panel-heading">
+                            <i class="bi bi-graph-down text-danger"></i>Pipeline Drop-Off Breakdown
+                        </h6>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center p-3 mb-3 bg-light rounded" style="border: 1px solid #f1f5f9;">
+                        <span class="fw-semibold text-dark"><i class="bi bi-telephone-x me-2 text-danger"></i>After Initial Contact</span>
+                        <span class="badge bg-danger fs-6">{{ drop_contact|default:0 }}</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center p-3 mb-3 bg-light rounded" style="border: 1px solid #f1f5f9;">
+                        <span class="fw-semibold text-dark"><i class="bi bi-geo-alt me-2 text-warning"></i>After Site Inspection</span>
+                        <span class="badge bg-warning text-dark fs-6">{{ drop_visit|default:0 }}</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center p-3 bg-light rounded" style="border: 1px solid #f1f5f9;">
+                        <span class="fw-semibold text-dark"><i class="bi bi-x-circle me-2 text-secondary"></i>Before Final Agreement</span>
+                        <span class="badge bg-secondary fs-6">{{ drop_conversion|default:0 }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
 
     </div>
 </div>
-
-</div>
-
-
-<!-- ================= LIST SECTIONS ================= -->
-
-<div class="row mt-4 g-4 align-items-stretch">
-
-<!-- Top Leads -->
-<div class="col-lg-6 d-flex">
-    <div class="dashboard-card w-100">
-        <h6 class="mb-3">Top Leads</h6>
-
-        <ul class="list-group custom-list">
-            {% for lead in top_leads %}
-            <li class="list-item d-flex justify-content-between align-items-center">
-                {{ lead.name }}
-                <span class="badge bg-primary">{{ lead.score }}</span>
-            </li>
-            {% empty %}
-            <div class="empty-list">No leads available</div>
-            {% endfor %}
-        </ul>
-
-    </div>
-</div>
-
-
-<!-- Drop-off -->
-<div class="col-lg-6 d-flex">
-    <div class="dashboard-card w-100">
-        <h6 class="mb-3">Drop-off Analysis</h6>
-
-        <div class="drop-item">
-            <span>After Contact</span>
-            <span class="badge bg-danger">{{ drop_contact|default:0 }}</span>
-        </div>
-
-        <div class="drop-item">
-            <span>After Site Visit</span>
-            <span class="badge bg-warning text-dark">{{ drop_visit|default:0 }}</span>
-        </div>
-
-        <div class="drop-item">
-            <span>Before Conversion</span>
-            <span class="badge bg-secondary">{{ drop_conversion|default:0 }}</span>
-        </div>
-
-    </div>
-</div>
-
-</div>
-
-</div>
-</div>
-
-
-<!-- ================= CHART JS ================= -->
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
 <script>
-
 let charts = {};
 
 function renderCharts(){
-
-    const isDark = document.documentElement.getAttribute("data-bs-theme") === "dark";
-
-    const textColor = isDark ? "#e5e7eb" : "#212529";
-    const gridColor = isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.08)";
-
     const funnelData = JSON.parse('{{ funnel_data|safe }}');
 
     Object.values(charts).forEach(c => c.destroy());
     charts = {};
 
-    /* Check if data exists */
     const hasData = funnelData.some(item => item.count > 0);
 
     if(hasData){
-
-        document.getElementById("funnelEmpty").style.display = "none";
+        const el = document.getElementById("funnelEmpty");
+        if (el) el.style.display = "none";
 
         const ctx = document.getElementById("leadFunnelChart").getContext("2d");
 
@@ -177,60 +239,27 @@ function renderCharts(){
             data: {
                 labels: funnelData.map(d => d.status),
                 datasets: [{
+                    label: 'Leads',
                     data: funnelData.map(d => d.count),
-                    backgroundColor: [
-                        "#0d6efd",
-                        "#ffc107",
-                        "#20c997",
-                        "#198754"
-                    ],
-                    borderRadius: 10
+                    backgroundColor: '#2563eb',
+                    borderRadius: 6
                 }]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                plugins: {
-                    legend: { display: false }
-                },
+                plugins: { legend: { display: false } },
                 scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: { color: textColor },
-                        grid: { color: gridColor }
-                    },
-                    x: {
-                        ticks: { color: textColor },
-                        grid: { display: false }
-                    }
+                    y: { beginAtZero: true, ticks: { precision: 0 } }
                 }
             }
         });
-
-    } else {
-
-        document.getElementById("funnelEmpty").style.display = "block";
-
     }
 }
 
-/* Init */
-
 document.addEventListener("DOMContentLoaded", () => {
-    setTimeout(renderCharts, 100);
+    setTimeout(renderCharts, 50);
 });
-
-/* Dark mode listener */
-
-const observer = new MutationObserver(() => {
-    setTimeout(renderCharts, 100);
-});
-
-observer.observe(document.documentElement, {
-    attributes: true,
-    attributeFilter: ['data-bs-theme']
-});
-
 </script>
 
 {% endblock %}

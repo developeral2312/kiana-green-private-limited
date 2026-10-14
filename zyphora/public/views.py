@@ -52,6 +52,10 @@ def about_page(request):
 def services_page(request):
     return render(request,'public_view/services.html')
 
+def products_page(request):
+    return render(request,'public_view/products.html')
+
+
 def contact_page(request):
     if request.method == "POST":
         # Handle custom form from home page (has 'bill' instead of 'service')

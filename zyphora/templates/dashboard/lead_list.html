@@ -2,169 +2,315 @@
 {% load static %}
 
 {% block link %}
-<link rel="stylesheet" href="{% static 'css/dashboard/lead_list.css' %}">
+<link rel="stylesheet" href="{% static 'css/dashboard/admin/admin.css' %}?v={% now 'U' %}">
+<link rel="stylesheet" href="{% static 'css/dashboard/lead_list.css' %}?v={% now 'U' %}">
 {% endblock %}
 
 {% block content %}
+<div class="leads-page-container">
 
-<nav aria-label="breadcrumb">
-  <ol class="breadcrumb mb-0">
-    <li class="breadcrumb-item">
-        <a href="{% url request.user.role %}">{{ request.user.role|title }} Dashboard</a>
-    </li>
-    <li class="breadcrumb-item active">Leads</li>
-  </ol>
-</nav>
-
-<div class="container mt-4">
-
-    <!-- Header -->
-    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-3">
-        <div>
-            <h1 class="page-title fw-bold text-primary"><i class="bi bi-people-fill"></i> Lead Management</h1>
-            <p class="page-subtitle">Track and manage potential customers through your sales pipeline.</p>
-        </div>
-        <a href="{% url 'add_lead' %}" class="add-lead-btn text-center"><i class="fa-solid fa-plus"></i> Add Lead</a>
-    </div>
-
-    <!-- Filter Form -->
-    <form method="GET" class="row g-2 align-items-center mb-3">
-        <div class="col-12 col-md-auto"><label for="statusFilter">Filter by Status:</label></div>
-        <div class="col-12 col-md-auto">
-            <select name="status" id="statusFilter" class="form-select">
-                <option value="">All</option>
-                {% for key,value in status_choices %}
-                    <option value="{{ key }}" {% if key == status %}selected{% endif %}>{{ value }}</option>
-                {% endfor %}
-            </select>
-        </div>
-        <div class="col-12 col-md-3">
-            <input type="text" name="q" class="form-control" placeholder="Search lead (name, phone...)" value="{{ query }}">
-        </div>
-        <div class="col-12 col-md-auto">
-            <button class="btn btn-primary w-100"><i class="bi bi-search"></i> Apply</button>
-        </div>
-    </form>
-
-    <!-- PAGINATION TOP -->
-    {% if page_obj.has_other_pages %}
-    <nav class="mb-3">
-        <ul class="pagination justify-content-center flex-wrap">
-            {% if page_obj.has_previous %}
-                <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}&{{ querystring }}">Previous</a></li>
-            {% else %}
-                <li class="page-item disabled"><span class="page-link">Previous</span></li>
-            {% endif %}
-
-            {% for num in page_obj.paginator.page_range %}
-                {% if page_obj.number == num %}
-                    <li class="page-item active"><span class="page-link">{{ num }}</span></li>
-                {% else %}
-                    <li class="page-item"><a class="page-link" href="?page={{ num }}&{{ querystring }}">{{ num }}</a></li>
-                {% endif %}
-            {% endfor %}
-
-            {% if page_obj.has_next %}
-                <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}&{{ querystring }}">Next</a></li>
-            {% else %}
-                <li class="page-item disabled"><span class="page-link">Next</span></li>
-            {% endif %}
-        </ul>
+    <!-- BREADCRUMB -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb leads-breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="{% url request.user.role %}">
+                    <i class="bi bi-house-door me-1"></i>{{ request.user.role|title }} Dashboard
+                </a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">Lead Pipeline</li>
+        </ol>
     </nav>
-    {% endif %}
 
-    <!-- Lead Table -->
-    <div class="card shadow-sm">
-        <div class="card-body p-0">
-            <div class="table-responsive">
-                <table class="table table-hover mb-0">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Phone</th>
-                            <th>Service</th>
-                            <th>Assigned Staff</th>
-                            <th>Status</th>
-                            <th>Priority</th>
-                            <th>Score</th>
-                            <th>Last Updated</th>
-                            <th class="text-center">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for lead in leads %}
-                        <tr class="{% if lead.status == 'converted' %}table-success{% endif %}">
-                            <td>
-                                <strong>{{ lead.name }}</strong>
-                                {% if lead.follow_up_date %}
-                                    <div class="follow-up">Follow-up: {{ lead.follow_up_date|date:"M d, Y" }}</div>
-                                {% endif %}
-                            </td>
-                            <td><a href="tel:{{ lead.phone }}">{{ lead.phone }}</a></td>
-                            <td>{{ lead.get_service_display }}</td>
-                            <td>
-                                {% if lead.assigned_to %}{{ lead.assigned_to.username }}{% else %}<span class="text-muted">Unassigned</span>{% endif %}
-                            </td>
-                            <td><span class="badge status-{{ lead.status }}">{{ lead.get_status_display }}</span></td>
-                            <td><span class="badge priority-{{ lead.priority }}">{{ lead.get_priority_display }}</span></td>
-                            <td>
-                                <div class="score-ring" style="--score: {{ lead.score }}">
-                                    <svg class="progress-ring" width="50" height="50">
-                                        <circle class="progress-ring-bg" cx="25" cy="25" r="20"></circle>
-                                        <circle class="progress-ring-progress" cx="25" cy="25" r="20"></circle>
-                                    </svg>
-                                    <span class="score-text">{{ lead.score }}</span>
-                                </div>
-                            </td>
-                            <td>{{ lead.updated_at|date:"M d, Y" }}</td>
-                            <td class="text-center">
-                                <div class="d-flex flex-wrap justify-content-center gap-1">
-                                    <a href="{% url 'view_lead' lead.id %}" class="btn btn-sm btn-info">View</a>
-                                    <a href="{% url 'update_lead' lead.id %}" class="btn btn-sm btn-warning">Update</a>
-                                    {% if request.user.role == 'admin' %}
-                                        <a href="{% url 'delete_lead' lead.id %}" class="btn btn-sm btn-danger" onclick="return confirm('Delete this lead?')">Delete</a>
-                                    {% endif %}
-                                </div>
-                            </td>
-                        </tr>
-                        {% empty %}
-                        <tr>
-                            <td colspan="9" class="text-center p-4">No leads found</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+    <!-- HEADER HERO CARD -->
+    <div class="leads-header-card d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+        <div class="d-flex align-items-center gap-3">
+            <div class="leads-header-icon-box">
+                <i class="bi bi-people-fill"></i>
+            </div>
+            <div>
+                <div class="d-flex align-items-center gap-2 flex-wrap">
+                    <h4 class="fw-bold mb-0 text-dark">Lead Pipeline Management</h4>
+                    <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill px-2.5 py-1">
+                        {{ page_obj.paginator.count|default:leads|length }} Total Leads
+                    </span>
+                </div>
+                <p class="text-muted small mb-0 mt-1">Track, qualify, and convert potential solar EPC customers through your pipeline.</p>
             </div>
         </div>
+        <div class="d-flex align-items-center gap-2">
+            <a href="{% url 'add_lead' %}" class="btn-add-lead-hero">
+                <i class="bi bi-plus-lg"></i>
+                <span>Add New Lead</span>
+            </a>
+        </div>
     </div>
 
-    <!-- PAGINATION BOTTOM -->
-    {% if page_obj.has_other_pages %}
-    <nav class="mt-3">
-        <ul class="pagination justify-content-center flex-wrap">
-            {% if page_obj.has_previous %}
-                <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}&{{ querystring }}">Previous</a></li>
-            {% else %}
-                <li class="page-item disabled"><span class="page-link">Previous</span></li>
-            {% endif %}
+    <!-- FILTER & SEARCH TOOLBAR -->
+    <div class="leads-filter-card mb-4">
+        <form method="GET" class="row g-2 align-items-center">
+            <!-- Search Input -->
+            <div class="col-12 col-md-5">
+                <div class="search-input-wrap">
+                    <i class="bi bi-search search-icon"></i>
+                    <input type="text" name="q" class="form-control" placeholder="Search by name, phone, or staff..." value="{{ query }}">
+                    {% if query %}
+                    <a href="{% url 'lead_list' %}{% if status %}?status={{ status }}{% endif %}" class="clear-search-btn" title="Clear search">
+                        <i class="bi bi-x-circle-fill"></i>
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
 
-            {% for num in page_obj.paginator.page_range %}
-                {% if page_obj.number == num %}
-                    <li class="page-item active"><span class="page-link">{{ num }}</span></li>
-                {% else %}
-                    <li class="page-item"><a class="page-link" href="?page={{ num }}&{{ querystring }}">{{ num }}</a></li>
+            <!-- Status Filter -->
+            <div class="col-12 col-sm-6 col-md-4">
+                <div class="input-group">
+                    <span class="input-group-text bg-light text-muted border-end-0 ps-3" style="border-radius: 10px 0 0 10px; border-color: #cbd5e1;">
+                        <i class="bi bi-funnel"></i>
+                    </span>
+                    <select name="status" id="statusFilter" class="form-select leads-filter-select border-start-0" style="border-radius: 0 10px 10px 0;">
+                        <option value="">All Statuses</option>
+                        {% for key,value in status_choices %}
+                        <option value="{{ key }}" {% if key == status %}selected{% endif %}>{{ value }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="col-12 col-sm-6 col-md-3 d-flex gap-2">
+                <button type="submit" class="btn btn-primary rounded-3 px-3 w-100 fw-semibold" style="font-size: 0.9rem;">
+                    <i class="bi bi-filter me-1"></i> Apply
+                </button>
+                {% if status or query %}
+                <a href="{% url 'lead_list' %}" class="btn btn-outline-secondary rounded-3 px-3 d-inline-flex align-items-center justify-content-center" title="Reset Filters">
+                    <i class="bi bi-arrow-counterclockwise"></i>
+                </a>
                 {% endif %}
-            {% endfor %}
+            </div>
+        </form>
+    </div>
 
-            {% if page_obj.has_next %}
-                <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}&{{ querystring }}">Next</a></li>
-            {% else %}
-                <li class="page-item disabled"><span class="page-link">Next</span></li>
-            {% endif %}
-        </ul>
-    </nav>
-    {% endif %}
+    <!-- MAIN TABLE CARD -->
+    <div class="leads-table-card">
+        <div class="table-responsive">
+            <table class="table leads-luxury-table">
+                <thead>
+                    <tr>
+                        <th>Lead Contact</th>
+                        <th>Phone</th>
+                        <th>Service Requested</th>
+                        <th>Assigned Staff</th>
+                        <th>Pipeline Status</th>
+                        <th>Priority</th>
+                        <th class="text-center">Score</th>
+                        <th>Last Updated</th>
+                        <th class="text-center" style="min-width: 170px;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for lead in leads %}
+                    <tr>
+                        <!-- Name & Contact -->
+                        <td>
+                            <div class="d-flex align-items-center gap-2.5">
+                                <div class="lead-avatar-circle">
+                                    {{ lead.name|make_list|first|upper }}
+                                </div>
+                                <div>
+                                    <div class="fw-bold text-dark">{{ lead.name }}</div>
+                                    {% if lead.follow_up_date %}
+                                    <div class="lead-followup-tag">
+                                        <i class="bi bi-calendar-event"></i>
+                                        <span>Follow-up: {{ lead.follow_up_date|date:"M d, Y" }}</span>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </td>
+
+                        <!-- Phone -->
+                        <td>
+                            <a href="tel:{{ lead.phone }}" class="text-decoration-none fw-semibold text-primary d-inline-flex align-items-center gap-1">
+                                <i class="bi bi-telephone text-muted" style="font-size: 0.8rem;"></i>
+                                <span>{{ lead.phone }}</span>
+                            </a>
+                        </td>
+
+                        <!-- Service -->
+                        <td>
+                            <span class="badge bg-light text-secondary border px-2.5 py-1 rounded-pill" style="font-weight: 500;">
+                                <i class="bi bi-sun text-warning me-1"></i>{{ lead.get_service_display|default:"Solar Solution" }}
+                            </span>
+                        </td>
+
+                        <!-- Assigned Staff -->
+                        <td>
+                            {% if lead.assigned_to %}
+                            <span class="badge bg-light text-dark border px-2.5 py-1 rounded-pill" style="font-weight: 500;">
+                                <i class="bi bi-person-circle text-primary me-1"></i>{{ lead.assigned_to.username }}
+                            </span>
+                            {% else %}
+                            <span class="badge bg-light text-muted border px-2.5 py-1 rounded-pill" style="font-weight: 500;">
+                                <i class="bi bi-person-dash me-1"></i>Unassigned
+                            </span>
+                            {% endif %}
+                        </td>
+
+                        <!-- Status -->
+                        <td>
+                            {% if lead.status == 'converted' %}
+                            <span class="badge bg-success-subtle text-success border border-success-subtle px-2.5 py-1 rounded-pill fw-semibold">
+                                <i class="bi bi-check-circle-fill me-1"></i>Converted
+                            </span>
+                            {% elif lead.status == 'new' %}
+                            <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-2.5 py-1 rounded-pill fw-semibold">
+                                <i class="bi bi-stars me-1"></i>New Lead
+                            </span>
+                            {% elif lead.status == 'contacted' %}
+                            <span class="badge bg-info-subtle text-info-emphasis border border-info-subtle px-2.5 py-1 rounded-pill fw-semibold">
+                                <i class="bi bi-chat-dots me-1"></i>Contacted
+                            </span>
+                            {% elif lead.status == 'site_visit_scheduled' %}
+                            <span class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle px-2.5 py-1 rounded-pill fw-semibold">
+                                <i class="bi bi-geo-alt me-1"></i>Site Visit
+                            </span>
+                            {% elif lead.status == 'rejected' %}
+                            <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-2.5 py-1 rounded-pill fw-semibold">
+                                <i class="bi bi-x-circle me-1"></i>Rejected
+                            </span>
+                            {% else %}
+                            <span class="badge bg-secondary-subtle text-secondary border px-2.5 py-1 rounded-pill fw-semibold">
+                                {{ lead.get_status_display }}
+                            </span>
+                            {% endif %}
+                        </td>
+
+                        <!-- Priority & Escalation -->
+                        <td>
+                            <div class="d-flex align-items-center flex-wrap gap-1">
+                                {% if lead.priority == 'high' %}
+                                <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-2 py-0.5 rounded-pill">High</span>
+                                {% elif lead.priority == 'medium' %}
+                                <span class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle px-2 py-0.5 rounded-pill">Medium</span>
+                                {% else %}
+                                <span class="badge bg-secondary-subtle text-secondary border px-2 py-0.5 rounded-pill">Low</span>
+                                {% endif %}
+
+                                {% if lead.escalation_level == 1 %}
+                                <span class="badge bg-warning text-dark px-2 py-0.5 rounded-pill" title="L1 Escalated">
+                                    <i class="bi bi-fire"></i> L1
+                                </span>
+                                {% elif lead.escalation_level == 2 %}
+                                <span class="badge bg-danger text-white px-2 py-0.5 rounded-pill" title="L2 Escalated">
+                                    <i class="bi bi-exclamation-triangle-fill"></i> L2
+                                </span>
+                                {% endif %}
+                            </div>
+                        </td>
+
+                        <!-- Score -->
+                        <td class="text-center">
+                            <div class="score-ring" style="--score: {{ lead.score|default:50 }};">
+                                <svg class="progress-ring" width="44" height="44">
+                                    <circle class="progress-ring-bg" cx="22" cy="22" r="18"></circle>
+                                    <circle class="progress-ring-progress" cx="22" cy="22" r="18"></circle>
+                                </svg>
+                                <span class="score-text">{{ lead.score|default:0 }}</span>
+                            </div>
+                        </td>
+
+                        <!-- Updated Date -->
+                        <td>
+                            <span class="text-muted small">{{ lead.updated_at|date:"M d, Y" }}</span>
+                        </td>
+
+                        <!-- Actions -->
+                        <td class="text-center text-nowrap">
+                            <div class="d-inline-flex align-items-center justify-content-center gap-1.5">
+                                <a href="{% url 'customer_360' lead.phone %}" class="btn-360-pill" title="Customer 360° Profile">
+                                    <i class="bi bi-person-bounding-box"></i>
+                                    <span>360°</span>
+                                </a>
+                                <a href="{% url 'view_lead' lead.id %}" class="action-btn-circle btn-view" title="View Lead Details">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                                <a href="{% url 'update_lead' lead.id %}" class="action-btn-circle btn-edit" title="Edit Lead">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                {% if request.user.role == 'admin' %}
+                                <a href="{% url 'delete_lead' lead.id %}" class="action-btn-circle btn-delete" title="Delete Lead"
+                                    onclick="return confirm('Are you sure you want to delete this lead?')">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="9">
+                            <div class="leads-empty-state">
+                                <div class="leads-empty-icon">
+                                    <i class="bi bi-inbox"></i>
+                                </div>
+                                <h5 class="fw-bold text-dark">No Leads Found</h5>
+                                <p class="text-muted small mb-3">Try adjusting your filters or search keywords to find leads.</p>
+                                <a href="{% url 'add_lead' %}" class="btn btn-primary rounded-pill px-4 btn-sm">
+                                    <i class="bi bi-plus-lg me-1"></i> Add First Lead
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- PAGINATION BAR (INTEGRATED AT BOTTOM OF TABLE) -->
+        {% if page_obj.has_other_pages %}
+        <div class="leads-pagination-bar">
+            <div class="text-muted small">
+                Showing page <strong>{{ page_obj.number }}</strong> of <strong>{{ page_obj.paginator.num_pages }}</strong>
+                ({{ page_obj.paginator.count }} leads total)
+            </div>
+            <nav aria-label="Lead pagination">
+                <ul class="pagination pagination-sm mb-0 flex-wrap">
+                    {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}&{{ querystring }}">
+                            <i class="bi bi-chevron-left me-1"></i> Previous
+                        </a>
+                    </li>
+                    {% else %}
+                    <li class="page-item disabled">
+                        <span class="page-link"><i class="bi bi-chevron-left me-1"></i> Previous</span>
+                    </li>
+                    {% endif %}
+
+                    {% for num in page_obj.paginator.page_range %}
+                    {% if page_obj.number == num %}
+                    <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+                    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                    <li class="page-item"><a class="page-link" href="?page={{ num }}&{{ querystring }}">{{ num }}</a></li>
+                    {% endif %}
+                    {% endfor %}
+
+                    {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.next_page_number }}&{{ querystring }}">
+                            Next <i class="bi bi-chevron-right ms-1"></i>
+                        </a>
+                    </li>
+                    {% else %}
+                    <li class="page-item disabled">
+                        <span class="page-link">Next <i class="bi bi-chevron-right ms-1"></i></span>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+        {% endif %}
+    </div>
 
 </div>
-
 {% endblock %}

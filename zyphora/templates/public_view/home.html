@@ -1,549 +1,787 @@
 {% extends 'public_view/base.html' %}
+{% load static %}
 
 {% block link %}
-<link rel="stylesheet" href="/static/css/public_view/home.css">
-<!-- FontAwesome for Premium Icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
-<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'css/public_view/home.css' %}">
 {% endblock %}
 
 {% block code %}
-<!-- PREMIUM HERO SECTION (SolarSmiths Style) -->
-<div class="ss-hero-section position-relative d-flex align-items-center">
-    <!-- Auto-scrolling Background Carousel -->
-    <div id="heroBgCarousel" class="carousel slide carousel-fade position-absolute w-100 h-100" data-bs-ride="carousel" data-bs-pause="false" data-bs-interval="4000" style="top: 0; left: 0; z-index: 0;">
-        <div class="carousel-inner w-100 h-100">
-            <div class="carousel-item active w-100 h-100">
-                <img src="/static/images/hero.png" class="d-block w-100 h-100" style="object-fit: cover;" alt="Solar Image 1">
-            </div>
-            <div class="carousel-item w-100 h-100">
-                <img src="/static/images/about-hero.png" class="d-block w-100 h-100" style="object-fit: cover;" alt="Solar Image 2">
-            </div>
-            <div class="carousel-item w-100 h-100">
-                <img src="/static/images/service-hero.png" class="d-block w-100 h-100" style="object-fit: cover;" alt="Solar Image 3">
-            </div>
-            <div class="carousel-item w-100 h-100">
-                <img src="/static/images/project-hero.png" class="d-block w-100 h-100" style="object-fit: cover;" alt="Solar Image 4">
-            </div>
-        </div>
+
+<!-- ================= 1. HERO SECTION ================= -->
+<section class="home-hero" style="background-image: url('{% static 'images/hero.png' %}');">
+  <div class="home-hero-overlay"></div>
+  <div class="home-hero-glow"></div>
+  
+  <div class="container text-center py-4">
+    
+    <!-- Floating Trust Pill -->
+    <div class="mb-4">
+      <div class="hero-pill-badge">
+        <span class="pulse-dot"></span>
+        <span>☀️ PM Surya Ghar Muft Bijli Yojana Official Partner</span>
+      </div>
     </div>
 
-    <!-- Overlay and Content -->
-    <div class="hero-overlay position-absolute w-100 h-100" style="top: 0; left: 0; z-index: 1;"></div>
-    <div class="container position-relative z-2">
-        <div class="row mb-5">
-            <div class="col-lg-9 text-white">
-                <h5 class="ss-subtitle mb-4 text-uppercase tracking-wider fw-bold">Leading Solar Panel Installation Company</h5>
-                <h1 class="display-3 fw-bold mb-4 ss-title lh-sm">
-                    Power Your Future with Clean,<br>
-                    <span class="ss-highlight">Affordable Solar Energy</span>
-                </h1>
-                <p class="fs-4 mb-5 ss-desc fw-light" style="line-height: 1.6;">
-                    We offer affordable and efficient solar panels for residential and commercial needs.
-                </p>
-                <a href="#quote-form" class="btn ss-btn-primary rounded-pill px-5 py-3 fs-5 fw-bold shadow-lg">
-                    Get Free Consultation <i class="fa-solid fa-arrow-right ms-2"></i>
-                </a>
-            </div>
-        </div>
+    <!-- Main Title -->
+    <h1 class="hero-main-heading mx-auto mb-4" style="max-width: 1050px;">
+      Empowering India's Clean Energy Future with <br class="d-none d-md-block">
+      <span class="text-gradient-emerald">Smart Rooftop Solar</span>
+    </h1>
 
-        <!-- 4 Feature Points -->
-        <div class="row pt-5 mt-2 border-top border-light border-opacity-25 w-100">
-            <div class="col-6 col-lg-3 d-flex align-items-center mb-3">
-                <div class="rounded-circle bg-white text-dark d-flex align-items-center justify-content-center me-3 shadow" style="width: 55px; height: 55px; flex-shrink: 0;">
-                    <i class="fa-solid fa-certificate fs-4"></i>
-                </div>
-                <span class="fw-bold lh-sm text-white" style="letter-spacing: 0.5px; font-size: 1rem;">10 Years<br>Warranty</span>
-            </div>
-            <div class="col-6 col-lg-3 d-flex align-items-center mb-3">
-                <div class="rounded-circle text-dark d-flex align-items-center justify-content-center me-3 shadow" style="width: 55px; height: 55px; background-color: #f28b00; flex-shrink: 0;">
-                    <i class="fa-solid fa-leaf fs-4"></i>
-                </div>
-                <span class="fw-bold lh-sm text-white" style="letter-spacing: 0.5px; font-size: 1rem;">Eco<br>Friendly</span>
-            </div>
-            <div class="col-6 col-lg-3 d-flex align-items-center mb-3">
-                <div class="rounded-circle bg-white text-dark d-flex align-items-center justify-content-center me-3 shadow" style="width: 55px; height: 55px; flex-shrink: 0;">
-                    <i class="fa-solid fa-bolt fs-4"></i>
-                </div>
-                <span class="fw-bold lh-sm text-white" style="letter-spacing: 0.5px; font-size: 1rem;">Fast<br>Charging</span>
-            </div>
-            <div class="col-6 col-lg-3 d-flex align-items-center mb-3">
-                <div class="rounded-circle text-dark d-flex align-items-center justify-content-center me-3 shadow" style="width: 55px; height: 55px; background-color: #f28b00; flex-shrink: 0;">
-                    <i class="fa-solid fa-battery-full fs-4"></i>
-                </div>
-                <span class="fw-bold lh-sm text-white" style="letter-spacing: 0.5px; font-size: 1rem;">Long Life<br>Battery</span>
-            </div>
-        </div>
-    </div>
-    </div>
-</div>
+    <!-- Subtitle -->
+    <p class="hero-sub-text mb-5">
+      Kiana Green Private Limited delivers turnkey engineering, procurement, and construction (EPC) for residential, commercial, and industrial solar projects — optimized for actual site irradiance, structural safety, and maximum ROI.
+    </p>
 
-<!-- STATS SECTION -->
-<div class="ss-stats-section bg-white py-5 shadow-sm position-relative z-3" style="margin-top: -50px;">
-    <div class="container">
-        <div class="row text-center g-4">
-            <div class="col-md-3 col-6">
-                <div class="stat-item">
-                    <h2 class="fw-bold ss-text-primary mb-1">10+</h2>
-                    <p class="text-muted fw-bold text-uppercase mb-0 small">Years Experience</p>
-                </div>
-            </div>
-            <div class="col-md-3 col-6">
-                <div class="stat-item border-start">
-                    <h2 class="fw-bold ss-text-primary mb-1">2000+</h2>
-                    <p class="text-muted fw-bold text-uppercase mb-0 small">Happy Customers</p>
-                </div>
-            </div>
-            <div class="col-md-3 col-6">
-                <div class="stat-item border-start">
-                    <h2 class="fw-bold ss-text-primary mb-1">50+ MW</h2>
-                    <p class="text-muted fw-bold text-uppercase mb-0 small">Solar Installed</p>
-                </div>
-            </div>
-            <div class="col-md-3 col-6">
-                <div class="stat-item border-start">
-                    <h2 class="fw-bold ss-text-primary mb-1">100%</h2>
-                    <p class="text-muted fw-bold text-uppercase mb-0 small">Satisfaction</p>
-                </div>
-            </div>
-        </div>
+    <!-- Hero CTA Buttons -->
+    <div class="d-flex justify-content-center gap-3 mb-5 flex-wrap">
+      <a href="{% url 'contact' %}" class="btn btn-success px-4 py-3 fw-bold rounded-pill shadow-lg d-inline-flex align-items-center gap-2" style="background-color: #10b981; border: none; font-size: 1.05rem;">
+        <i class="bi bi-calendar-check"></i> Book Free Rooftop Survey
+      </a>
+      <a href="#solar-calculator" class="btn btn-outline-light px-4 py-3 fw-bold rounded-pill d-inline-flex align-items-center gap-2" style="font-size: 1.05rem; backdrop-filter: blur(10px);">
+        <i class="bi bi-calculator"></i> Calculate Solar Savings
+      </a>
+      <a href="{% url 'products' %}" class="btn btn-link text-white fw-semibold text-decoration-none px-3 py-3 d-inline-flex align-items-center gap-1" style="font-size: 1.02rem;">
+        Explore Products <i class="bi bi-arrow-right"></i>
+      </a>
     </div>
-</div>
 
-<!-- ABOUT SECTION -->
-<div class="section-padding bg-light">
-    <div class="container">
-        <div class="row align-items-center">
-            <div class="col-lg-6 mb-5 mb-lg-0 pe-lg-5">
-                <div class="position-relative">
-                    <img src="/static/images/energy.avif" class="img-fluid rounded-4 shadow-lg w-100"
-                        style="object-fit: cover; height: 500px;">
-                </div>
-            </div>
-            <div class="col-lg-6 ps-lg-5">
-                <h6 class="ss-text-primary fw-bold text-uppercase tracking-wider mb-2">About Us</h6>
-                <h2 class="display-5 fw-bold ss-text-dark mb-4">India's Best Solar Panel Company</h2>
-                <p class="lead text-muted mb-4" style="line-height: 1.8;">
-                    Kiana Green Private Limited is your reliable partner in the transition to clean energy. We specialize in engineering, procurement, and construction (EPC) of high-efficiency solar power plants.
-                </p>
-                <div class="row g-4 mt-2">
-                    <div class="col-sm-6">
-                        <div class="d-flex align-items-start">
-                            <i class="fa-solid fa-check-circle ss-text-primary fs-4 me-3 mt-1"></i>
-                            <div>
-                                <h5 class="fw-bold mb-1">Tier-1 Modules</h5>
-                                <p class="text-muted small">Only the highest grade A+ panels for maximum generation.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="d-flex align-items-start">
-                            <i class="fa-solid fa-check-circle ss-text-primary fs-4 me-3 mt-1"></i>
-                            <div>
-                                <h5 class="fw-bold mb-1">MNRE Subsidy</h5>
-                                <p class="text-muted small">Complete paperwork assistance for Govt. subsidies.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <a href="{% url 'about' %}" class="btn btn-outline-dark px-4 py-2 mt-4 rounded-pill fw-bold">Discover More</a>
-            </div>
+    <!-- Hero Stats Glass Grid -->
+    <div class="row g-3 justify-content-center max-w-100 mt-2">
+      <div class="col-6 col-lg-3">
+        <div class="hero-stats-card">
+          <div class="hero-stats-number">100+ MW</div>
+          <div class="hero-stats-label">Installed Capacity</div>
         </div>
+      </div>
+      <div class="col-6 col-lg-3">
+        <div class="hero-stats-card">
+          <div class="hero-stats-number">5,000+</div>
+          <div class="hero-stats-label">Happy Rooftops</div>
+        </div>
+      </div>
+      <div class="col-6 col-lg-3">
+        <div class="hero-stats-card">
+          <div class="hero-stats-number">₹78,000</div>
+          <div class="hero-stats-label">Direct Subsidy Support</div>
+        </div>
+      </div>
+      <div class="col-6 col-lg-3">
+        <div class="hero-stats-card">
+          <div class="hero-stats-number">25 Yrs</div>
+          <div class="hero-stats-label">Performance Warranty</div>
+        </div>
+      </div>
     </div>
-</div>
 
-<!-- SERVICES SECTION -->
-<div class="section-padding bg-white" id="services">
-    <div class="container">
-        <div class="text-center mb-5 max-w-700 mx-auto">
-            <h6 class="ss-text-primary fw-bold text-uppercase tracking-wider mb-2">Our Services</h6>
-            <h2 class="display-5 fw-bold ss-text-dark">Solar Solutions For Every Need</h2>
-            <p class="text-muted mt-3">We offer comprehensive solar solutions tailored to residential, commercial, and industrial requirements.</p>
-        </div>
-        <div class="row g-4">
-            <div class="col-lg-4">
-                <div class="ss-service-card card border-0 shadow-sm rounded-4 overflow-hidden h-100">
-                    <img src="/static/images/home.png" class="card-img-top" style="height: 240px; object-fit: cover;">
-                    <div class="card-body p-4 text-center">
-                        <h4 class="fw-bold text-dark mb-3">Residential Solar</h4>
-                        <p class="text-muted mb-4">Slash your electricity bills to zero and enjoy government subsidies with our home solar systems.</p>
-                        <a href="#" class="ss-link">Learn More <i class="fa-solid fa-arrow-right ms-1"></i></a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4">
-                <div class="ss-service-card card border-0 shadow-sm rounded-4 overflow-hidden h-100">
-                    <img src="/static/images/com.png" class="card-img-top" style="height: 240px; object-fit: cover;">
-                    <div class="card-body p-4 text-center">
-                        <h4 class="fw-bold text-dark mb-3">Commercial Solar</h4>
-                        <p class="text-muted mb-4">Reduce operational costs and claim accelerated depreciation with our heavy-duty solar plants.</p>
-                        <a href="#" class="ss-link">Learn More <i class="fa-solid fa-arrow-right ms-1"></i></a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4">
-                <div class="ss-service-card card border-0 shadow-sm rounded-4 overflow-hidden h-100">
-                    <img src="/static/images/service.jpg" class="card-img-top" style="height: 240px; object-fit: cover;">
-                    <div class="card-body p-4 text-center">
-                        <h4 class="fw-bold text-dark mb-3">Solar Maintenance</h4>
-                        <p class="text-muted mb-4">Ensure your plant operates at 100% efficiency year-round. We provide deep cleaning and auditing.</p>
-                        <a href="#" class="ss-link">Learn More <i class="fa-solid fa-arrow-right ms-1"></i></a>
-                    </div>
-                </div>
-            </div>
-        </div>
+  </div>
+</section>
+
+<!-- ================= 2. TIER-1 PARTNER ECOSYSTEM ================= -->
+<section class="partner-strip">
+  <div class="container text-center">
+    <p class="text-muted small fw-bold text-uppercase mb-3" style="letter-spacing: 2px;">
+      ENGINEERED WITH GLOBAL TIER-1 & ALMM APPROVED OEM PARTNERS
+    </p>
+    <div class="d-flex justify-content-center align-items-center flex-wrap gap-3">
+      <span class="brand-chip"><i class="bi bi-sun-fill text-warning"></i> Tata Power Solar</span>
+      <span class="brand-chip"><i class="bi bi-lightning-charge-fill text-success"></i> Adani Solar</span>
+      <span class="brand-chip"><i class="bi bi-cpu-fill text-primary"></i> Growatt Inverters</span>
+      <span class="brand-chip"><i class="bi bi-plug-fill text-info"></i> Havells Solar</span>
+      <span class="brand-chip"><i class="bi bi-battery-charging text-success"></i> Sungrow</span>
+      <span class="brand-chip"><i class="bi bi-award-fill text-warning"></i> Waaree Energies</span>
+      <span class="brand-chip"><i class="bi bi-shield-fill-check text-primary"></i> Luminous Solar</span>
     </div>
-</div>
+  </div>
+</section>
 
-<!-- DYNAMIC PROJECTS -->
-<div class="section-padding bg-light" id="projects">
-    <div class="container">
-        <div class="d-flex justify-content-between align-items-end mb-5">
+<!-- ================= 3. WHO WE ARE ================= -->
+<section class="py-5 bg-white">
+  <div class="container py-5 my-2">
+    <div class="row align-items-center g-5">
+      
+      <!-- Visual with Overlay Badges -->
+      <div class="col-lg-6">
+        <div class="position-relative">
+          <div class="rounded-4 overflow-hidden shadow-lg border">
+            <img src="{% static 'images/about-rooftop-hd.jpg' %}" alt="Solar Installation Team" class="w-100" style="height: 440px; object-fit: cover;">
+          </div>
+          <!-- Floating Feature Badge -->
+          <div class="position-absolute bottom-0 start-0 m-4 p-3 bg-white rounded-3 shadow-lg border d-flex align-items-center gap-3" style="max-width: 320px;">
+            <div class="rounded-circle bg-success bg-opacity-10 p-3 text-success fs-3">
+              <i class="bi bi-patch-check-fill"></i>
+            </div>
             <div>
-                <h6 class="ss-text-primary fw-bold text-uppercase tracking-wider mb-2">Our Portfolio</h6>
-                <h2 class="display-5 fw-bold ss-text-dark m-0">Featured Installations</h2>
+              <h6 class="fw-bold text-dark mb-0">Certified MNRE & ALMM</h6>
+              <small class="text-muted">Tier-1 Mono PERC & TopCon panels with zero degradation warranty.</small>
             </div>
-            <a href="{% url 'projects' %}" class="btn btn-outline-dark rounded-pill px-4 d-none d-md-block">View All Projects</a>
+          </div>
         </div>
+      </div>
+
+      <!-- Text on Right -->
+      <div class="col-lg-6 ps-lg-5">
+        <div class="section-tag">ENGINEERING EXCELLENCE</div>
+        <h2 class="section-title mb-4">
+          Architecting India's Transition to Zero-Carbon Solar Power
+        </h2>
+        <p class="text-muted mb-4 fs-6" style="line-height: 1.7;">
+          At Kiana Green Private Limited, we bridge the gap between technical solar engineering and flawless site execution. From residential bungalows to large industrial factory sheds, our in-house engineering team conducts detailed 3D shadow drone surveys, structural wind-load checks, and electrical SLD designing.
+        </p>
+
+        <!-- Feature Points -->
+        <div class="row g-3 mb-4">
+          <div class="col-sm-6">
+            <div class="d-flex align-items-start gap-2">
+              <i class="bi bi-check-circle-fill text-success fs-5 mt-1"></i>
+              <div>
+                <strong class="text-dark d-block">3D Drone Shadow Analysis</strong>
+                <small class="text-muted">Maximum sunlight capture and zero obstruction losses.</small>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="d-flex align-items-start gap-2">
+              <i class="bi bi-check-circle-fill text-success fs-5 mt-1"></i>
+              <div>
+                <strong class="text-dark d-block">Patented Leakproof Mounts</strong>
+                <small class="text-muted">Zero roof drilling leakage, certified for 160 km/h winds.</small>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="d-flex align-items-start gap-2">
+              <i class="bi bi-check-circle-fill text-success fs-5 mt-1"></i>
+              <div>
+                <strong class="text-dark d-block">DISCOM Net Metering</strong>
+                <small class="text-muted">End-to-end paperwork, bi-directional meter sync, & subsidy.</small>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="d-flex align-items-start gap-2">
+              <i class="bi bi-check-circle-fill text-success fs-5 mt-1"></i>
+              <div>
+                <strong class="text-dark d-block">Zero-Cost Solar Financing</strong>
+                <small class="text-muted">Easy bank loan approvals & low monthly EMI options.</small>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="d-flex gap-3">
+          <a href="{% url 'about' %}" class="btn btn-outline-success px-4 py-2 rounded-pill fw-bold">
+            Learn More About Us &rarr;
+          </a>
+          <a href="{% url 'contact' %}" class="btn btn-success px-4 py-2 rounded-pill fw-bold" style="background-color: #0b5c32; border: none;">
+            Get Free Consultation
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ================= 4. OUR 5-STEP PROCESS ================= -->
+<section class="py-5" style="background-color: #f8fafc;">
+  <div class="container py-5 my-2">
+    <div class="text-center mx-auto mb-5" style="max-width: 720px;">
+      <div class="section-tag justify-content-center">OUR TURNKEY WORKFLOW</div>
+      <h2 class="section-title mb-3">From Initial Survey to Solar Power in 5 Simple Steps</h2>
+      <p class="text-muted">We handle all engineering, procurement, state DISCOM approvals, and commissioning with complete transparency.</p>
+    </div>
+
+    <div class="row g-4">
+      <!-- Step 1 -->
+      <div class="col-lg col-md-6">
+        <div class="process-step-card">
+          <div class="process-step-number">01</div>
+          <h5 class="fw-bold text-dark mb-2">Site Audit</h5>
+          <p class="text-muted small mb-0">3D shadow profiling, structural load verification, and energy consumption analysis.</p>
+        </div>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="col-lg col-md-6">
+        <div class="process-step-card">
+          <div class="process-step-number">02</div>
+          <h5 class="fw-bold text-dark mb-2">Custom CAD Design</h5>
+          <p class="text-muted small mb-0">Electrical Single Line Diagram (SLD), string sizing, and optimal solar panel layout.</p>
+        </div>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="col-lg col-md-6">
+        <div class="process-step-card">
+          <div class="process-step-number">03</div>
+          <h5 class="fw-bold text-dark mb-2">Hardware Supply</h5>
+          <p class="text-muted small mb-0">Direct procurement of Tier-1 ALMM panels, smart inverters, and hot-dip galvanized mounting structures.</p>
+        </div>
+      </div>
+
+      <!-- Step 4 -->
+      <div class="col-lg col-md-6">
+        <div class="process-step-card">
+          <div class="process-step-number">04</div>
+          <h5 class="fw-bold text-dark mb-2">Installation & QC</h5>
+          <p class="text-muted small mb-0">Trained engineers execute civil, electrical, earthing, and lightning protection to safety standards.</p>
+        </div>
+      </div>
+
+      <!-- Step 5 -->
+      <div class="col-lg col-md-6">
+        <div class="process-step-card">
+          <div class="process-step-number">05</div>
+          <h5 class="fw-bold text-dark mb-2">Net Metering & Sync</h5>
+          <p class="text-muted small mb-0">DISCOM inspection liaisoning, bi-directional meter sync, and automated govt. subsidy claim.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 5. SOLUTIONS & SERVICES ================= -->
+<section class="py-5 bg-white">
+  <div class="container py-5 my-2">
+    <div class="d-flex justify-content-between align-items-end mb-5 flex-wrap gap-3">
+      <div>
+        <div class="section-tag">ENERGY SOLUTIONS</div>
+        <h2 class="section-title mb-0">Engineered for Homes, Enterprises & Industry</h2>
+      </div>
+      <a href="{% url 'services' %}" class="btn btn-outline-success px-4 py-2 rounded-pill fw-bold">
+        View All Services &rarr;
+      </a>
+    </div>
+
+    <div class="row g-4">
+      <!-- 1. Residential -->
+      <div class="col-lg-4 col-md-6">
+        <div class="solution-card">
+          <div class="solution-card-img-wrapper">
+            <img src="{% static 'images/about-rooftop-hd.jpg' %}" alt="Residential Solar">
+            <span class="solution-badge">₹78,000 PM Subsidy</span>
+          </div>
+          <div class="solution-card-body">
+            <h5 class="fw-bold text-dark mb-2">Residential Rooftop Solar</h5>
+            <p class="text-muted small mb-3 flex-grow-1">
+              On-grid systems for independent homes and villas. Slashing electricity bills by up to 90% with net-metering.
+            </p>
+            <div class="d-flex justify-content-between align-items-center pt-2 border-top">
+              <span class="text-muted small fw-semibold">3 kW - 10 kW</span>
+              <a href="{% url 'services' %}" class="text-success fw-bold text-decoration-none small">Explore &rarr;</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. Commercial -->
+      <div class="col-lg-4 col-md-6">
+        <div class="solution-card">
+          <div class="solution-card-img-wrapper">
+            <img src="{% static 'images/solar_gen_2.jpg' %}" alt="Commercial Solar">
+            <span class="solution-badge">High Opex Savings</span>
+          </div>
+          <div class="solution-card-body">
+            <h5 class="fw-bold text-dark mb-2">Commercial Solar Systems</h5>
+            <p class="text-muted small mb-3 flex-grow-1">
+              Engineered for hospitals, institutions, hotels, and business parks to drastically reduce peak daytime tariffs.
+            </p>
+            <div class="d-flex justify-content-between align-items-center pt-2 border-top">
+              <span class="text-muted small fw-semibold">10 kW - 100 kW</span>
+              <a href="{% url 'services' %}" class="text-success fw-bold text-decoration-none small">Explore &rarr;</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. Industrial -->
+      <div class="col-lg-4 col-md-6">
+        <div class="solution-card">
+          <div class="solution-card-img-wrapper">
+            <img src="{% static 'images/off-grid.jpg' %}" alt="Industrial Solar">
+            <span class="solution-badge">Tax Benefits (Sec 32)</span>
+          </div>
+          <div class="solution-card-body">
+            <h5 class="fw-bold text-dark mb-2">Industrial Solar Plants</h5>
+            <p class="text-muted small mb-3 flex-grow-1">
+              High-capacity plants on factory sheds and ground mounts with accelerated 40% depreciation tax benefits.
+            </p>
+            <div class="d-flex justify-content-between align-items-center pt-2 border-top">
+              <span class="text-muted small fw-semibold">100 kW - 5 MW+</span>
+              <a href="{% url 'services' %}" class="text-success fw-bold text-decoration-none small">Explore &rarr;</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. Leakproof Roof -->
+      <div class="col-lg-4 col-md-6">
+        <div class="solution-card">
+          <div class="solution-card-img-wrapper">
+            <img src="{% static 'images/about.png' %}" alt="Leakproof Solar Roof">
+            <span class="solution-badge">Patented Technology</span>
+          </div>
+          <div class="solution-card-body">
+            <h5 class="fw-bold text-dark mb-2">Patented Leakproof Solar Roof</h5>
+            <p class="text-muted small mb-3 flex-grow-1">
+              Waterproof solar rooftop structure that acts as a 100% rain shelter, terrace room, and power generator without roof piercing.
+            </p>
+            <div class="d-flex justify-content-between align-items-center pt-2 border-top">
+              <span class="text-muted small fw-semibold">Custom Terrace Sizing</span>
+              <a href="{% url 'services' %}" class="text-success fw-bold text-decoration-none small">Explore &rarr;</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. Operations & Maintenance -->
+      <div class="col-lg-4 col-md-6">
+        <div class="solution-card">
+          <div class="solution-card-img-wrapper">
+            <img src="{% static 'images/services-maintenance.jpg' %}" alt="O&M Services">
+            <span class="solution-badge">24/7 IoT Monitoring</span>
+          </div>
+          <div class="solution-card-body">
+            <h5 class="fw-bold text-dark mb-2">Solar O&M & AMC Care</h5>
+            <p class="text-muted small mb-3 flex-grow-1">
+              Preventive maintenance, robotic panel cleaning, inverter diagnostics, and live cloud IoT generation tracking.
+            </p>
+            <div class="d-flex justify-content-between align-items-center pt-2 border-top">
+              <span class="text-muted small fw-semibold">Annual Contracts</span>
+              <a href="{% url 'services' %}" class="text-success fw-bold text-decoration-none small">Explore &rarr;</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 6. Inverters & Energy Storage -->
+      <div class="col-lg-4 col-md-6">
+        <div class="solution-card">
+          <div class="solution-card-img-wrapper">
+            <img src="{% static 'images/product-inverters-hd.jpg' %}" alt="Inverters & BESS">
+            <span class="solution-badge">Hybrid & On-Grid</span>
+          </div>
+          <div class="solution-card-body">
+            <h5 class="fw-bold text-dark mb-2">Smart Inverters & Battery Storage</h5>
+            <p class="text-muted small mb-3 flex-grow-1">
+              Tier-1 smart string inverters, hybrid bi-directional setups, and Lithium Iron Phosphate (LiFePO4) solar storage banks.
+            </p>
+            <div class="d-flex justify-content-between align-items-center pt-2 border-top">
+              <span class="text-muted small fw-semibold">Multi-Brand Supply</span>
+              <a href="{% url 'products' %}" class="text-success fw-bold text-decoration-none small">Explore &rarr;</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 6. INTERACTIVE CALCULATOR ================= -->
+{% include 'public_view/savings_calculator.html' %}
+
+<!-- ================= 7. RECENT PROJECTS SHOWCASE ================= -->
+<section class="py-5" style="background-color: #f8fafc;">
+  <div class="container py-5 my-2">
+    <div class="d-flex justify-content-between align-items-end mb-4 flex-wrap gap-3">
+      <div>
+        <div class="section-tag">PORTFOLIO OF SUCCESS</div>
+        <h2 class="section-title mb-0">Delivered Solar EPC Installations</h2>
+      </div>
+      <a href="{% url 'projects' %}" class="btn btn-outline-success px-4 py-2 rounded-pill fw-bold">
+        Browse All Projects &rarr;
+      </a>
+    </div>
+
+    <!-- Filter Buttons -->
+    <div class="d-flex gap-2 mb-4 flex-wrap" id="projectFilterNav">
+      <button class="project-filter-pill active" onclick="filterProjects('all', this)">All Projects</button>
+      <button class="project-filter-pill" onclick="filterProjects('residential', this)">Residential</button>
+      <button class="project-filter-pill" onclick="filterProjects('commercial', this)">Commercial</button>
+      <button class="project-filter-pill" onclick="filterProjects('industrial', this)">Industrial</button>
+    </div>
+
+    <!-- Projects Grid -->
+    <div class="row g-4" id="projectsGrid">
+      
+      <!-- Project 1 -->
+      <div class="col-lg-4 col-md-6 project-item" data-cat="residential">
+        <div class="project-showcase-card">
+          <div class="project-img-box">
+            <img src="{% static 'images/about-rooftop-hd.jpg' %}" alt="Residential Solar">
+            <span class="project-capacity-badge"><i class="bi bi-sun"></i> 5 kW On-Grid</span>
+          </div>
+          <div class="p-4">
+            <h5 class="fw-bold text-dark mb-1">Rooftop Solar Bungalow</h5>
+            <p class="text-muted small mb-2"><i class="bi bi-geo-alt me-1 text-danger"></i> Noida, Uttar Pradesh</p>
+            <p class="text-muted small mb-0">Mono PERC panels with net-metering synchronization and PM Surya Ghar subsidy approval.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Project 2 -->
+      <div class="col-lg-4 col-md-6 project-item" data-cat="commercial">
+        <div class="project-showcase-card">
+          <div class="project-img-box">
+            <img src="{% static 'images/solar_gen_2.jpg' %}" alt="Commercial Solar">
+            <span class="project-capacity-badge"><i class="bi bi-building"></i> 80 kW Commercial</span>
+          </div>
+          <div class="p-4">
+            <h5 class="fw-bold text-dark mb-1">Industrial Engineering Complex</h5>
+            <p class="text-muted small mb-2"><i class="bi bi-geo-alt me-1 text-danger"></i> Ghaziabad, Uttar Pradesh</p>
+            <p class="text-muted small mb-0">High-efficiency rooftop plant generating over 9,600 monthly units for manufacturing operations.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Project 3 -->
+      <div class="col-lg-4 col-md-6 project-item" data-cat="commercial">
+        <div class="project-showcase-card">
+          <div class="project-img-box">
+            <img src="{% static 'images/product-hero-hd.jpg' %}" alt="Hospital Solar">
+            <span class="project-capacity-badge"><i class="bi bi-hospital"></i> 25 kW Hybrid Setup</span>
+          </div>
+          <div class="p-4">
+            <h5 class="fw-bold text-dark mb-1">Super-Specialty Hospital</h5>
+            <p class="text-muted small mb-2"><i class="bi bi-geo-alt me-1 text-danger"></i> Greater Noida, UP</p>
+            <p class="text-muted small mb-0">Zero-export enabled solar setup with automated diesel-generator synchronization.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Project 4 -->
+      <div class="col-lg-4 col-md-6 project-item" data-cat="industrial">
+        <div class="project-showcase-card">
+          <div class="project-img-box">
+            <img src="{% static 'images/off-grid.jpg' %}" alt="Industrial Warehouse">
+            <span class="project-capacity-badge"><i class="bi bi-box-seam"></i> 150 kW Metal Shed</span>
+          </div>
+          <div class="p-4">
+            <h5 class="fw-bold text-dark mb-1">Logistics & Cold Storage Hub</h5>
+            <p class="text-muted small mb-2"><i class="bi bi-geo-alt me-1 text-danger"></i> Faridabad, Haryana</p>
+            <p class="text-muted small mb-0">Trapezoidal sheet solar installation with specialized non-penetrating clamps and walkways.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Project 5 -->
+      <div class="col-lg-4 col-md-6 project-item" data-cat="residential">
+        <div class="project-showcase-card">
+          <div class="project-img-box">
+            <img src="{% static 'images/services-hero.jpg' %}" alt="Residential Leakproof">
+            <span class="project-capacity-badge"><i class="bi bi-umbrella"></i> 10 kW Leakproof Roof</span>
+          </div>
+          <div class="p-4">
+            <h5 class="fw-bold text-dark mb-1">Luxury Villa Solar Canopy</h5>
+            <p class="text-muted small mb-2"><i class="bi bi-geo-alt me-1 text-danger"></i> South Delhi</p>
+            <p class="text-muted small mb-0">Elevated waterproof structure functioning both as a breezy terrace garden and power plant.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Project 6 -->
+      <div class="col-lg-4 col-md-6 project-item" data-cat="industrial">
+        <div class="project-showcase-card">
+          <div class="project-img-box">
+            <img src="{% static 'images/solar_gen_5.jpg' %}" alt="Utility Solar">
+            <span class="project-capacity-badge"><i class="bi bi-globe"></i> 1.2 MW Ground Mount</span>
+          </div>
+          <div class="p-4">
+            <h5 class="fw-bold text-dark mb-1">Renewable IPP Solar Park</h5>
+            <p class="text-muted small mb-2"><i class="bi bi-geo-alt me-1 text-danger"></i> Bikaner, Rajasthan</p>
+            <p class="text-muted small mb-0">High-capacity central inverter plant delivering green power into the high-voltage transmission grid.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ================= 8. REAL CUSTOMER REVIEWS ================= -->
+<section class="py-5 bg-white">
+  <div class="container py-5 my-2">
+    <div class="d-flex justify-content-between align-items-end mb-5 flex-wrap gap-3">
+      <div>
+        <div class="section-tag">VERIFIED TESTIMONIALS</div>
+        <h2 class="section-title mb-1">Trusted by 5,000+ Property Owners</h2>
+        <p class="text-muted mb-0">Read genuine feedback from residential and commercial clients who switched to solar with us.</p>
+      </div>
+      <button type="button" class="btn btn-outline-success px-4 py-2 rounded-pill fw-bold" data-bs-toggle="modal" data-bs-target="#reviewModal">
+        <i class="bi bi-pencil-square me-1"></i> Write a Review
+      </button>
+    </div>
+
+    <!-- Reviews Grid -->
+    <div class="row g-4">
+      {% for r in reviews %}
+      <div class="col-lg-4 col-md-6">
+        <div class="review-card-item">
+          <!-- Rating Stars & Verified Chip -->
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <div class="text-warning fs-6">
+              {% for star in "12345" %}
+                {% if forloop.counter <= r.rating %}
+                  <i class="bi bi-star-fill"></i>
+                {% else %}
+                  <i class="bi bi-star text-muted opacity-25"></i>
+                {% endif %}
+              {% endfor %}
+            </div>
+            <span class="badge bg-success bg-opacity-10 text-success rounded-pill px-2 py-1 small">
+              <i class="bi bi-check-circle-fill me-1"></i> Verified Owner
+            </span>
+          </div>
+
+          <!-- Review Comment -->
+          <p class="text-muted mb-4 fs-6 flex-grow-1" style="line-height: 1.6;">
+            "{{ r.review }}"
+          </p>
+
+          <!-- Author Info -->
+          <div class="d-flex align-items-center gap-3 pt-3 border-top">
+            <div class="review-avatar">
+              {{ r.name|slice:":1"|upper }}
+            </div>
+            <div>
+              <h6 class="fw-bold text-dark mb-0">{{ r.name }}</h6>
+              <small class="text-muted"><i class="bi bi-geo-alt me-1"></i>{{ r.location|default:"India" }}</small>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% empty %}
+      <div class="col-12 text-center py-4">
+        <p class="text-muted">No reviews posted yet. Be the first to share your experience!</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- Review Submission Modal -->
+<div class="modal fade" id="reviewModal" tabindex="-1" aria-labelledby="reviewModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content rounded-4 border-0 shadow-lg">
+      <div class="modal-header border-0 pb-0 px-4 pt-4">
+        <h5 class="modal-title fw-bold text-dark" id="reviewModalLabel">
+          <i class="bi bi-star-fill text-warning me-2"></i>Share Your Experience
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body px-4 py-3">
+        <form method="POST">
+          {% csrf_token %}
+          
+          <div class="mb-3">
+            <label class="form-label small fw-bold text-muted">YOUR RATING</label>
+            <div class="d-flex gap-2 fs-3 text-warning cursor-pointer" id="starRatingPicker">
+              <i class="bi bi-star-fill cursor-pointer" data-val="1"></i>
+              <i class="bi bi-star-fill cursor-pointer" data-val="2"></i>
+              <i class="bi bi-star-fill cursor-pointer" data-val="3"></i>
+              <i class="bi bi-star-fill cursor-pointer" data-val="4"></i>
+              <i class="bi bi-star-fill cursor-pointer" data-val="5"></i>
+            </div>
+            <input type="hidden" name="rating" id="ratingInput" value="5">
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label small fw-bold text-muted">YOUR FULL NAME</label>
+            <input type="text" name="name" class="form-control rounded-3" placeholder="e.g. Rahul Sharma" required>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label small fw-bold text-muted">YOUR EMAIL ADDRESS</label>
+            <input type="email" name="email" class="form-control rounded-3" placeholder="e.g. rahul@example.com" required>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label small fw-bold text-muted">CITY / LOCATION</label>
+            <input type="text" name="location" class="form-control rounded-3" placeholder="e.g. Noida, UP">
+          </div>
+
+          <div class="mb-4">
+            <label class="form-label small fw-bold text-muted">YOUR DETAILED REVIEW</label>
+            <textarea name="review" class="form-control rounded-3" rows="4" placeholder="Tell us how the solar installation has helped reduce your electricity bills..." required></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-success w-100 py-3 fw-bold rounded-pill shadow-sm" style="background-color: #0b5c32; border: none;">
+            Submit Customer Review
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= 9. SOLAR FAQs ================= -->
+<section class="py-5" style="background-color: #f8fafc;">
+  <div class="container py-5 my-2">
+    <div class="text-center mx-auto mb-5" style="max-width: 700px;">
+      <div class="section-tag justify-content-center">FREQUENTLY ASKED QUESTIONS</div>
+      <h2 class="section-title mb-3">Clear Answers for Smart Solar Decisions</h2>
+      <p class="text-muted">Everything you need to know about rooftop solar subsidies, installation requirements, and return on investment.</p>
+    </div>
+
+    <div class="mx-auto" style="max-width: 860px;">
+      <div class="accordion accordion-flush bg-white rounded-4 shadow-sm p-3 border" id="homeFaqAccordion">
         
-        <div class="row g-4">
-            {% for item in project_data|slice:":3" %}
-            <div class="col-md-4">
-                <div class="card project-card-premium h-100 border-0 shadow-sm rounded-4 overflow-hidden">
-                    <div class="project-img-wrapper position-relative">
-                        {% if item.photo %}
-                        <img src="{{ item.photo.file.url }}" class="w-100" style="height: 280px; object-fit: cover;">
-                        {% else %}
-                        <img src="/static/images/project-hero.png" class="w-100" style="height: 280px; object-fit: cover;">
-                        {% endif %}
-                        <div class="project-overlay text-white p-3 d-flex flex-column justify-content-end">
-                            <span class="badge bg-success mb-2 align-self-start">{{ item.project.get_project_type_display|default:"Premium Installation" }}</span>
-                            <h5 class="fw-bold mb-1">{{ item.project.feasibility.suggested_capacity|floatformat:0|default:"Custom" }}kW Power Plant</h5>
-                            <p class="small m-0"><i class="fa-solid fa-location-dot text-warning me-1"></i> {{item.project.location|default:"India"}}</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {% endfor %}
-
-            {% if project_data|length == 0 %}
-            <div class="col-md-4">
-                <div class="card project-card-premium h-100 border-0 shadow-sm rounded-4 overflow-hidden">
-                    <div class="project-img-wrapper position-relative">
-                        <img src="/static/images/home.png" class="w-100" style="height: 280px; object-fit: cover;">
-                        <div class="project-overlay text-white p-3 d-flex flex-column justify-content-end">
-                            <span class="badge bg-success mb-2 align-self-start">Residential</span>
-                            <h5 class="fw-bold mb-1">5kW Home Solar Plant</h5>
-                            <p class="small m-0"><i class="fa-solid fa-location-dot text-warning me-1"></i> New Delhi, NCR</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card project-card-premium h-100 border-0 shadow-sm rounded-4 overflow-hidden">
-                    <div class="project-img-wrapper position-relative">
-                        <img src="/static/images/com.png" class="w-100" style="height: 280px; object-fit: cover;">
-                        <div class="project-overlay text-white p-3 d-flex flex-column justify-content-end">
-                            <span class="badge bg-primary mb-2 align-self-start">Commercial</span>
-                            <h5 class="fw-bold mb-1">100kW Factory Rooftop</h5>
-                            <p class="small m-0"><i class="fa-solid fa-location-dot text-warning me-1"></i> Gurugram, Haryana</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card project-card-premium h-100 border-0 shadow-sm rounded-4 overflow-hidden">
-                    <div class="project-img-wrapper position-relative">
-                        <img src="/static/images/on-grid.jpg" class="w-100" style="height: 280px; object-fit: cover;">
-                        <div class="project-overlay text-white p-3 d-flex flex-column justify-content-end">
-                            <span class="badge bg-warning text-dark mb-2 align-self-start">Industrial</span>
-                            <h5 class="fw-bold mb-1">500kW Mega Plant</h5>
-                            <p class="small m-0"><i class="fa-solid fa-location-dot text-warning me-1"></i> Noida, UP</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            {% elif project_data|length == 1 %}
-            <div class="col-md-4">
-                <div class="card project-card-premium h-100 border-0 shadow-sm rounded-4 overflow-hidden">
-                    <div class="project-img-wrapper position-relative">
-                        <img src="/static/images/com.png" class="w-100" style="height: 280px; object-fit: cover;">
-                        <div class="project-overlay text-white p-3 d-flex flex-column justify-content-end">
-                            <span class="badge bg-primary mb-2 align-self-start">Commercial</span>
-                            <h5 class="fw-bold mb-1">100kW Factory Rooftop</h5>
-                            <p class="small m-0"><i class="fa-solid fa-location-dot text-warning me-1"></i> Gurugram, Haryana</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card project-card-premium h-100 border-0 shadow-sm rounded-4 overflow-hidden">
-                    <div class="project-img-wrapper position-relative">
-                        <img src="/static/images/on-grid.jpg" class="w-100" style="height: 280px; object-fit: cover;">
-                        <div class="project-overlay text-white p-3 d-flex flex-column justify-content-end">
-                            <span class="badge bg-warning text-dark mb-2 align-self-start">Industrial</span>
-                            <h5 class="fw-bold mb-1">500kW Mega Plant</h5>
-                            <p class="small m-0"><i class="fa-solid fa-location-dot text-warning me-1"></i> Noida, UP</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            {% elif project_data|length == 2 %}
-            <div class="col-md-4">
-                <div class="card project-card-premium h-100 border-0 shadow-sm rounded-4 overflow-hidden">
-                    <div class="project-img-wrapper position-relative">
-                        <img src="/static/images/on-grid.jpg" class="w-100" style="height: 280px; object-fit: cover;">
-                        <div class="project-overlay text-white p-3 d-flex flex-column justify-content-end">
-                            <span class="badge bg-warning text-dark mb-2 align-self-start">Industrial</span>
-                            <h5 class="fw-bold mb-1">500kW Mega Plant</h5>
-                            <p class="small m-0"><i class="fa-solid fa-location-dot text-warning me-1"></i> Noida, UP</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {% endif %}
-        </div>
-    </div>
-</div>
-
-<!-- REVIEWS SECTION -->
-<div class="section-padding bg-white" id="reviews">
-    <div class="container">
-        <div class="d-flex justify-content-between align-items-end mb-5">
-            <div>
-                <h6 class="ss-text-primary fw-bold text-uppercase tracking-wider mb-2">Testimonials</h6>
-                <h2 class="display-5 fw-bold ss-text-dark m-0">What Our Clients Say</h2>
-            </div>
-            <button class="btn ss-btn-primary rounded-pill px-4" data-bs-toggle="modal" data-bs-target="#writeReviewModal">
-                <i class="fa-solid fa-pen-nib me-2"></i> Write a Review
+        <!-- FAQ 1 -->
+        <div class="accordion-item border-bottom py-2">
+          <h2 class="accordion-header">
+            <button class="accordion-button collapsed fw-bold text-dark fs-6 bg-transparent shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#hfaq1">
+              How does the PM Surya Ghar Muft Bijli Yojana subsidy work?
             </button>
+          </h2>
+          <div id="hfaq1" class="accordion-collapse collapse" data-bs-parent="#homeFaqAccordion">
+            <div class="accordion-body text-muted pt-0 pb-3" style="line-height: 1.7;">
+              Under the central government scheme, residential rooftops receive direct bank transfer (DBT) subsidies: ₹30,000 for a 1 kW system, ₹60,000 for a 2 kW system, and ₹78,000 for 3 kW and above. We manage the national portal registration and all technical documentation on your behalf.
+            </div>
+          </div>
         </div>
+
+        <!-- FAQ 2 -->
+        <div class="accordion-item border-bottom py-2">
+          <h2 class="accordion-header">
+            <button class="accordion-button collapsed fw-bold text-dark fs-6 bg-transparent shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#hfaq2">
+              How much shadow-free rooftop area is required for 1 kW solar?
+            </button>
+          </h2>
+          <div id="hfaq2" class="accordion-collapse collapse" data-bs-parent="#homeFaqAccordion">
+            <div class="accordion-body text-muted pt-0 pb-3" style="line-height: 1.7;">
+              Typically, 1 kW requires approximately 80 to 100 square feet of shadow-free rooftop area. For a standard 3 kW residential setup (which produces ~360 units per month), you need around 250 to 300 square feet of roof space.
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ 3 -->
+        <div class="accordion-item border-bottom py-2">
+          <h2 class="accordion-header">
+            <button class="accordion-button collapsed fw-bold text-dark fs-6 bg-transparent shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#hfaq3">
+              Will solar damage or cause water leakage on my terrace?
+            </button>
+          </h2>
+          <div id="hfaq3" class="accordion-collapse collapse" data-bs-parent="#homeFaqAccordion">
+            <div class="accordion-body text-muted pt-0 pb-3" style="line-height: 1.7;">
+              Not at all! We use heavy chemical anchor fastenings and rubber waterproofing sealants on RCC roofs. Alternatively, you can choose our <strong>Patented Leakproof Solar Roof</strong>, which elevates the structure as a shaded waterproof canopy with zero water dripping, protecting your terrace completely.
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ 4 -->
+        <div class="accordion-item border-bottom py-2">
+          <h2 class="accordion-header">
+            <button class="accordion-button collapsed fw-bold text-dark fs-6 bg-transparent shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#hfaq4">
+              What happens during cloudy days or power cuts?
+            </button>
+          </h2>
+          <div id="hfaq4" class="accordion-collapse collapse" data-bs-parent="#homeFaqAccordion">
+            <div class="accordion-body text-muted pt-0 pb-3" style="line-height: 1.7;">
+              Modern Mono PERC panels still generate power under diffuse daylight during cloudy weather. On an on-grid system, the grid supplies any shortfall automatically. If you want backup during power grid outages, we integrate hybrid inverters with Lithium battery storage.
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ 5 -->
+        <div class="accordion-item py-2">
+          <h2 class="accordion-header">
+            <button class="accordion-button collapsed fw-bold text-dark fs-6 bg-transparent shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#hfaq5">
+              What is the typical payback period for a rooftop solar system?
+            </button>
+          </h2>
+          <div id="hfaq5" class="accordion-collapse collapse" data-bs-parent="#homeFaqAccordion">
+            <div class="accordion-body text-muted pt-0 pb-3" style="line-height: 1.7;">
+              With electricity tariffs between ₹7 to ₹9 per unit and the ₹78,000 subsidy, most residential setups recover their complete capital investment within 3.0 to 3.5 years. Commercial and industrial plants typically achieve payback in 2.5 to 3 years.
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 10. HIGH-IMPACT CLOSING CTA BANNER ================= -->
+<section class="py-5 bg-white">
+  <div class="container py-3">
+    <div class="high-impact-cta text-center text-white p-5 mx-auto">
+      <div class="position-relative" style="z-index: 2; max-width: 820px; margin: 0 auto;">
         
-        <div class="row g-4">
-            {% for review in reviews|slice:":3" %}
-            <div class="col-md-4">
-                <div class="card h-100 border-0 shadow-sm rounded-4 p-4 position-relative overflow-hidden">
-                    <!-- Decorative Icon -->
-                    <i class="fa-solid fa-quote-right position-absolute opacity-10 text-primary" style="font-size: 5rem; top: -10px; right: -10px;"></i>
-                    
-                    <div class="d-flex align-items-center mb-3 position-relative z-1">
-                        <div class="rounded-circle d-flex justify-content-center align-items-center text-white fw-bold fs-5 me-3 shadow-sm" style="width: 50px; height: 50px; background: linear-gradient(135deg, #00234b, #004085);">
-                            {{ review.name|make_list|first|upper }}
-                        </div>
-                        <div>
-                            <h5 class="fw-bold mb-0 ss-text-dark">{{ review.name }}</h5>
-                            <small class="text-muted"><i class="fa-solid fa-location-dot text-warning me-1"></i> {{ review.location }}</small>
-                        </div>
-                    </div>
-                    <div class="text-warning mb-3 fs-6 position-relative z-1">
-                        {% for i in "12345" %}
-                            {% if forloop.counter <= review.rating %}
-                                <i class="fa-solid fa-star"></i>
-                            {% else %}
-                                <i class="fa-regular fa-star"></i>
-                            {% endif %}
-                        {% endfor %}
-                    </div>
-                    <p class="text-muted mb-0 fst-italic position-relative z-1 lh-lg">"{{ review.review }}"</p>
-                </div>
-            </div>
-            {% empty %}
-            <div class="col-12 text-center text-muted">
-                <div class="py-5">
-                    <i class="fa-regular fa-face-smile text-primary mb-3" style="font-size: 3rem;"></i>
-                    <p class="fs-5">No reviews yet. Be the first to share your experience!</p>
-                </div>
-            </div>
-            {% endfor %}
+        <span class="badge bg-warning text-dark px-3 py-2 rounded-pill fw-bold mb-3 small text-uppercase">
+          <i class="bi bi-clock-history me-1"></i> Limited-Time Subsidy Slabs Active
+        </span>
+
+        <h2 class="display-5 fw-bold mb-3 text-white">
+          Ready to Cut Your Electricity Bill by 90%?
+        </h2>
+        
+        <p class="fs-5 text-light opacity-90 mb-4" style="line-height: 1.6;">
+          Join thousands of homeowners and businesses generating clean, independent solar electricity with zero maintenance worries.
+        </p>
+
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
+          <a href="{% url 'contact' %}" class="btn btn-success px-4 py-3 fw-bold rounded-pill shadow-lg d-inline-flex align-items-center gap-2" style="background-color: #10b981; border: none; font-size: 1.05rem;">
+            <i class="bi bi-house-door-fill"></i> Schedule Free Site Audit
+          </a>
+          <a href="tel:+918770313216" class="btn btn-outline-light px-4 py-3 fw-bold rounded-pill d-inline-flex align-items-center gap-2" style="font-size: 1.05rem;">
+            <i class="bi bi-telephone-fill text-warning"></i> Call: +91 87703 13216
+          </a>
         </div>
-    </div>
-</div>
 
-<!-- Write Review Modal -->
-<div class="modal fade" id="writeReviewModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
-            <div class="modal-header bg-primary text-white border-0 px-4 py-3">
-                <h5 class="modal-title fw-bold"><i class="fa-solid fa-star text-warning me-2"></i> Share Your Experience</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <form action="{% url 'home' %}" method="POST">
-                {% csrf_token %}
-                <div class="modal-body p-4 bg-light">
-                    <div class="mb-4 text-center">
-                        <label class="form-label fw-bold d-block text-secondary text-uppercase small">Your Rating</label>
-                        <div class="rating-stars display-6 text-warning" style="cursor: pointer;">
-                            <i class="fa-regular fa-star" data-rating="1"></i>
-                            <i class="fa-regular fa-star" data-rating="2"></i>
-                            <i class="fa-regular fa-star" data-rating="3"></i>
-                            <i class="fa-regular fa-star" data-rating="4"></i>
-                            <i class="fa-regular fa-star" data-rating="5"></i>
-                        </div>
-                        <input type="hidden" name="rating" id="ratingInput" value="5" required>
-                    </div>
-                    
-                    <style>
-                        /* Style the default Django form inputs */
-                        #writeReviewModal input[type="text"],
-                        #writeReviewModal input[type="email"],
-                        #writeReviewModal textarea {
-                            width: 100%;
-                            padding: 0.75rem 1rem;
-                            border: 1px solid #dee2e6;
-                            border-radius: 0.5rem;
-                            background-color: #fff;
-                            font-family: inherit;
-                            margin-bottom: 1rem;
-                            box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075);
-                            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-                        }
-                        #writeReviewModal input:focus,
-                        #writeReviewModal textarea:focus {
-                            border-color: #00234b;
-                            outline: 0;
-                            box-shadow: 0 0 0 0.25rem rgba(0,35,75,0.25);
-                        }
-                        #writeReviewModal label {
-                            display: none; /* Hide default labels */
-                        }
-                    </style>
-
-                    {{ form.as_p }}
-                    
-                </div>
-                <div class="modal-footer bg-white border-top-0 px-4 py-3 justify-content-between">
-                    <button type="button" class="btn btn-light rounded-pill px-4 fw-bold text-muted border" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-success rounded-pill px-4 fw-bold shadow-sm">Submit Review</button>
-                </div>
-            </form>
+        <div class="d-flex justify-content-center gap-4 text-light opacity-75 mt-4 small flex-wrap">
+          <span><i class="bi bi-check2 text-success me-1"></i> Zero Obligation</span>
+          <span><i class="bi bi-check2 text-success me-1"></i> 24-Hr Technical Visit</span>
+          <span><i class="bi bi-check2 text-success me-1"></i> Free 3D CAD Shadow Model</span>
         </div>
-    </div>
-</div>
 
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Interactive Scripts for Projects Filter & Star Rating Picker -->
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const stars = document.querySelectorAll(".rating-stars i");
-        const ratingInput = document.getElementById("ratingInput");
-        
-        // Initial setup for default rating of 5
-        updateStars(5);
+  function filterProjects(cat, btn) {
+    // Update active pill
+    document.querySelectorAll('.project-filter-pill').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
 
-        stars.forEach(star => {
-            star.addEventListener("click", function() {
-                const rating = this.getAttribute("data-rating");
-                ratingInput.value = rating;
-                updateStars(rating);
-            });
-            
-            star.addEventListener("mouseover", function() {
-                updateStars(this.getAttribute("data-rating"));
-            });
-            
-            star.addEventListener("mouseout", function() {
-                updateStars(ratingInput.value);
-            });
-        });
-        
-        function updateStars(rating) {
-            stars.forEach(s => {
-                if(parseInt(s.getAttribute("data-rating")) <= rating) {
-                    s.classList.remove("fa-regular");
-                    s.classList.add("fa-solid");
-                } else {
-                    s.classList.remove("fa-solid");
-                    s.classList.add("fa-regular");
-                }
-            });
-        }
+    // Filter cards
+    const items = document.querySelectorAll('.project-item');
+    items.forEach(item => {
+      if (cat === 'all' || item.getAttribute('data-cat') === cat) {
+        item.style.display = 'block';
+      } else {
+        item.style.display = 'none';
+      }
     });
-</script>
+  }
 
-<!-- GET QUOTE FORM SECTION (Moved to bottom as requested) -->
-<div class="section-padding ss-bg-dark text-white" id="quote-form">
-    <div class="container">
-        <div class="row align-items-center">
-            <div class="col-lg-5 mb-5 mb-lg-0 pe-lg-5">
-                <h6 class="ss-text-primary fw-bold text-uppercase tracking-wider mb-2">Get Started</h6>
-                <h2 class="display-5 fw-bold mb-4">Request Your Free Solar Quote</h2>
-                <p class="lead opacity-75 mb-4">Fill out the form below and our solar experts will contact you within 24 hours with a tailored solution.</p>
-                <div class="d-flex align-items-center mb-3">
-                    <div class="icon-box bg-white rounded-circle text-dark d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
-                        <i class="fa-solid fa-phone fs-5"></i>
-                    </div>
-                    <div>
-                        <p class="mb-0 small text-uppercase opacity-75">Call Us Now</p>
-                        <h5 class="fw-bold mb-0">+91 87966 27007</h5>
-                    </div>
-                </div>
-                <div class="d-flex align-items-center">
-                    <div class="icon-box bg-white rounded-circle text-dark d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
-                        <i class="fa-solid fa-envelope fs-5"></i>
-                    </div>
-                    <div>
-                        <p class="mb-0 small text-uppercase opacity-75">Email Us</p>
-                        <h5 class="fw-bold mb-0">info@kianagreen.com</h5>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="col-lg-7">
-                <div class="bg-white p-4 p-md-5 rounded-4 shadow-lg text-dark">
-                    <h3 class="fw-bold mb-4 text-center">Get Your Free Quote</h3>
-                    
-                    <form action="{% url 'contact' %}" method="POST">
-                        {% csrf_token %}
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <label class="form-label fw-semibold small">Full Name</label>
-                                <input type="text" name="name" class="form-control ss-input" placeholder="e.g. Aditya Sharma" required>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label fw-semibold small">Email Address</label>
-                                <input type="email" name="email" class="form-control ss-input" placeholder="e.g. name@example.com">
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label fw-semibold small">Phone Number</label>
-                                <input type="text" name="phone" class="form-control ss-input" placeholder="+91 XXXXX XXXXX" required>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label fw-semibold small">Average Monthly Bill</label>
-                                <select class="form-select ss-input" name="bill" required>
-                                    <option value="">Select Range</option>
-                                    <option value="Under ₹3,000">Under ₹3,000</option>
-                                    <option value="₹3,000 - ₹5,000">₹3,000 - ₹5,000</option>
-                                    <option value="₹5,000 - ₹10,000">₹5,000 - ₹10,000</option>
-                                    <option value="Above ₹10,000">Above ₹10,000</option>
-                                </select>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label fw-semibold small">City / Location</label>
-                                <input type="text" name="location" class="form-control ss-input" placeholder="e.g. Lucknow, UP" required>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label fw-semibold small">Service Required</label>
-                                <select class="form-select ss-input" name="service" required>
-                                    <option value="">Select Service</option>
-                                    <option value="ongrid">On-grid Solar</option>
-                                    <option value="offgrid">Off-grid Solar</option>
-                                    <option value="hybrid">Hybrid Solar</option>
-                                    <option value="commercial">Commercial Solar</option>
-                                </select>
-                            </div>
-                            <div class="col-12 mt-4">
-                                <button type="submit" class="btn ss-btn-primary w-100 py-3 fw-bold fs-5 shadow">
-                                    Request Free Consultation <i class="fa-solid fa-paper-plane ms-2"></i>
-                                </button>
-                                <p class="text-center text-muted mt-3 mb-0" style="font-size: 0.8rem;"><i class="fa-solid fa-shield-halved text-success me-1"></i> Your information is 100% secure with us.</p>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+  // Star Rating Picker in Modal
+  document.addEventListener('DOMContentLoaded', function() {
+    const starContainer = document.getElementById('starRatingPicker');
+    const ratingInput = document.getElementById('ratingInput');
+
+    if (starContainer && ratingInput) {
+      const stars = starContainer.querySelectorAll('i');
+
+      stars.forEach(star => {
+        star.addEventListener('click', function() {
+          const val = parseInt(this.getAttribute('data-val'));
+          ratingInput.value = val;
+
+          stars.forEach((s, idx) => {
+            if (idx < val) {
+              s.className = 'bi bi-star-fill cursor-pointer';
+            } else {
+              s.className = 'bi bi-star cursor-pointer opacity-25';
+            }
+          });
+        });
+      });
+    }
+  });
+</script>
 
 {% endblock %}

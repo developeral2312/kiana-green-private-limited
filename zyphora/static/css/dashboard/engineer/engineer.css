@@ -6,71 +6,7 @@
 }
 
 
-/* ================= KPI CARDS ================= */
 
-.kpi-card {
-    width: 100%;
-    min-height: 170px;
-    border-radius: 16px;
-    padding: 26px 20px;
-
-    color: #fff;
-
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-
-    transition: all 0.3s ease;
-
-    backdrop-filter: blur(10px);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
-}
-
-.kpi-card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.18);
-}
-
-
-/* ================= KPI TEXT ================= */
-
-.kpi-icon {
-    font-size: 2.2rem;
-    margin-bottom: 8px;
-    opacity: 0.95;
-}
-
-.kpi-value {
-    font-size: 1.9rem;
-    font-weight: 700;
-    margin: 6px 0;
-}
-
-.kpi-label {
-    font-size: 0.9rem;
-    opacity: 0.9;
-}
-
-
-/* ================= KPI COLORS ================= */
-
-.kpi-card.assigned {
-    background: linear-gradient(135deg, #0d6efd, #4f8cff);
-}
-
-.kpi-card.ongoing {
-    background: linear-gradient(135deg, #ffc107, #ffda6a);
-    color: #000;
-}
-
-.kpi-card.completed {
-    background: linear-gradient(135deg, #198754, #46c37b);
-}
-
-.kpi-card.pending {
-    background: linear-gradient(135deg, #dc3545, #ff6b6b);
-}
 
 
 /* ================= DASHBOARD CARDS ================= */

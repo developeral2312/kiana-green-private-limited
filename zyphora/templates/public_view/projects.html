@@ -29,7 +29,7 @@
                     {% if item.photo %}
                         <img src="{{ item.photo.file.url }}" class="card-img-top" style="height: 250px; object-fit: cover;">
                     {% else %}
-                        <img src="/static/images/project-hero.png" class="card-img-top" style="height: 250px; object-fit: cover;">
+                        <img src="{% static 'images/solar_tech_projects.jpg' %}" class="card-img-top" style="height: 250px; object-fit: cover;">
                     {% endif %}
 
                     <div class="card-body p-4">
@@ -49,7 +49,7 @@
             {% if project_data|length == 0 %}
             <div class="col-md-4">
                 <div class="card project-card shadow-sm border-0 h-100 rounded-4 overflow-hidden">
-                    <img src="/static/images/home.png" class="card-img-top" style="height: 250px; object-fit: cover;">
+                    <img src="{% static 'images/on-grid.jpg' %}" class="card-img-top" style="height: 250px; object-fit: cover;">
                     <div class="card-body p-4">
                         <h5 class="card-title fw-bold mb-3" style="color: #00234b;">5kW Residential Solar</h5>
                         <p class="card-text text-muted small mb-1"><i class="fa-solid fa-location-dot me-2" style="color: #f28b00;"></i> Location: New Delhi</p>
@@ -60,7 +60,7 @@
             </div>
             <div class="col-md-4">
                 <div class="card project-card shadow-sm border-0 h-100 rounded-4 overflow-hidden">
-                    <img src="/static/images/com.png" class="card-img-top" style="height: 250px; object-fit: cover;">
+                    <img src="{% static 'images/com.png' %}" class="card-img-top" style="height: 250px; object-fit: cover;">
                     <div class="card-body p-4">
                         <h5 class="card-title fw-bold mb-3" style="color: #00234b;">100kW Commercial Solar</h5>
                         <p class="card-text text-muted small mb-1"><i class="fa-solid fa-location-dot me-2" style="color: #f28b00;"></i> Location: Gurugram</p>
@@ -71,7 +71,7 @@
             </div>
             <div class="col-md-4">
                 <div class="card project-card shadow-sm border-0 h-100 rounded-4 overflow-hidden">
-                    <img src="/static/images/on-grid.jpg" class="card-img-top" style="height: 250px; object-fit: cover;">
+                    <img src="{% static 'images/project-hero.png' %}" class="card-img-top" style="height: 250px; object-fit: cover;">
                     <div class="card-body p-4">
                         <h5 class="card-title fw-bold mb-3" style="color: #00234b;">500kW Industrial Plant</h5>
                         <p class="card-text text-muted small mb-1"><i class="fa-solid fa-location-dot me-2" style="color: #f28b00;"></i> Location: Noida</p>
@@ -84,7 +84,7 @@
             {% elif project_data|length == 1 %}
             <div class="col-md-4">
                 <div class="card project-card shadow-sm border-0 h-100 rounded-4 overflow-hidden">
-                    <img src="/static/images/com.png" class="card-img-top" style="height: 250px; object-fit: cover;">
+                    <img src="{% static 'images/com.png' %}" class="card-img-top" style="height: 250px; object-fit: cover;">
                     <div class="card-body p-4">
                         <h5 class="card-title fw-bold mb-3" style="color: #00234b;">100kW Commercial Solar</h5>
                         <p class="card-text text-muted small mb-1"><i class="fa-solid fa-location-dot me-2" style="color: #f28b00;"></i> Location: Gurugram</p>
@@ -95,7 +95,7 @@
             </div>
             <div class="col-md-4">
                 <div class="card project-card shadow-sm border-0 h-100 rounded-4 overflow-hidden">
-                    <img src="/static/images/on-grid.jpg" class="card-img-top" style="height: 250px; object-fit: cover;">
+                    <img src="{% static 'images/project-hero.png' %}" class="card-img-top" style="height: 250px; object-fit: cover;">
                     <div class="card-body p-4">
                         <h5 class="card-title fw-bold mb-3" style="color: #00234b;">500kW Industrial Plant</h5>
                         <p class="card-text text-muted small mb-1"><i class="fa-solid fa-location-dot me-2" style="color: #f28b00;"></i> Location: Noida</p>
@@ -108,7 +108,7 @@
             {% elif project_data|length == 2 %}
             <div class="col-md-4">
                 <div class="card project-card shadow-sm border-0 h-100 rounded-4 overflow-hidden">
-                    <img src="/static/images/on-grid.jpg" class="card-img-top" style="height: 250px; object-fit: cover;">
+                    <img src="{% static 'images/project-hero.png' %}" class="card-img-top" style="height: 250px; object-fit: cover;">
                     <div class="card-body p-4">
                         <h5 class="card-title fw-bold mb-3" style="color: #00234b;">500kW Industrial Plant</h5>
                         <p class="card-text text-muted small mb-1"><i class="fa-solid fa-location-dot me-2" style="color: #f28b00;"></i> Location: Noida</p>
@@ -131,10 +131,10 @@
         </div>
         <div class="row align-items-center">
             <div class="col-md-6 mb-4 mb-md-0">
-                <img src="{% static 'images/before.png' %}" class="img-fluid rounded-4 shadow-lg border">
+                <img src="{% static 'images/before.png' %}" class="img-fluid rounded-4 shadow-lg border" style="height: 350px; width: 100%; object-fit: cover;" alt="Before Installation">
             </div>
             <div class="col-md-6">
-                <img src="{% static 'images/after.png' %}" class="img-fluid rounded-4 shadow-lg border">
+                <img src="{% static 'images/after.png' %}" class="img-fluid rounded-4 shadow-lg border" style="height: 350px; width: 100%; object-fit: cover;" alt="After Installation">
             </div>
         </div>
     </div>

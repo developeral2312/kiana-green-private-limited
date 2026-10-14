@@ -1,0 +1,96 @@
+{% extends "dashboard/dashboard.html" %}
+{% load widget_tweaks %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold mb-0 text-dark">Track New Equipment</h2>
+            <p class="text-muted">Register an asset serial number for <a href="{% url 'project_detail' project.id %}" class="fw-bold text-primary">{{ project.title }}</a></p>
+        </div>
+        <a href="{% url 'project_equipment' project.id %}" class="btn btn-outline-secondary rounded-pill px-4">
+            <i class="fas fa-arrow-left me-2"></i> Back to Asset List
+        </a>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm rounded-4">
+                <div class="card-header bg-primary text-white p-4 rounded-top-4">
+                    <h5 class="mb-0"><i class="fas fa-barcode me-2"></i> Equipment Details</h5>
+                </div>
+                <div class="card-body p-4 p-md-5">
+                    <form method="POST">
+                        {% csrf_token %}
+                        
+                        <div class="row g-4">
+                            <!-- Category -->
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold text-secondary">Category *</label>
+                                {{ form.category }}
+                            </div>
+                            <!-- Status -->
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold text-secondary">Status</label>
+                                {{ form.status }}
+                            </div>
+                            
+                            <!-- Brand & Model -->
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold text-secondary">Brand / Make *</label>
+                                {{ form.brand }}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold text-secondary">Model Name</label>
+                                {{ form.model_name }}
+                            </div>
+                            
+                            <!-- Serial Number (Full Width) -->
+                            <div class="col-12">
+                                <label class="form-label fw-bold text-primary"><i class="fas fa-hashtag me-1"></i> Unique Serial Number *</label>
+                                <div class="input-group input-group-lg">
+                                    <span class="input-group-text bg-light"><i class="fas fa-qrcode"></i></span>
+                                    {{ form.serial_number }}
+                                </div>
+                                {% if form.serial_number.errors %}
+                                <div class="text-danger small mt-1">
+                                    {{ form.serial_number.errors.0 }}
+                                </div>
+                                {% endif %}
+                                <div class="form-text">Ensure serial number matches exactly with physical unit to validate warranty.</div>
+                            </div>
+                            
+                            <!-- Warranty Details -->
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold text-secondary">Installation Date</label>
+                                {{ form.installation_date }}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold text-secondary">Warranty Period (Months)</label>
+                                <div class="input-group">
+                                    {{ form.warranty_months }}
+                                    <span class="input-group-text">Months</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Notes -->
+                            <div class="col-12">
+                                <label class="form-label fw-bold text-secondary">Additional Notes</label>
+                                {{ form.notes }}
+                            </div>
+                        </div>
+                        
+                        <hr class="my-4">
+                        
+                        <div class="d-flex justify-content-end">
+                            <button type="submit" class="btn btn-primary btn-lg rounded-pill px-5 shadow-sm fw-bold">
+                                <i class="fas fa-save me-2"></i> Save Equipment
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

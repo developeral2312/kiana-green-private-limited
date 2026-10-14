@@ -1,0 +1,106 @@
+{% extends 'dashboard/dashboard.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold mb-0 text-primary">Partner Portal</h2>
+            <p class="text-muted">Welcome, {{ partner.name }} ({{ partner.get_partner_type_display }})</p>
+        </div>
+        <div>
+            <a href="{% url 'partner_portal_add_lead' %}" class="btn btn-success fw-bold px-4 py-2 shadow-sm rounded-pill">
+                <i class="fas fa-plus-circle me-1"></i> Submit New Lead
+            </a>
+        </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="row mb-4">
+        <div class="col-md-6 col-lg-3">
+            <div class="card border-0 shadow-sm bg-primary text-white h-100 rounded-4">
+                <div class="card-body">
+                    <h6 class="text-white-50 text-uppercase fw-bold mb-2">Total Leads Submitted</h6>
+                    <h2 class="mb-0 fw-bold">{{ total_leads }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+            <div class="card border-0 shadow-sm bg-success text-white h-100 rounded-4">
+                <div class="card-body">
+                    <h6 class="text-white-50 text-uppercase fw-bold mb-2">Converted to Projects</h6>
+                    <h2 class="mb-0 fw-bold">{{ converted_leads }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+            <div class="card border-0 shadow-sm bg-warning text-dark h-100 rounded-4">
+                <div class="card-body">
+                    <h6 class="text-dark-50 text-uppercase fw-bold mb-2">Commission Rate</h6>
+                    <h2 class="mb-0 fw-bold">{{ partner.commission_rate }}%</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+            <div class="card border-0 shadow-sm bg-dark text-white h-100 rounded-4">
+                <div class="card-body">
+                    <h6 class="text-white-50 text-uppercase fw-bold mb-2">Your Manager</h6>
+                    <p class="mb-0 fw-bold fs-5">{{ partner.assigned_manager.first_name|default:"Unassigned" }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Leads Table -->
+    <div class="card shadow-sm border-0 rounded-4">
+        <div class="card-header bg-white border-bottom py-3">
+            <h5 class="mb-0 fw-bold"><i class="fas fa-list-ul text-primary me-2"></i> Your Submitted Leads</h5>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="ps-4">Customer Name</th>
+                            <th>Phone</th>
+                            <th>Email</th>
+                            <th>Status</th>
+                            <th>Submitted On</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for lead in leads %}
+                        <tr>
+                            <td class="ps-4 fw-bold">{{ lead.customer_name }}</td>
+                            <td><a href="tel:{{ lead.phone }}" class="text-decoration-none">{{ lead.phone }}</a></td>
+                            <td>{{ lead.email|default:"-" }}</td>
+                            <td>
+                                {% if lead.status == 'new' %}
+                                <span class="badge bg-primary rounded-pill px-3">New</span>
+                                {% elif lead.status == 'contacted' %}
+                                <span class="badge bg-info rounded-pill px-3">Contacted</span>
+                                {% elif lead.status == 'converted' %}
+                                <span class="badge bg-success rounded-pill px-3">Converted</span>
+                                {% elif lead.status == 'lost' %}
+                                <span class="badge bg-danger rounded-pill px-3">Lost</span>
+                                {% else %}
+                                <span class="badge bg-secondary rounded-pill px-3">{{ lead.status|title }}</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ lead.created_at|date:"d M Y" }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" class="text-center py-5 text-muted">
+                                <i class="fas fa-box-open fs-1 mb-3 opacity-50"></i>
+                                <p class="mb-0">You haven't submitted any leads yet.</p>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

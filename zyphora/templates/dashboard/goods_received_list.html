@@ -3,92 +3,127 @@
 
 {% block content %}
 
-        <!-- Breadcrumbs -->
-        <nav aria-label="breadcrumb" class="mb-3">
-            <ol class="breadcrumb mb-0">
-                <li class="breadcrumb-item"><a href="{% url request.user.role %}">{{ request.user.role|title }} Dashboard</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Goods Received</li>
-            </ol>
-        </nav>
+<!-- Breadcrumbs -->
+<nav aria-label="breadcrumb" class="mb-3">
+    <ol class="breadcrumb mb-0">
+        <li class="breadcrumb-item"><a href="{% url request.user.role %}">{{ request.user.role|title }} Dashboard</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Goods Received</li>
+    </ol>
+</nav>
 
-<div class="main-content">
-    <div class="container-fluid">
-
-        <!-- Page Header -->
-        <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
-            <h4 class="mb-2 mb-md-0 text-primary">
-                <i class="bi bi-box-seam me-1"></i> Goods Received
-            </h4>
-        </div>
-
-        <!-- Search -->
-        <div class="card shadow-sm mb-3">
-            <div class="card-body">
-                <form method="get" class="row g-2">
-                    <div class="col-md-4">
-                        <input type="text"
-                               name="q"
-                               class="form-control"
-                               placeholder="Search PO or Vendor..."
-                               value="{{ request.GET.q }}">
-                    </div>
-                    <div class="col-md-auto">
-                        <button class="btn btn-outline-primary">
-                            <i class="bi bi-search me-1"></i> Search
-                        </button>
-                    </div>
-                </form>
+<!-- Executive Hero Card -->
+<div class="executive-hero-card mb-4">
+    <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+        <div class="d-flex align-items-center gap-3">
+            <div class="hero-icon-box">
+                <i class="bi bi-box-arrow-in-down"></i>
             </div>
-        </div>
-
-        <!-- Goods Received Table -->
-        <div class="card shadow-sm">
-            <div class="card-body p-0">
-                <div class="table-responsive">
-                    <table class="table table-hover mb-0">
-                        <thead class="table-light">
-                            <tr>
-                                <th>PO Number</th>
-                                <th>Vendor</th>
-                                <th>Received Date</th>
-                                <th>Received By</th>
-                                <th>Notes</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for g in goods %}
-                                <tr
-                                    {% if g.days_since_received <= 7 %}
-                                        class="table-success"
-                                    {% elif g.days_since_received > 30 %}
-                                        class="text-muted"
-                                    {% endif %}
-                                >
-                                    <td><strong>PO-{{ g.purchase_order.id }}</strong></td>
-                                    <td>{{ g.purchase_order.vendor.name }}</td>
-                                    <td>{{ g.received_date|date:"d M Y" }}</td>
-                                    <td>
-                                        {% if g.received_by %}
-                                            {{ g.received_by.name|default:g.received_by.user.username }}
-                                        {% else %}
-                                            <span class="text-muted">Admin / System</span>
-                                        {% endif %}
-                                    </td>
-                                    <td>{{ g.notes|default:"-" }}</td>
-                                </tr>
-                            {% empty %}
-                                <tr>
-                                    <td colspan="5" class="text-center text-muted py-4">
-                                        No Goods Received Yet
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+            <div>
+                <div class="d-flex align-items-center gap-2">
+                    <h3 class="hero-heading mb-0">Goods Received (GRN)</h3>
+                    <span class="hero-count-badge">{{ goods|length }} Records</span>
                 </div>
+                <p class="hero-subtext mb-0">Warehouse delivery intake logs, package inspections & receiving vouchers</p>
             </div>
         </div>
 
+        <a href="{% url 'purchase_order_list' %}" class="btn btn-outline-primary px-3 py-2" style="border-radius: 10px; font-weight: 600;">
+            <i class="bi bi-receipt me-1"></i> View Purchase Orders
+        </a>
+    </div>
+</div>
+
+<!-- Search Toolbar -->
+<div class="filter-toolbar-card mb-4">
+    <form method="get" class="row g-3 align-items-center">
+        <div class="col-md-5">
+            <div class="search-input-wrap">
+                <i class="bi bi-search search-icon"></i>
+                <input type="text"
+                       name="q"
+                       class="form-control"
+                       placeholder="Search PO number or vendor..."
+                       value="{{ request.GET.q }}">
+            </div>
+        </div>
+
+        <div class="col-md-auto d-flex gap-2">
+            <button class="btn btn-primary px-3" type="submit">
+                <i class="bi bi-search me-1"></i> Search
+            </button>
+            {% if request.GET.q %}
+            <a href="{% url 'goods_received_list' %}" class="btn btn-outline-secondary px-3">
+                <i class="bi bi-x-circle me-1"></i> Reset
+            </a>
+            {% endif %}
+        </div>
+    </form>
+</div>
+
+<!-- Goods Received Table Card -->
+<div class="card shadow-sm border-0 mb-4 overflow-hidden">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th>PO Number</th>
+                        <th>Vendor</th>
+                        <th>Received Date</th>
+                        <th>Received By</th>
+                        <th>Notes / Remarks</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for g in goods %}
+                    <tr>
+                        <td>
+                            <div class="d-flex align-items-center gap-2">
+                                <div class="hero-icon-box" style="width: 32px; height: 32px; font-size: 0.95rem; border-radius: 8px;">
+                                    <i class="bi bi-box-seam"></i>
+                                </div>
+                                <span class="fw-bold font-monospace text-dark">PO-{{ g.purchase_order.id }}</span>
+                            </div>
+                        </td>
+
+                        <td>
+                            <span class="fw-semibold text-dark">{{ g.purchase_order.vendor.name }}</span>
+                        </td>
+
+                        <td>
+                            <span class="text-secondary small">{{ g.received_date|date:"d M Y" }}</span>
+                        </td>
+
+                        <td>
+                            <span class="fw-medium text-dark small">
+                                {% if g.received_by %}
+                                    <i class="bi bi-person text-secondary me-1"></i>{{ g.received_by.name|default:g.received_by.user.username }}
+                                {% else %}
+                                    <span class="text-muted">Admin / System</span>
+                                {% endif %}
+                            </span>
+                        </td>
+
+                        <td>
+                            <span class="text-secondary small text-truncate d-inline-block" style="max-width: 300px;">
+                                {{ g.notes|default:"-" }}
+                            </span>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center p-5">
+                            <div class="hero-icon-box mx-auto mb-3" style="width: 56px; height: 56px; font-size: 1.6rem;">
+                                <i class="bi bi-box-arrow-in-down"></i>
+                            </div>
+                            <h6 class="fw-bold text-dark mt-2">No Goods Received Yet</h6>
+                            <p class="text-muted mb-3 small">Intake records will appear here as purchase orders are fulfilled.</p>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 

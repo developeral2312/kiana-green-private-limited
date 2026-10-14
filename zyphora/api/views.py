@@ -1,9 +1,8 @@
-
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 from projects.models import Project, InstallationTask
-from crm.models import Lead
-from .serializers import LeadSerializer, ProjectSerializer, InstallationTaskSerializer
+from crm.models import Lead, SiteVisit
+from .serializers import LeadSerializer, ProjectSerializer, InstallationTaskSerializer, SiteVisitSerializer
 
 class LeadViewSet(viewsets.ModelViewSet):
     queryset = Lead.objects.all()
@@ -17,3 +16,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
 class InstallationTaskViewSet(viewsets.ModelViewSet):
     queryset = InstallationTask.objects.all()
     serializer_class = InstallationTaskSerializer
+
+class SiteVisitViewSet(viewsets.ModelViewSet):
+    queryset = SiteVisit.objects.all()
+    serializer_class = SiteVisitSerializer

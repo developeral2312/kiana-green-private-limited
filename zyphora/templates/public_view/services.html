@@ -1,109 +1,197 @@
-{% extends "public_view/base.html" %}
+{% extends 'public_view/base.html' %}
 {% load static %}
-{% block link %}
-<link rel="stylesheet" href="{% static 'css/public_view/services.css' %}">
-{% endblock %}
 
 {% block code %}
-
-<!-- Hero Section -->
-<section class="services-hero">
-    <div class="hero-overlay">
-        <div class="hero-content text-center">
-            <h1>Our Solar Services</h1>
-            <p>Smart Solar Energy with Advanced Waterproof Roofing Systems Across Kerala</p>
-        </div>
+<!-- ================= 1. HERO SECTION ================= -->
+<section class="kiana-hero" style="background-image: url('{% static 'images/tech_3.jpg' %}'); min-height: 75vh; display: flex; align-items: center; padding-top: 100px; background-size: cover; background-position: center;">
+  <div class="container text-center py-5 mt-5">
+    <div class="d-flex align-items-center justify-content-center gap-2 mb-4">
+      <span class="kiana-hero-subtitle-line"></span>
+      <span class="kiana-hero-subtitle text-white fw-bold">SERVICES</span>
+      <span class="kiana-hero-subtitle-line"></span>
     </div>
+    <h1 class="kiana-hero-title mx-auto text-white" style="max-width: 950px; font-weight: 800; font-size: 4.0rem; text-shadow: 0 2px 4px rgba(0,0,0,0.3);">
+      Support Across the Project Lifecycle
+    </h1>
+    <p class="kiana-hero-text mx-auto mb-5 text-white fw-medium fs-5" style="text-shadow: 0 1px 3px rgba(0,0,0,0.3); max-width: 800px;">
+      Kiana Green is not just a hardware supplier. We provide complete technical and operational support to ensure your solar systems achieve maximum return on investment.
+    </p>
+  </div>
 </section>
 
-<!-- Services Section -->
-<section class="services-section container">
-
-    <!-- Service Item -->
-    <div class="service-item">
-        <div class="service-image">
-            <img src="{% static 'images/on-grid.jpg' %}" alt="On Grid Solar">
-        </div>
-        <div class="service-content">
-            <h2>On-Grid Solar System Installation</h2>
-            <p>Reduce electricity bills with grid-connected solar systems. Export excess power through net metering and enjoy faster ROI.</p>
-            <ul>
-                <li>Save up to 90% on electricity bills</li>
-                <li>Government subsidy support</li>
-                <li>Low maintenance</li>
-                <li>Ideal for homes & offices</li>
-            </ul>
-        </div>
+<!-- ================= 2. PROCESS SECTION ================= -->
+<section class="py-5 bg-white">
+  <div class="container py-5 my-3">
+    <div class="text-center mx-auto mb-5 pb-2" style="max-width: 800px;">
+      <div class="d-flex align-items-center justify-content-center gap-2 mb-3">
+        <span style="display: inline-block; width: 24px; height: 2px; background-color: var(--kg-primary);"></span>
+        <span class="fw-bold text-success text-uppercase" style="letter-spacing: 1.5px; font-size: 0.85rem;">OUR PROCESS</span>
+        <span style="display: inline-block; width: 24px; height: 2px; background-color: var(--kg-primary);"></span>
+      </div>
+      <h2 class="display-5 fw-bold mb-3" style="color: var(--kg-primary);">From Selection to Post-Commissioning</h2>
     </div>
 
-    <div class="service-item reverse">
-        <div class="service-image">
-            <img src="{% static 'images/off-grid.jpg' %}" alt="Off Grid Solar">
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        
+        <!-- Step 1 -->
+        <div class="d-flex gap-4 mb-4 pb-4 border-bottom">
+          <div class="text-success fw-bold display-6" style="opacity: 0.8;">01</div>
+          <div>
+            <h5 class="fw-bold text-dark mb-1">Discover</h5>
+            <p class="text-muted mb-0">Site surveys, grid feasibility, shading analysis & more.</p>
+          </div>
         </div>
-        <div class="service-content">
-            <h2>Off-Grid Solar System</h2>
-            <p>Perfect for areas with frequent power cuts. Store solar energy in batteries for uninterrupted power supply.</p>
-            <ul>
-                <li>24/7 power backup</li>
-                <li>Independent from grid</li>
-                <li>Ideal for rural & remote areas</li>
-            </ul>
+        
+        <!-- Step 2 -->
+        <div class="d-flex gap-4 mb-4 pb-4 border-bottom">
+          <div class="text-success fw-bold display-6" style="opacity: 0.8;">02</div>
+          <div>
+            <h5 class="fw-bold text-dark mb-1">Select</h5>
+            <p class="text-muted mb-0">Hardware curation (modules, inverters, structures) tailored to your load & budget.</p>
+          </div>
         </div>
-    </div>
+        
+        <!-- Step 3 -->
+        <div class="d-flex gap-4 mb-4 pb-4 border-bottom">
+          <div class="text-success fw-bold display-6" style="opacity: 0.8;">03</div>
+          <div>
+            <h5 class="fw-bold text-dark mb-1">Coordinate</h5>
+            <p class="text-muted mb-0">System sizing, civil layouts, electrical string design & BoM generation.</p>
+          </div>
+        </div>
+        
+        <!-- Step 4 -->
+        <div class="d-flex gap-4 mb-4 pb-4 border-bottom">
+          <div class="text-success fw-bold display-6" style="opacity: 0.8;">04</div>
+          <div>
+            <h5 class="fw-bold text-dark mb-1">Install</h5>
+            <p class="text-muted mb-0">On-site supervision during critical construction & electrical phases.</p>
+          </div>
+        </div>
+        
+        <!-- Step 5 -->
+        <div class="d-flex gap-4 mb-4 pb-4 border-bottom">
+          <div class="text-success fw-bold display-6" style="opacity: 0.8;">05</div>
+          <div>
+            <h5 class="fw-bold text-dark mb-1">Verify</h5>
+            <p class="text-muted mb-0">System testing, pre-commissioning checks & grid synchronization assistance.</p>
+          </div>
+        </div>
+        
+        <!-- Step 6 -->
+        <div class="d-flex gap-4">
+          <div class="text-success fw-bold display-6" style="opacity: 0.8;">06</div>
+          <div>
+            <h5 class="fw-bold text-dark mb-1">Sustain</h5>
+            <p class="text-muted mb-0">Plant monitoring, warranty claims, maintenance strategies & O&M.</p>
+          </div>
+        </div>
 
-    <div class="service-item">
-        <div class="service-image">
-            <img src="{% static 'images/hybrid.webp' %}" alt="Hybrid Solar">
-        </div>
-        <div class="service-content">
-            <h2>Hybrid Solar System</h2>
-            <p>Combine grid connection with battery backup for maximum savings and reliability.</p>
-            <ul>
-                <li>Smart energy management</li>
-                <li>Power during outages</li>
-                <li>Future-ready technology</li>
-            </ul>
-        </div>
+      </div>
     </div>
-
-    <div class="service-item reverse">
-        <div class="service-image">
-            <img src="/static/images/com.png" alt="Commercial Solar">
-        </div>
-        <div class="service-content">
-            <h2>Commercial & Industrial Solar Projects</h2>
-            <p>Reduce operational costs with large-scale solar installations for businesses and industries.</p>
-            <ul>
-                <li>Energy audit & load analysis</li>
-                <li>Custom system design</li>
-                <li>End-to-end project execution</li>
-            </ul>
-        </div>
-    </div>
-
-    <div class="service-item">
-        <div class="service-image">
-            <img src="/static/images/service.jpg" alt="Solar Maintenance">
-        </div>
-        <div class="service-content">
-            <h2>Solar Maintenance & AMC Services</h2>
-            <p>Ensure maximum efficiency and longer lifespan with professional maintenance services.</p>
-            <ul>
-                <li>Panel cleaning</li>
-                <li>Inverter inspection</li>
-                <li>Performance monitoring</li>
-                <li>Safety checks</li>
-            </ul>
-        </div>
-    </div>
-
+  </div>
 </section>
 
-<!-- CTA Section -->
-<section class="services-cta">
-    <h2>Ready to Switch to Solar?</h2>
-    <p>Get a free site inspection today.</p>
-    <a href="{% url 'contact' %}" class="cta-btn">Contact Us</a>
+<!-- ================= 3. SERVICES GRID ================= -->
+<section class="py-5" style="background-color: #f9fbf9;">
+  <div class="container py-5 my-3">
+    <div class="text-center mx-auto mb-5 pb-2" style="max-width: 800px;">
+      <div class="d-flex align-items-center justify-content-center gap-2 mb-3">
+        <span style="display: inline-block; width: 24px; height: 2px; background-color: var(--kg-primary);"></span>
+        <span class="fw-bold text-success text-uppercase" style="letter-spacing: 1.5px; font-size: 0.85rem;">WHAT WE DO</span>
+        <span style="display: inline-block; width: 24px; height: 2px; background-color: var(--kg-primary);"></span>
+      </div>
+      <h2 class="display-5 fw-bold mb-3" style="color: var(--kg-primary);">Services We Provide</h2>
+      <p class="text-muted fs-6 mx-auto">
+        Practical support at every stage — before, during, and after your project.
+      </p>
+    </div>
+
+    <div class="row g-4">
+      <!-- Card 1 -->
+      <div class="col-lg-6">
+        <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
+          <img src="{% static 'images/tech_4.jpg' %}" class="card-img-top" alt="Product Sourcing" style="height: 250px; object-fit: cover;">
+          <div class="card-body p-4 p-lg-5">
+            <h4 class="fw-bold text-success mb-3">Product Sourcing</h4>
+            <p class="text-muted mb-0" style="line-height: 1.7;">Direct procurement of panels, inverters, and BoS components from Tier-1 OEMs, ensuring maximum quality at competitive pricing.</p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Card 2 -->
+      <div class="col-lg-6">
+        <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
+          <img src="{% static 'images/design-support-new.png' %}" class="card-img-top" alt="Design Support" style="height: 250px; object-fit: cover;">
+          <div class="card-body p-4 p-lg-5">
+            <h4 class="fw-bold text-success mb-3">Design Support</h4>
+            <p class="text-muted mb-0" style="line-height: 1.7;">Detailed structural and electrical engineering designs including shadow analysis, string sizing, and 3D plant layouts.</p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Card 3 -->
+      <div class="col-lg-6">
+        <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
+          <img src="{% static 'images/services-install.jpg' %}" class="card-img-top" alt="Installation Support" style="height: 250px; object-fit: cover;">
+          <div class="card-body p-4 p-lg-5">
+            <h4 class="fw-bold text-success mb-3">Installation Support</h4>
+            <p class="text-muted mb-0" style="line-height: 1.7;">Technical guidance and quality assurance during the actual execution phase to ensure best practices.</p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Card 4 -->
+      <div class="col-lg-6">
+        <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
+          <img src="{% static 'images/system-upgrade-new.png' %}" class="card-img-top" alt="System Upgrades" style="height: 250px; object-fit: cover;">
+          <div class="card-body p-4 p-lg-5">
+            <h4 class="fw-bold text-success mb-3">System Upgrades</h4>
+            <p class="text-muted mb-0" style="line-height: 1.7;">Capacity enhancements, battery retrofitting, and inverter replacements for existing operational plants.</p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Card 5 -->
+      <div class="col-lg-6">
+        <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
+          <img src="{% static 'images/services-maintenance.jpg' %}" class="card-img-top" alt="Operations & Maintenance" style="height: 250px; object-fit: cover;">
+          <div class="card-body p-4 p-lg-5">
+            <h4 class="fw-bold text-success mb-3">Operations & Maintenance</h4>
+            <p class="text-muted mb-0" style="line-height: 1.7;">Comprehensive monitoring, preventative maintenance, and module cleaning to ensure peak power generation.</p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Card 6 -->
+      <div class="col-lg-6">
+        <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
+          <img src="{% static 'images/services-inspection.jpg' %}" class="card-img-top" alt="Site/Asset Inspection" style="height: 250px; object-fit: cover;">
+          <div class="card-body p-4 p-lg-5">
+            <h4 class="fw-bold text-success mb-3">Site/Asset Inspection</h4>
+            <p class="text-muted mb-0" style="line-height: 1.7;">Post-installation health checks, drone thermography, and safety audits to identify underperforming strings.</p>
+          </div>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+</section>
+
+<!-- ================= 4. CTA SECTION ================= -->
+<section class="py-5" style="background-color: var(--kg-primary);">
+  <div class="container py-5 my-3 text-center">
+    <div class="mx-auto" style="max-width: 800px;">
+      <h2 class="display-6 fw-bold mb-4 text-white">Need Support on an Active or Upcoming Project?</h2>
+      <p class="text-white opacity-75 fs-5 mb-5 mx-auto" style="max-width: 700px;">
+        Get in touch with our technical team today to discuss how we can accelerate your clean energy journey.
+      </p>
+      <a href="{% url 'contact' %}" class="btn btn-outline-light px-5 py-3 rounded-2 fw-bold fs-5 shadow-sm" style="border-width: 2px;">
+        Talk to Our Team
+      </a>
+    </div>
+  </div>
 </section>
 
 {% endblock %}

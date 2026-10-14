@@ -1,22 +1,221 @@
-{% extends "dashboard/dashboard.html" %}
+{% extends 'dashboard/dashboard.html' %}
+{% load static %}
+
 {% block content %}
 
-<!-- Breadcrumbs -->
-<nav aria-label="breadcrumb">
-  <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
-    <li class="breadcrumb-item"><a href="{% url 'vendor_list' %}">Vendors</a></li>
+<!-- Breadcrumb -->
+<nav aria-label="breadcrumb" class="mb-3">
+  <ol class="breadcrumb mb-0">
+    <li class="breadcrumb-item">
+        <a href="{% url 'admin' %}"><i class="bi bi-house-door me-1"></i> Admin Dashboard</a>
+    </li>
+    <li class="breadcrumb-item">
+        <a href="{% url 'vendor_list' %}"><i class="bi bi-truck me-1"></i> Vendors</a>
+    </li>
+    <li class="breadcrumb-item">
+        <a href="{% url 'view_vendor' vendor.id %}">{{ vendor.name }}</a>
+    </li>
     <li class="breadcrumb-item active" aria-current="page">Edit Vendor</li>
   </ol>
 </nav>
 
-<h4>Edit Vendor: {{ vendor.name }}</h4>
+<div class="admin-dashboard-container">
+    <div class="container-fluid px-0">
 
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn btn-primary">Save Changes</button>
-    <a href="{% url 'vendor_list' %}" class="btn btn-secondary">Cancel</a>
-</form>
+        <!-- Executive Hero Card -->
+        <div class="executive-hero-card mb-4">
+            <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="hero-icon-box">
+                        <i class="bi bi-pencil-square"></i>
+                    </div>
+                    <div>
+                        <div class="d-flex align-items-center gap-2">
+                            <h3 class="hero-heading mb-0">Edit Vendor: {{ vendor.name }}</h3>
+                            <span class="hero-count-badge">ID: #{{ vendor.id }}</span>
+                        </div>
+                        <p class="hero-subtext mb-0">Update supplier information, banking, or commercial terms</p>
+                    </div>
+                </div>
+
+                <div class="d-flex align-items-center gap-2">
+                    <a href="{% url 'view_vendor' vendor.id %}" class="btn btn-outline-secondary btn-sm rounded-pill px-3 py-1 fw-semibold">
+                        <i class="bi bi-arrow-left me-1"></i> Cancel
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        {% if form.errors %}
+        <div class="alert alert-danger alert-dismissible fade show mb-4 rounded-3" role="alert">
+            <div class="fw-bold mb-1"><i class="bi bi-exclamation-triangle-fill me-2"></i>Please check the errors below:</div>
+            <ul class="mb-0 ps-3">
+                {% for field in form %}
+                    {% for error in field.errors %}
+                        <li><strong>{{ field.label }}:</strong> {{ error }}</li>
+                    {% endfor %}
+                {% endfor %}
+            </ul>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endif %}
+
+        <!-- Form Panel -->
+        <div class="white-premium-panel">
+            <div class="p-3">
+                <form method="POST" novalidate>
+                    {% csrf_token %}
+
+                    <!-- SECTION 1: BASIC & CONTACT INFO -->
+                    <div class="d-flex align-items-center gap-2 pb-2 mb-3 border-bottom">
+                        <span class="badge bg-primary rounded-pill px-2">1</span>
+                        <h6 class="fw-bold text-dark mb-0">Vendor & Contact Details</h6>
+                    </div>
+
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <label for="{{ form.name.id_for_label }}" class="form-label fw-semibold text-dark small">Company / Vendor Name <span class="text-danger">*</span></label>
+                            {{ form.name }}
+                            {% if form.name.errors %}
+                                <div class="text-danger small mt-1">{{ form.name.errors|striptags }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="{{ form.contact_person.id_for_label }}" class="form-label fw-semibold text-dark small">Contact Person</label>
+                            {{ form.contact_person }}
+                            {% if form.contact_person.errors %}
+                                <div class="text-danger small mt-1">{{ form.contact_person.errors|striptags }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="{{ form.phone.id_for_label }}" class="form-label fw-semibold text-dark small">Phone <span class="text-danger">*</span></label>
+                            {{ form.phone }}
+                            {% if form.phone.errors %}
+                                <div class="text-danger small mt-1">{{ form.phone.errors|striptags }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="{{ form.email.id_for_label }}" class="form-label fw-semibold text-dark small">Email Address</label>
+                            {{ form.email }}
+                            {% if form.email.errors %}
+                                <div class="text-danger small mt-1">{{ form.email.errors|striptags }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- SECTION 2: TAX & COMPLIANCE -->
+                    <div class="d-flex align-items-center gap-2 pb-2 mb-3 border-bottom">
+                        <span class="badge bg-primary rounded-pill px-2">2</span>
+                        <h6 class="fw-bold text-dark mb-0">Tax & Compliance</h6>
+                    </div>
+
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <label for="{{ form.gst_number.id_for_label }}" class="form-label fw-semibold text-dark small">GST Number</label>
+                            {{ form.gst_number }}
+                            {% if form.gst_number.errors %}
+                                <div class="text-danger small mt-1">{{ form.gst_number.errors|striptags }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="{{ form.pan_number.id_for_label }}" class="form-label fw-semibold text-dark small">PAN Number</label>
+                            {{ form.pan_number }}
+                            {% if form.pan_number.errors %}
+                                <div class="text-danger small mt-1">{{ form.pan_number.errors|striptags }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- SECTION 3: SUPPLY & TERMS -->
+                    <div class="d-flex align-items-center gap-2 pb-2 mb-3 border-bottom">
+                        <span class="badge bg-primary rounded-pill px-2">3</span>
+                        <h6 class="fw-bold text-dark mb-0">Supply Category & Payment Terms</h6>
+                    </div>
+
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <label for="{{ form.category.id_for_label }}" class="form-label fw-semibold text-dark small">Material Category</label>
+                            {{ form.category }}
+                            <small class="text-muted d-block mt-1">e.g. Solar Modules, Inverters, Structures, Cables, BOS</small>
+                            {% if form.category.errors %}
+                                <div class="text-danger small mt-1">{{ form.category.errors|striptags }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="{{ form.payment_terms.id_for_label }}" class="form-label fw-semibold text-dark small">Payment Terms</label>
+                            {{ form.payment_terms }}
+                            <small class="text-muted d-block mt-1">e.g. 100% Advance, 15 Days Credit, 30 Days Credit</small>
+                            {% if form.payment_terms.errors %}
+                                <div class="text-danger small mt-1">{{ form.payment_terms.errors|striptags }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- SECTION 4: BANKING DETAILS -->
+                    <div class="d-flex align-items-center gap-2 pb-2 mb-3 border-bottom">
+                        <span class="badge bg-primary rounded-pill px-2">4</span>
+                        <h6 class="fw-bold text-dark mb-0">Bank Account Details (For Payments)</h6>
+                    </div>
+
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-4">
+                            <label for="{{ form.bank_name.id_for_label }}" class="form-label fw-semibold text-dark small">Bank Name</label>
+                            {{ form.bank_name }}
+                            {% if form.bank_name.errors %}
+                                <div class="text-danger small mt-1">{{ form.bank_name.errors|striptags }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-md-4">
+                            <label for="{{ form.bank_account_number.id_for_label }}" class="form-label fw-semibold text-dark small">Account Number</label>
+                            {{ form.bank_account_number }}
+                            {% if form.bank_account_number.errors %}
+                                <div class="text-danger small mt-1">{{ form.bank_account_number.errors|striptags }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-md-4">
+                            <label for="{{ form.bank_ifsc.id_for_label }}" class="form-label fw-semibold text-dark small">IFSC Code</label>
+                            {{ form.bank_ifsc }}
+                            {% if form.bank_ifsc.errors %}
+                                <div class="text-danger small mt-1">{{ form.bank_ifsc.errors|striptags }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- SECTION 5: ADDRESS -->
+                    <div class="d-flex align-items-center gap-2 pb-2 mb-3 border-bottom">
+                        <span class="badge bg-primary rounded-pill px-2">5</span>
+                        <h6 class="fw-bold text-dark mb-0">Address</h6>
+                    </div>
+
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-12">
+                            <label for="{{ form.address.id_for_label }}" class="form-label fw-semibold text-dark small">Complete Address</label>
+                            {{ form.address }}
+                            {% if form.address.errors %}
+                                <div class="text-danger small mt-1">{{ form.address.errors|striptags }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2 pt-3 border-top">
+                        <a href="{% url 'view_vendor' vendor.id %}" class="btn btn-outline-secondary px-4 rounded-pill">Cancel</a>
+                        <button type="submit" class="btn btn-primary px-4 rounded-pill shadow-xs">
+                            <i class="bi bi-check-circle me-1"></i> Save Changes
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>
 
 {% endblock %}

@@ -64,9 +64,7 @@
                     <div class="col-md-6 mb-3"><label class="form-label">Project Type</label>{{ form.project_type }}</div>
                     <div class="col-md-6 mb-3"><label class="form-label">Location</label>{{ form.location }}</div>
 
-                    {% if request.user.role == 'admin' %}
-                        <div class="col-md-6 mb-3"><label class="form-label">Engineer</label>{{ form.engineer }}</div>
-                    {% endif %}
+                    <div class="col-md-6 mb-3"><label class="form-label">Engineer</label>{{ form.engineer }}</div>
 
                     <div class="col-md-6 mb-3"><label class="form-label">Status</label>{{ form.status }}</div>
                     <div class="col-md-6 mb-3">

@@ -1,0 +1,151 @@
+{% extends "dashboard/dashboard.html" %}
+
+{% block content %}
+<style>
+    .status-active { background-color: #e6fffa; color: #319795; border: 1px solid #b2f5ea; }
+    .status-expired { background-color: #fff5f5; color: #e53e3e; border: 1px solid #fed7d7; }
+    .status-faulty { background-color: #fffaf0; color: #dd6b20; border: 1px solid #feebc8; }
+    .status-replaced { background-color: #ebf8ff; color: #3182ce; border: 1px solid #bee3f8; }
+    
+    .equipment-card {
+        transition: transform 0.2s, box-shadow 0.2s;
+        border-radius: 12px;
+        border: none;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    }
+    .equipment-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+    }
+    .metric-box {
+        background: white;
+        border-radius: 12px;
+        padding: 20px;
+        text-align: center;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        border: 1px solid #edf2f7;
+    }
+    .metric-icon {
+        font-size: 2rem;
+        color: #3182ce;
+        margin-bottom: 10px;
+    }
+</style>
+
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold mb-0 text-dark">Warranty & Asset Tracking</h2>
+            <p class="text-muted">Serial numbers and warranty status for <a href="{% url 'project_detail' project.id %}" class="fw-bold text-primary">{{ project.title }}</a></p>
+        </div>
+        <div>
+            <a href="{% url 'add_project_equipment' project.id %}" class="btn btn-primary rounded-pill px-4 shadow-sm">
+                <i class="fas fa-plus me-2"></i> Register Asset
+            </a>
+            <a href="{% url 'project_detail' project.id %}" class="btn btn-outline-secondary rounded-pill px-4 ms-2">
+                <i class="fas fa-arrow-left me-2"></i> Project Dashboard
+            </a>
+        </div>
+    </div>
+
+    <!-- Asset Summary Metrics -->
+    <div class="row mb-5 g-4">
+        <div class="col-md-3">
+            <div class="metric-box">
+                <i class="fas fa-solar-panel metric-icon"></i>
+                <h3 class="fw-bold mb-0">{{ panel_count }}</h3>
+                <span class="text-muted small text-uppercase fw-bold">Solar Panels</span>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="metric-box">
+                <i class="fas fa-charging-station metric-icon" style="color: #48bb78;"></i>
+                <h3 class="fw-bold mb-0">{{ inverter_count }}</h3>
+                <span class="text-muted small text-uppercase fw-bold">Inverters</span>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="metric-box">
+                <i class="fas fa-car-battery metric-icon" style="color: #ecc94b;"></i>
+                <h3 class="fw-bold mb-0">{{ battery_count }}</h3>
+                <span class="text-muted small text-uppercase fw-bold">Batteries</span>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="metric-box">
+                <i class="fas fa-shield-alt metric-icon" style="color: #805ad5;"></i>
+                <h3 class="fw-bold mb-0">{{ equipments.count }}</h3>
+                <span class="text-muted small text-uppercase fw-bold">Total Assets Tracked</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Assets List -->
+    <div class="card border-0 shadow-sm rounded-4">
+        <div class="card-header bg-white border-bottom p-4">
+            <h5 class="mb-0 fw-bold"><i class="fas fa-list text-primary me-2"></i> Registered Equipment</h5>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="ps-4">Asset ID</th>
+                            <th>Category</th>
+                            <th>Brand / Model</th>
+                            <th>Serial Number</th>
+                            <th>Installed On</th>
+                            <th>Warranty Expiry</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in equipments %}
+                        <tr>
+                            <td class="ps-4 fw-bold text-secondary">#{{ item.id|stringformat:"04d" }}</td>
+                            <td>
+                                {% if item.category == 'panel' %}<i class="fas fa-solar-panel text-primary me-1"></i>
+                                {% elif item.category == 'inverter' %}<i class="fas fa-charging-station text-success me-1"></i>
+                                {% elif item.category == 'battery' %}<i class="fas fa-car-battery text-warning me-1"></i>
+                                {% else %}<i class="fas fa-box text-secondary me-1"></i>{% endif %}
+                                {{ item.get_category_display }}
+                            </td>
+                            <td>
+                                <div class="fw-bold text-dark">{{ item.brand }}</div>
+                                <div class="small text-muted">{{ item.model_name|default:"-" }}</div>
+                            </td>
+                            <td><span class="badge bg-light text-dark border font-monospace py-2 px-3"><i class="fas fa-qrcode me-1 text-muted"></i> {{ item.serial_number }}</span></td>
+                            <td>{{ item.installation_date|date:"d M, Y" }}</td>
+                            <td>
+                                {% if item.warranty_expiry %}
+                                    {{ item.warranty_expiry|date:"d M, Y" }}
+                                    <div class="small text-muted">({{ item.warranty_months }} Mo)</div>
+                                {% else %}
+                                    <span class="text-muted">-</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <span class="badge status-{{ item.status }} py-2 px-3 rounded-pill">
+                                    {{ item.get_status_display }}
+                                </span>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="7" class="text-center py-5">
+                                <div class="text-muted mb-3"><i class="fas fa-box-open fa-3x opacity-50"></i></div>
+                                <h5>No assets tracked yet</h5>
+                                <p class="text-muted">Register physical assets and serial numbers to manage warranty lifecycle.</p>
+                                <a href="{% url 'add_project_equipment' project.id %}" class="btn btn-primary rounded-pill mt-2">
+                                    <i class="fas fa-plus me-1"></i> Add First Asset
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

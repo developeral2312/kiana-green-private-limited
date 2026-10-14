@@ -11,7 +11,6 @@ class Review(models.Model):
     rating = models.IntegerField()
     review = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
-
     def __str__(self):
         return self.name
 
@@ -40,7 +39,6 @@ class Lead(models.Model):
         ('commercial','Commercial Solar')
     )
 
-    # --- Core lead info ---
     name = models.CharField(max_length=50)
     phone = models.CharField(max_length=15)
     email = models.EmailField(null=True,blank=True)
@@ -57,10 +55,13 @@ class Lead(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    # --- SLA & Escalation ---
+    escalation_level = models.IntegerField(default=0, help_text="0: None, 1: L1, 2: L2, 3: L3")
+    escalated_at = models.DateTimeField(null=True, blank=True)
+
     # --- Lead score ---
     score = models.IntegerField(default=0)
 
-    # --- Score calculation ---
 
     def calculate_score(self):
         score = 0
@@ -73,7 +74,6 @@ class Lead(models.Model):
         if self.service:
             score += 30
 
-        # --- Follow-ups completed ---
         completed_followups = self.followups.filter(status='done').count()
         if self.followups.exists():
             # each completed follow-up gives 20 points max
@@ -89,29 +89,17 @@ class Lead(models.Model):
 
         return min(score, 100)
 
-
-    # --- Save method with project creation ---
     def save(self, *args, **kwargs):
-
         is_new = self.pk is None
-
         old_status = None
         if not is_new:
             old_status = Lead.objects.filter(pk=self.pk).values_list('status', flat=True).first()
-
         super().save(*args, **kwargs)
-
         self.score = self.calculate_score()
         super().save(update_fields=['score'])
-
-        # ✅ Convert to project (ONLY once)
         if self.status == 'converted' and old_status != 'converted':
-
             from projects.models import Project, ProjectMedia
-
-            # Prevent duplicate project creation
             if not self.projects.exists():
-
                 project = Project.objects.create(
                     title=f"{self.name} {self.service} Project",
                     lead=self,
@@ -221,6 +209,11 @@ class SiteVisit(models.Model):
         CustomUser, on_delete=models.SET_NULL, null=True, blank=True, related_name='site_visits_added'
     )
 
+    # API / Mobile App Fields
+    latitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
+    longitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
+    signature = models.ImageField(upload_to='signatures/', null=True, blank=True)
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -243,21 +236,7 @@ class SitePhoto(models.Model):
     uploaded_by = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, blank=True)
     uploaded_at = models.DateTimeField(auto_now_add=True)
 
-class LeadActivity(models.Model):
 
-    lead = models.ForeignKey(
-        Lead,
-        on_delete=models.CASCADE,
-        related_name="activities"
-    )
-
-    title = models.CharField(max_length=200)
-    description = models.TextField(blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    created_by = models.ForeignKey('users.CustomUser', null=True, blank=True, on_delete=models.SET_NULL)
-
-    def __str__(self):
-        return f"{self.title} ({self.lead.title})"
 # -------------------------------
 # Lead Activity Timeline
 # -------------------------------
@@ -273,3 +252,33 @@ class LeadActivity(models.Model):
 
     def __str__(self):
         return f"{self.lead.name} - {self.title}"
+
+
+# ===============================
+# FEATURE 20: REFERRAL ENGINE
+# ===============================
+class Referral(models.Model):
+    STATUS_CHOICES = (
+        ('pending', 'Pending (Lead)'),
+        ('converted', 'Converted (Project Started)'),
+        ('paid', 'Commission Paid'),
+        ('rejected', 'Rejected / Invalid'),
+    )
+    
+    # Who is referring
+    referrer_name = models.CharField(max_length=150)
+    referrer_phone = models.CharField(max_length=20)
+    referrer_email = models.EmailField(blank=True, null=True)
+    
+    # Who is referred
+    referred_lead = models.OneToOneField('Lead', on_delete=models.CASCADE, related_name='referred_by', null=True, blank=True)
+    
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    commission_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+    notes = models.TextField(blank=True)
+    
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.referrer_name} referred {self.referred_lead.name if self.referred_lead else 'Unknown'}"

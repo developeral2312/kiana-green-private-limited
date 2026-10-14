@@ -30,8 +30,15 @@ urlpatterns = [
 
     path('stock/', stock_list, name="stock_list"),
     path('material-stock/<int:material_id>/', get_material_stock, name='material_stock'),
+    path('material-stock-by-name/', get_material_stock, name='material_stock_by_name'),
 
     path('allocation/', allocation_list, name="allocation_list"),
     path('add-allocation/', allocate_material, name="allocate_material"),
-
+    path('assign-kit/<int:pid>/', assign_kit_to_project, name='assign_kit_to_project'),
+    
+    # RFQ
+    path('rfq/', rfq_list, name="rfq_list"),
+    path('rfq/<int:rfq_id>/', rfq_detail, name="rfq_detail"),
+    path('rfq/<int:rfq_id>/quote/', add_vendor_quotation, name="add_vendor_quotation"),
+    path('rfq/<int:rfq_id>/award/<int:quote_id>/', award_rfq, name="award_rfq"),
 ]

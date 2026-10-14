@@ -6,19 +6,20 @@
     <!-- ===== HEADER (LOGO + TOGGLE) ===== -->
     <div class="sidebar-header d-flex align-items-center justify-content-between px-3 py-2">
 
-        <!-- Logo -->
-                <!-- Custom HTML Text Logo -->
-        <div class="sidebar-logo d-flex flex-column align-items-center justify-content-center" style="width: 90px; margin: 0 auto; padding: 5px 0;">
-    <img src="{% static 'images/logo1.png' %}" 
-         class="img-fluid" 
-         alt="Logo" 
-         style="width: 100%; height: auto;">
-    
-    <div style="width: 100%; text-align-last: justify; font-weight: 800; color: #2ecc71; font-size: 0.85rem; letter-spacing: 1px; margin-top: 2px; line-height: 1;">GREEN</div>
-</div>
+        <!-- Logo Full (Expanded State) -->
+        <a href="{% url 'dashboard' %}" class="sidebar-logo-full text-decoration-none d-flex align-items-center">
+            <img src="{% static 'images/kiana-green-logo.png' %}" alt="Kiana Green Logo"
+                style="max-height: 42px; width: auto; object-fit: contain;">
+        </a>
+
+        <!-- Logo Mini (Collapsed State) -->
+        <a href="{% url 'dashboard' %}" class="sidebar-logo-mini text-decoration-none d-none align-items-center justify-content-center" title="Dashboard">
+            <img src="{% static 'images/favicon.png' %}" alt="Zyphora"
+                style="width: 36px; height: 36px; object-fit: contain; border-radius: 8px;">
+        </a>
 
         <!-- Sidebar Toggle: ONLY on desktop. On mobile, hamburger in topnavbar is used. -->
-        <label for="sidebarToggleCheckbox" class="toggle-btn d-none d-lg-flex">
+        <label for="sidebarToggleCheckbox" class="toggle-btn d-none d-lg-flex align-items-center justify-content-center" title="Toggle Sidebar">
             <i class="bi bi-chevron-left arrow-icon"></i>
         </label>
 
@@ -30,35 +31,47 @@
 
         <!-- ================= DASHBOARD ================= -->
         <li class="nav-item">
-
             <a href="{% url 'dashboard' %}"
-               class="nav-link d-flex align-items-center {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}"
-               data-bs-toggle="tooltip"
-               data-bs-placement="right"
-               title="Dashboard">
-
-                <i class="bi bi-speedometer2 nav-icon  text-primary "></i>
+                class="nav-link d-flex align-items-center {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}"
+                data-bs-toggle="tooltip" data-bs-placement="right" title="Dashboard">
+                <i class="bi bi-grid-1x2-fill nav-icon"></i>
                 <span class="link-text ms-2">Dashboard</span>
-
             </a>
+        </li>
 
-        </li>        
-        
+        <!-- ================= APPROVAL ENGINE ================= -->
+        <li class="nav-item">
+            <a href="{% url 'approval_dashboard' %}"
+                class="nav-link d-flex align-items-center {% if request.resolver_match.url_name == 'approval_dashboard' %}active{% endif %}"
+                data-bs-toggle="tooltip" data-bs-placement="right" title="Approvals">
+                <i class="bi bi-shield-check nav-icon"></i>
+                <span class="link-text ms-2">Approval Engine</span>
+            </a>
+        </li>
+
         <!-- CRM -->
         <li class="sidebar-heading mt-3 text-muted small">CRM MANAGEMENT</li>
         <li class="nav-item">
-            <a class="nav-link d-flex align-items-center justify-content-between {% if request.resolver_match.url_name in 'lead_list add_lead review' %}active{% endif %}" 
-               data-bs-toggle="collapse" href="#crmMenu" aria-expanded="{% if request.resolver_match.url_name in 'lead_list add_lead review' %}true{% else %}false{% endif %}">
+            <a class="nav-link d-flex align-items-center justify-content-between {% if request.resolver_match.url_name in 'lead_list add_lead review referral_list escalation_dashboard' %}active{% endif %}"
+                data-bs-toggle="collapse" href="#crmMenu"
+                aria-expanded="{% if request.resolver_match.url_name in 'lead_list add_lead review referral_list escalation_dashboard' %}true{% else %}false{% endif %}">
                 <div class="d-flex align-items-center">
-                    <i class="bi bi-person-lines-fill nav-icon text-primary"></i>
+                    <i class="bi bi-people-fill nav-icon"></i>
                     <span class="link-text ms-2">CRM</span>
                 </div>
             </a>
-            <div class="collapse submenu {% if request.resolver_match.url_name in 'lead_list add_lead review' %}show{% endif %}" id="crmMenu" data-bs-parent="#sidebarMenu">
+            <div class="collapse submenu {% if request.resolver_match.url_name in 'lead_list add_lead review referral_list escalation_dashboard' %}show{% endif %}"
+                id="crmMenu" data-bs-parent="#sidebarMenu">
                 <ul class="nav flex-column ms-4">
-                    <li><a href="{% url 'lead_list' %}" class="nav-link {% if request.resolver_match.url_name == 'lead_list' %}text-primary fw-bold{% endif %}">All Leads</a></li>
-                    <li><a href="{% url 'add_lead' %}" class="nav-link {% if request.resolver_match.url_name == 'add_lead' %}text-primary fw-bold{% endif %}">Add Lead</a></li>
-                    <li><a href="{% url 'review' %}" class="nav-link {% if request.resolver_match.url_name == 'review' %}text-primary fw-bold{% endif %}">User Reviews</a></li>
+                    <li><a href="{% url 'lead_list' %}"
+                            class="nav-link {% if request.resolver_match.url_name == 'lead_list' %}active{% endif %}">All
+                            Leads</a></li>
+                    <li><a href="{% url 'add_lead' %}"
+                            class="nav-link {% if request.resolver_match.url_name == 'add_lead' %}active{% endif %}">Add
+                            Lead</a></li>
+                    <li><a href="{% url 'review' %}"
+                            class="nav-link {% if request.resolver_match.url_name == 'review' %}active{% endif %}">User
+                            Reviews</a></li>
                 </ul>
             </div>
         </li>
@@ -66,24 +79,45 @@
         <!-- PROJECTS -->
         <li class="sidebar-heading mt-3 text-muted small">PROJECT MANAGEMENT</li>
         <li class="nav-item">
-            <a class="nav-link d-flex align-items-center justify-content-between {% if request.resolver_match.url_name in 'project_list feasibility_list design_list installation_progress licensing_list energisation_projects completed_projects recent_activity gallery_projects' %}active{% endif %}" 
-               data-bs-toggle="collapse" href="#projectMenu" aria-expanded="{% if request.resolver_match.url_name in 'project_list feasibility_list design_list installation_progress licensing_list energisation_projects completed_projects recent_activity gallery_projects' %}true{% else %}false{% endif %}">
+            <a class="nav-link d-flex align-items-center justify-content-between {% if '/projects/' in request.path or request.resolver_match.url_name in 'project_list feasibility_list design_list installation_progress licensing_list energisation_projects completed_projects recent_activity gallery_projects ticket_list subcontractor_dashboard project_detail edit_project project_activities' %}active{% endif %}"
+                data-bs-toggle="collapse" href="#projectMenu"
+                aria-expanded="{% if '/projects/' in request.path or request.resolver_match.url_name in 'project_list feasibility_list design_list installation_progress licensing_list energisation_projects completed_projects recent_activity gallery_projects ticket_list subcontractor_dashboard project_detail edit_project project_activities' %}true{% else %}false{% endif %}">
                 <div class="d-flex align-items-center">
-                    <i class="bi bi-briefcase nav-icon text-warning"></i>
+                    <i class="bi bi-kanban nav-icon"></i>
                     <span class="link-text ms-2">Projects</span>
                 </div>
             </a>
-            <div class="collapse submenu {% if request.resolver_match.url_name in 'project_list feasibility_list design_list installation_progress licensing_list energisation_projects completed_projects recent_activity gallery_projects' %}show{% endif %}" id="projectMenu" data-bs-parent="#sidebarMenu">
+            <div class="collapse submenu {% if '/projects/' in request.path or request.resolver_match.url_name in 'project_list feasibility_list design_list installation_progress licensing_list energisation_projects completed_projects recent_activity gallery_projects ticket_list subcontractor_dashboard project_detail edit_project project_activities' %}show{% endif %}"
+                id="projectMenu">
                 <ul class="nav flex-column ms-4">
-                    <li><a href="{% url 'project_list' %}" class="nav-link">All Projects</a></li>
-                    <li><a class="nav-link" href="{% url 'feasibility_list' %}">Feasibility Study</a></li>
-                    <li><a class="nav-link" href="{% url 'design_list' %}">Design Management</a></li>
-                    <li><a class="nav-link" href="{% url 'installation_progress' %}">Installation Progress</a></li>
-                    <li><a class="nav-link" href="{% url 'licensing_list' %}">Licensing Progress</a></li>
-                    <li><a class="nav-link" href="{% url 'energisation_projects' %}">Energisation</a></li>
-                    <li><a href="{% url 'completed_projects' %}" class="nav-link">Completed Projects</a></li>
-                    <li><a href="{% url 'recent_activity' %}" class="nav-link">Recent Activity</a></li>
-                    <li><a href="{% url 'gallery_projects' %}" class="nav-link">Project Gallery</a></li>
+                    <li><a href="{% url 'project_list' %}"
+                            class="nav-link {% if request.resolver_match.url_name == 'project_list' %}active{% endif %}">All
+                            Projects</a></li>
+                    <li><a class="nav-link {% if request.resolver_match.url_name == 'feasibility_list' %}active{% endif %}"
+                            href="{% url 'feasibility_list' %}">Feasibility Study</a></li>
+                    <li><a class="nav-link {% if request.resolver_match.url_name == 'design_list' %}active{% endif %}"
+                            href="{% url 'design_list' %}">Design Management</a></li>
+                    <li><a class="nav-link {% if request.resolver_match.url_name == 'installation_progress' %}active{% endif %}"
+                            href="{% url 'installation_progress' %}">Installation Progress</a></li>
+                    <li><a class="nav-link {% if request.resolver_match.url_name == 'licensing_list' %}active{% endif %}"
+                            href="{% url 'licensing_list' %}">Licensing Progress</a></li>
+                    <li><a class="nav-link {% if request.resolver_match.url_name == 'energisation_projects' %}active{% endif %}"
+                            href="{% url 'energisation_projects' %}">Energisation</a></li>
+                    <li><a href="{% url 'completed_projects' %}"
+                            class="nav-link {% if request.resolver_match.url_name == 'completed_projects' %}active{% endif %}">Completed
+                            Projects</a></li>
+                    <li><a href="{% url 'ticket_list' %}"
+                            class="nav-link {% if request.resolver_match.url_name == 'ticket_list' %}active{% endif %}">Helpdesk
+                            & AMC</a></li>
+                    <li><a href="{% url 'subcontractor_dashboard' %}"
+                            class="nav-link {% if request.resolver_match.url_name == 'subcontractor_dashboard' %}active{% endif %}">Subcontractor
+                            Portal</a></li>
+                    <li><a href="{% url 'recent_activity' %}"
+                            class="nav-link {% if request.resolver_match.url_name == 'recent_activity' %}active{% endif %}">Recent
+                            Activity</a></li>
+                    <li><a href="{% url 'gallery_projects' %}"
+                            class="nav-link {% if request.resolver_match.url_name == 'gallery_projects' %}active{% endif %}">Project
+                            Gallery</a></li>
                 </ul>
             </div>
         </li>
@@ -91,35 +125,63 @@
         <!-- EMPLOYEES -->
         <li class="sidebar-heading mt-3 text-muted small">EMPLOYEE MANAGEMENT</li>
         <li class="nav-item">
-            <a class="nav-link d-flex align-items-center justify-content-between {% if request.resolver_match.url_name in 'emplist addemp assigned_tasks' %}active{% endif %}" 
-               data-bs-toggle="collapse" href="#employeeMenu" aria-expanded="{% if request.resolver_match.url_name in 'emplist addemp assigned_tasks' %}true{% else %}false{% endif %}">
+            <a class="nav-link d-flex align-items-center justify-content-between {% if request.resolver_match.url_name in 'emplist addemp assigned_tasks hr_dashboard' %}active{% endif %}"
+                data-bs-toggle="collapse" href="#employeeMenu"
+                aria-expanded="{% if request.resolver_match.url_name in 'emplist addemp assigned_tasks hr_dashboard' %}true{% else %}false{% endif %}">
                 <div class="d-flex align-items-center">
-                    <i class="bi bi-people nav-icon text-success"></i>
+                    <i class="bi bi-person-badge nav-icon"></i>
                     <span class="link-text ms-2">Employees</span>
                 </div>
             </a>
-            <div class="collapse submenu {% if request.resolver_match.url_name in 'emplist addemp assigned_tasks' %}show{% endif %}" id="employeeMenu" data-bs-parent="#sidebarMenu">
+            <div class="collapse submenu {% if request.resolver_match.url_name in 'emplist addemp assigned_tasks hr_dashboard' %}show{% endif %}"
+                id="employeeMenu" data-bs-parent="#sidebarMenu">
                 <ul class="nav flex-column ms-4">
                     <li><a href="{% url 'emplist' %}" class="nav-link">Employee List</a></li>
                     <li><a href="{% url 'addemp' %}" class="nav-link">New Employee</a></li>
                     <li><a href="{% url 'assigned_tasks' %}" class="nav-link">Assigned Tasks</a></li>
+                    <li><a href="{% url 'hr_dashboard' %}" class="nav-link">HR & Attendance</a>
+                    </li>
+                </ul>
+            </div>
+        </li>
+
+        <!-- PARTNERS & FRANCHISE -->
+        <li class="sidebar-heading mt-3 text-muted small">PARTNERS & FRANCHISE</li>
+        <li class="nav-item">
+            <a class="nav-link d-flex align-items-center justify-content-between {% if request.resolver_match.url_name in 'partner_list add_partner partner_detail all_partner_leads all_dealer_stocks' %}active{% endif %}"
+                data-bs-toggle="collapse" href="#partnerMenu"
+                aria-expanded="{% if request.resolver_match.url_name in 'partner_list add_partner partner_detail all_partner_leads all_dealer_stocks' %}true{% else %}false{% endif %}">
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-buildings nav-icon"></i>
+                    <span class="link-text ms-2">Partners</span>
+                </div>
+            </a>
+            <div class="collapse submenu {% if request.resolver_match.url_name in 'partner_list add_partner partner_detail all_partner_leads all_dealer_stocks' %}show{% endif %}"
+                id="partnerMenu" data-bs-parent="#sidebarMenu">
+                <ul class="nav flex-column ms-4">
+                    <li><a href="{% url 'partner_list' %}" class="nav-link">Partner List</a></li>
+                    <li><a href="{% url 'all_partner_leads' %}" class="nav-link">Franchise Leads</a></li>
+                    <li><a href="{% url 'all_dealer_stocks' %}" class="nav-link">Dealer Stock</a></li>
+                    <li><a href="{% url 'add_partner' %}" class="nav-link">Add Partner</a></li>
                 </ul>
             </div>
         </li>
 
         <!-- PROCUREMENT -->
-        <li class="sidebar-heading mt-3 text-muted small">PROCUREMENT</li>
         <li class="nav-item">
-            <a class="nav-link d-flex align-items-center justify-content-between {% if request.resolver_match.url_name in 'material_list admin_material_requests allocation_list vendor_list purchase_order_list goods_received_list stock_list' %}active{% endif %}" 
-               data-bs-toggle="collapse" href="#procurementMenu" aria-expanded="{% if request.resolver_match.url_name in 'material_list admin_material_requests allocation_list vendor_list purchase_order_list goods_received_list stock_list' %}true{% else %}false{% endif %}">
+            <a class="nav-link d-flex align-items-center justify-content-between {% if request.resolver_match.url_name == 'material_list' or request.resolver_match.url_name == 'rfq_list' or request.resolver_match.url_name == 'admin_material_requests' or request.resolver_match.url_name == 'allocation_list' or request.resolver_match.url_name == 'vendor_list' or request.resolver_match.url_name == 'purchase_order_list' or request.resolver_match.url_name == 'goods_received_list' or request.resolver_match.url_name == 'stock_list' %}active{% endif %}"
+                data-bs-toggle="collapse" href="#procurementMenu"
+                aria-expanded="{% if request.resolver_match.url_name == 'material_list' or request.resolver_match.url_name == 'rfq_list' or request.resolver_match.url_name == 'admin_material_requests' or request.resolver_match.url_name == 'allocation_list' or request.resolver_match.url_name == 'vendor_list' or request.resolver_match.url_name == 'purchase_order_list' or request.resolver_match.url_name == 'goods_received_list' or request.resolver_match.url_name == 'stock_list' %}true{% else %}false{% endif %}">
                 <div class="d-flex align-items-center">
-                    <i class="bi bi-box-seam nav-icon text-purple"></i>
+                    <i class="bi bi-boxes nav-icon"></i>
                     <span class="link-text ms-2">Procurement</span>
                 </div>
             </a>
-            <div class="collapse submenu {% if request.resolver_match.url_name in 'material_list admin_material_requests allocation_list vendor_list purchase_order_list goods_received_list stock_list' %}show{% endif %}" id="procurementMenu" data-bs-parent="#sidebarMenu">
+            <div class="collapse submenu {% if request.resolver_match.url_name == 'material_list' or request.resolver_match.url_name == 'rfq_list' or request.resolver_match.url_name == 'admin_material_requests' or request.resolver_match.url_name == 'allocation_list' or request.resolver_match.url_name == 'vendor_list' or request.resolver_match.url_name == 'purchase_order_list' or request.resolver_match.url_name == 'goods_received_list' or request.resolver_match.url_name == 'stock_list' %}show{% endif %}"
+                id="procurementMenu" data-bs-parent="#sidebarMenu">
                 <ul class="nav flex-column ms-4">
                     <li><a href="{% url 'material_list' %}" class="nav-link">Materials</a></li>
+                    <li><a href="{% url 'rfq_list' %}" class="nav-link">Vendor Bidding (RFQ)</a></li>
                     <li><a href="{% url 'admin_material_requests' %}" class="nav-link">Material Requests</a></li>
                     <li><a class="nav-link" href="{% url 'allocation_list' %}">Allocated Materials</a></li>
                     <li><a href="{% url 'vendor_list' %}" class="nav-link">Vendors</a></li>
@@ -133,19 +195,24 @@
         <!-- ================= FINANCE ================= -->
         <li class="sidebar-heading mt-3 text-muted small text-uppercase">Finance</li>
         <li class="nav-item mt-2">
-            <a class="nav-link d-flex align-items-center justify-content-between {% if request.resolver_match.url_name in 'invoice_list client_payments all_expenses project_costing' %}active{% endif %}"
-               data-bs-toggle="collapse" href="#financeMenu" aria-expanded="{% if request.resolver_match.url_name in 'invoice_list client_payments all_expenses project_costing' %}true{% else %}false{% endif %}">
+            <a class="nav-link d-flex align-items-center justify-content-between {% if request.resolver_match.url_name in 'invoice_list client_payments all_expenses project_costing commission_list loan_dashboard project_profit_report' %}active{% endif %}"
+                data-bs-toggle="collapse" href="#financeMenu"
+                aria-expanded="{% if request.resolver_match.url_name in 'invoice_list client_payments all_expenses project_costing commission_list loan_dashboard project_profit_report' %}true{% else %}false{% endif %}">
                 <div class="d-flex align-items-center">
-                    <i class="bi bi-cash-coin nav-icon"></i>
+                    <i class="bi bi-wallet2 nav-icon"></i>
                     <span class="link-text ms-2">Finance</span>
                 </div>
             </a>
-            <div class="collapse submenu {% if request.resolver_match.url_name in 'invoice_list client_payments all_expenses project_costing' %}show{% endif %}" id="financeMenu" data-bs-parent="#sidebarMenu">
+            <div class="collapse submenu {% if request.resolver_match.url_name in 'invoice_list client_payments all_expenses project_costing commission_list loan_dashboard project_profit_report' %}show{% endif %}"
+                id="financeMenu" data-bs-parent="#sidebarMenu">
                 <ul class="nav flex-column ms-4">
                     <li><a href="{% url 'invoice_list' %}" class="nav-link">Invoices</a></li>
                     <li><a href="{% url 'client_payments' %}" class="nav-link">Payments</a></li>
                     <li><a href="{% url 'all_expenses' %}" class="nav-link">Expenses</a></li>
                     <li><a href="{% url 'project_costing' %}" class="nav-link">Project Costing</a></li>
+                    <li><a href="{% url 'project_profit_report' %}" class="nav-link">P&L Analytics</a></li>
+                    <li><a href="{% url 'commission_list' %}" class="nav-link">Commissions</a></li>
+                    <li><a href="{% url 'loan_dashboard' %}" class="nav-link">Loans & Financing</a></li>
                 </ul>
             </div>
         </li>
@@ -153,14 +220,16 @@
         <!-- CONTENT / BLOG -->
         <li class="sidebar-heading mt-3 text-muted small">CONTENT</li>
         <li class="nav-item">
-            <a class="nav-link d-flex align-items-center justify-content-between {% if request.resolver_match.url_name in 'blogposts addpost' %}active{% endif %}" 
-               data-bs-toggle="collapse" href="#blogMenu" aria-expanded="{% if request.resolver_match.url_name in 'blogposts addpost' %}true{% else %}false{% endif %}">
+            <a class="nav-link d-flex align-items-center justify-content-between {% if request.resolver_match.url_name in 'blogposts addpost' %}active{% endif %}"
+                data-bs-toggle="collapse" href="#blogMenu"
+                aria-expanded="{% if request.resolver_match.url_name in 'blogposts addpost' %}true{% else %}false{% endif %}">
                 <div class="d-flex align-items-center">
-                    <i class="bi bi-journal-text nav-icon text-danger"></i>
+                    <i class="bi bi-newspaper nav-icon"></i>
                     <span class="link-text ms-2">Blog</span>
                 </div>
             </a>
-            <div class="collapse submenu {% if request.resolver_match.url_name in 'blogposts addpost' %}show{% endif %}" id="blogMenu" data-bs-parent="#sidebarMenu">
+            <div class="collapse submenu {% if request.resolver_match.url_name in 'blogposts addpost' %}show{% endif %}"
+                id="blogMenu" data-bs-parent="#sidebarMenu">
                 <ul class="nav flex-column ms-4">
                     <li><a href="{% url 'blogposts' %}" class="nav-link">All Posts</a></li>
                     <li><a href="{% url 'addpost' %}" class="nav-link">Add Post</a></li>
@@ -172,15 +241,15 @@
         <!-- ================= NOTIFICATIONS ================= -->
         <li class="nav-item mt-3">
             <a href="{% url 'notifications' %}" class="nav-link d-flex align-items-center">
-                <i class="bi bi-bell nav-icon text-danger"></i>
+                <i class="bi bi-bell nav-icon"></i>
                 <span class="link-text ms-2">Notifications</span>
             </a>
         </li>
-        
-        <!-- ================= PROFILE ================= -->        
+
+        <!-- ================= PROFILE ================= -->
         <li class="nav-item mt-3">
             <a href="{% url 'admin_profile' %}" class="nav-link d-flex align-items-center">
-                <i class="bi bi-person-circle nav-icon text-primary"></i>
+                <i class="bi bi-person-circle nav-icon"></i>
                 <span class="link-text ms-2">My Profile</span>
             </a>
         </li>
@@ -191,15 +260,15 @@
 
 <!-- ================= TOOLTIP SCRIPT ================= -->
 <script>
-document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("DOMContentLoaded", function () {
 
-    var tooltipTriggerList = [].slice.call(
-        document.querySelectorAll('[data-bs-toggle="tooltip"]')
-    );
+        var tooltipTriggerList = [].slice.call(
+            document.querySelectorAll('[data-bs-toggle="tooltip"]')
+        );
 
-    tooltipTriggerList.map(function (tooltipTriggerEl) {
-        return new bootstrap.Tooltip(tooltipTriggerEl);
+        tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+
     });
-
-});
 </script>

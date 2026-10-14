@@ -2,137 +2,477 @@
 {% load static %}
 
 {% block content %}
+<div class="container-fluid py-4 px-md-4">
 
-    <!-- Breadcrumb -->
+    <!-- ===== BREADCRUMB & HEADER ===== -->
     <nav aria-label="breadcrumb" class="mb-3">
-        <ol class="breadcrumb mb-0">
+        <ol class="breadcrumb bg-transparent p-0 mb-2 small">
             <li class="breadcrumb-item">
-                <a href="{% url request.user.role %}">
-                    {{ request.user.role|title }} Dashboard
+                <a href="{% url 'dashboard' %}" class="text-decoration-none text-muted">
+                    <i class="bi bi-house-door me-1"></i> Dashboard
                 </a>
             </li>
             <li class="breadcrumb-item">
-                <a href="{% url 'allocation_list' %}">
-                    Material Allocation
+                <a href="{% url 'allocation_list' %}" class="text-decoration-none text-muted">
+                    Inventory & Allocations
                 </a>
             </li>
-            <li class="breadcrumb-item active">
+            <li class="breadcrumb-item active text-primary fw-semibold" aria-current="page">
                 Allocate Material
             </li>
         </ol>
     </nav>
-    
-<div class="container mt-4">
 
-    <!-- Header -->
-    <div class="mb-3">
-        <h4 class="fw-bold text-primary">
-            <i class="bi bi-box-arrow-up-right me-2"></i>
-            Allocate Material
-        </h4>
-        <p class="text-muted mb-0">
-            Assign materials from inventory to a specific project
-        </p>
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3 border-bottom pb-3">
+        <div>
+            <div class="d-flex align-items-center gap-2 mb-1">
+                <div class="rounded-circle bg-primary-subtle text-primary p-2 d-inline-flex align-items-center justify-content-center" style="width: 42px; height: 42px;">
+                    <i class="bi bi-boxes fs-5"></i>
+                </div>
+                <h3 class="fw-bold mb-0 text-dark">Allocate Material to Project</h3>
+            </div>
+            <p class="text-muted mb-0 small">
+                Dispatch and assign warehouse equipment, solar modules, inverters, and custom site hardware directly to assigned project work orders.
+            </p>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+            <span class="badge bg-light text-secondary border px-3 py-2 rounded-pill small">
+                <i class="bi bi-person-badge me-1 text-primary"></i> Role: <strong class="text-dark">{{ request.user.role|title }}</strong>
+            </span>
+            <a href="{% url 'allocation_list' %}" class="btn btn-outline-secondary rounded-pill px-3 btn-sm">
+                <i class="bi bi-arrow-left me-1"></i> Back to Allocations
+            </a>
+        </div>
     </div>
 
+    <!-- ===== ROLE RBAC FILTER NOTICE ===== -->
+    {% if request.user.role != 'admin' and not request.user.is_superuser %}
+    <div class="alert alert-info border-0 shadow-sm rounded-4 d-flex align-items-center gap-3 p-3 mb-4">
+        <div class="rounded-circle bg-info-subtle text-info p-2 d-flex align-items-center justify-content-center flex-shrink-0" style="width: 40px; height: 40px;">
+            <i class="bi bi-shield-lock-fill fs-5"></i>
+        </div>
+        <div class="small">
+            <strong class="d-block text-info-emphasis">Role-Based Access Active:</strong>
+            You can only see and allocate materials to projects officially assigned to you. Unrelated company projects are strictly restricted.
+        </div>
+    </div>
+    {% endif %}
 
+    {% if project_count == 0 and request.user.role != 'admin' and not request.user.is_superuser %}
+    <div class="card border-0 shadow-sm rounded-4 p-5 text-center mb-4 bg-white">
+        <div class="mx-auto text-warning mb-3">
+            <i class="bi bi-exclamation-triangle-fill display-4"></i>
+        </div>
+        <h5 class="fw-bold text-dark">No Assigned Projects Found</h5>
+        <p class="text-muted max-w-md mx-auto mb-4" style="max-width: 500px;">
+            You currently do not have any active solar installation projects assigned to your account. Material allocation requires at least one assigned project.
+        </p>
+        <div>
+            <a href="{% url 'dashboard' %}" class="btn btn-primary rounded-pill px-4">
+                <i class="bi bi-speedometer2 me-1"></i> Return to Dashboard
+            </a>
+        </div>
+    </div>
+    {% else %}
 
-    <!-- Card -->
-    <div class="card shadow-sm border-0">
+    <div class="row g-4">
 
-        <div class="card-body">
-
-            <form method="POST">
-                {% csrf_token %}
-
-                <h6 class="text-muted mb-3">Allocation Details</h6>
-
-                <div class="row g-3">
-
-                    <!-- Project -->
-                    <div class="col-md-6">
-                        <label class="form-label">Project</label>
-                        {{ form.project }}
-                        {% for error in form.project.errors %}
-                            <div class="text-danger small">{{ error }}</div>
-                        {% endfor %}
+        <!-- ===== MAIN FORM (LEFT COLUMN) ===== -->
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm rounded-4 bg-white overflow-hidden">
+                <div class="card-header bg-white border-bottom py-3 px-4 d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="bi bi-clipboard2-check text-primary fs-5"></i>
+                        <span class="fw-bold text-dark">Material Dispatch Form</span>
                     </div>
-
-                    <!-- Material -->
-                    <div class="col-md-6">
-                        <label class="form-label">Material</label>
-                        {{ form.material }}
-
-                        <!-- 🔥 Live Stock -->
-                        <small id="stock-info" class="text-muted d-block mt-1">
-                            Select material to view stock
-                        </small>
-
-                        {% for error in form.material.errors %}
-                            <div class="text-danger small">{{ error }}</div>
-                        {% endfor %}
-                    </div>
-
-                    <!-- Quantity -->
-                    <div class="col-md-6">
-                        <label class="form-label">Quantity</label>
-                        {{ form.quantity }}
-
-                        {% for error in form.quantity.errors %}
-                            <div class="text-danger small">{{ error }}</div>
-                        {% endfor %}
-                    </div>
-
+                    <span class="badge bg-primary-subtle text-primary rounded-pill px-3 py-1 small">
+                        Manual & Warehouse Input Supported
+                    </span>
                 </div>
 
-                <!-- Actions -->
-                <div class="d-flex justify-content-end gap-2 mt-4">
+                <div class="card-body p-4">
+                    <form method="POST" id="materialAllocationForm" novalidate>
+                        {% csrf_token %}
 
-                    <a href="{% url 'allocation_list' %}" class="btn btn-light border">
-                        Cancel
-                    </a>
+                        <!-- Non-field Errors -->
+                        {% if form.non_field_errors %}
+                        <div class="alert alert-danger rounded-3 py-2 small mb-3">
+                            {% for error in form.non_field_errors %}
+                                <div><i class="bi bi-exclamation-circle me-1"></i> {{ error }}</div>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
 
-                    <button class="btn btn-primary px-4">
-                        <i class="bi bi-check-circle me-1"></i>
-                        Allocate Material
-                    </button>
+                        <!-- STEP 1: DESTINATION PROJECT -->
+                        <div class="mb-4">
+                            <label for="id_project" class="form-label fw-bold text-dark d-flex align-items-center gap-1 mb-1">
+                                <i class="bi bi-folder-check text-primary"></i> Destination Project
+                                <span class="text-danger">*</span>
+                            </label>
+                            <p class="text-muted small mb-2">Select your assigned project site where materials will be delivered.</p>
+                            
+                            {{ form.project }}
 
+                            {% for error in form.project.errors %}
+                                <div class="text-danger small mt-1 d-flex align-items-center gap-1">
+                                    <i class="bi bi-x-circle"></i> {{ error }}
+                                </div>
+                            {% endfor %}
+                        </div>
+
+                        <!-- STEP 2: INVENTORY ITEM / MATERIAL (MANUAL INPUT WITH DATALIST) -->
+                        <div class="mb-4">
+                            <label for="id_material_name" class="form-label fw-bold text-dark d-flex align-items-center gap-1 mb-1">
+                                <i class="bi bi-pencil-square text-info"></i> Warehouse Material / Hardware
+                                <span class="text-danger">*</span>
+                            </label>
+                            <p class="text-muted small mb-2">
+                                Write or type any material name manually. Existing warehouse materials will auto-suggest as you type.
+                            </p>
+
+                            <div class="position-relative">
+                                {{ form.material_name }}
+                                
+                                <!-- DATALIST FOR AUTO-SUGGESTIONS -->
+                                <datalist id="warehouse-materials-list">
+                                    {% for mat in all_materials %}
+                                    <option value="{{ mat.name }}">
+                                        Available: {{ mat.stock.quantity }} {{ mat.unit }} | Category: {{ mat.get_category_display }}
+                                    </option>
+                                    {% endfor %}
+                                </datalist>
+                            </div>
+
+                            {% for error in form.material_name.errors %}
+                                <div class="text-danger small mt-1 d-flex align-items-center gap-1">
+                                    <i class="bi bi-x-circle"></i> {{ error }}
+                                </div>
+                            {% endfor %}
+
+                            <!-- LIVE STOCK STATUS CARD -->
+                            <div id="stock-status-box" class="mt-3 p-3 rounded-3 bg-light border d-flex align-items-center justify-content-between transition-all">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div id="stock-icon-wrapper" class="rounded-circle bg-secondary-subtle text-secondary p-2 d-flex align-items-center justify-content-center" style="width: 38px; height: 38px;">
+                                        <i class="bi bi-pencil fs-6"></i>
+                                    </div>
+                                    <div>
+                                        <div id="stock-headline" class="fw-semibold text-dark small">Manual / Custom Hardware Mode</div>
+                                        <div id="stock-subtext" class="text-muted" style="font-size: 0.8rem;">Type any hardware name or choose a warehouse item to check stock.</div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <span id="stock-badge" class="badge bg-secondary-subtle text-secondary rounded-pill px-3 py-2">
+                                        Manual Input
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- STEP 3: DISPATCH QUANTITY -->
+                        <div class="mb-4">
+                            <label for="id_quantity" class="form-label fw-bold text-dark d-flex align-items-center gap-1 mb-1">
+                                <i class="bi bi-calculator text-success"></i> Required Quantity
+                                <span class="text-danger">*</span>
+                            </label>
+                            <p class="text-muted small mb-2">Specify the exact number of units, length in meters, or piece count required.</p>
+
+                            <div class="input-group">
+                                {{ form.quantity }}
+                                <span class="input-group-text bg-light fw-semibold text-muted px-3" id="quantity-unit-addon">
+                                    Units
+                                </span>
+                            </div>
+
+                            <div id="quantity-feedback" class="small mt-1 text-muted">
+                                Minimum allocation: 1 unit.
+                            </div>
+
+                            {% for error in form.quantity.errors %}
+                                <div class="text-danger small mt-1 d-flex align-items-center gap-1">
+                                    <i class="bi bi-x-circle"></i> {{ error }}
+                                </div>
+                            {% endfor %}
+                        </div>
+
+                        <!-- ACTION BUTTONS -->
+                        <div class="pt-3 border-top d-flex justify-content-end align-items-center gap-3">
+                            <a href="{% url 'allocation_list' %}" class="btn btn-light border rounded-pill px-4 fw-semibold text-muted">
+                                Cancel
+                            </a>
+                            <button type="submit" id="btn-submit-allocation" class="btn btn-primary rounded-pill px-4 py-2 fw-bold shadow-sm d-inline-flex align-items-center gap-2">
+                                <i class="bi bi-check2-circle fs-5"></i>
+                                <span>Confirm & Allocate Material</span>
+                            </button>
+                        </div>
+                    </form>
                 </div>
+            </div>
+        </div>
 
-            </form>
+        <!-- ===== SUMMARY & WAREHOUSE SIDEBAR (RIGHT COLUMN) ===== -->
+        <div class="col-lg-4">
+            
+            <!-- Real-time Preview Card -->
+            <div class="card border-0 shadow-sm rounded-4 bg-white mb-4 overflow-hidden border-top border-primary border-4">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <h6 class="fw-bold text-dark mb-0">
+                            <i class="bi bi-receipt text-primary me-1"></i> Allocation Summary
+                        </h6>
+                        <span class="badge bg-success-subtle text-success rounded-pill px-2 py-1 small">
+                            Preview
+                        </span>
+                    </div>
+
+                    <div class="p-3 bg-light rounded-3 mb-3 small">
+                        <div class="d-flex justify-content-between py-1 border-bottom">
+                            <span class="text-muted">Target Project:</span>
+                            <strong id="preview-project" class="text-dark text-end ms-2 text-truncate" style="max-width: 170px;">Not selected</strong>
+                        </div>
+                        <div class="d-flex justify-content-between py-1 border-bottom">
+                            <span class="text-muted">Material Item:</span>
+                            <strong id="preview-material" class="text-dark text-end ms-2 text-truncate" style="max-width: 170px;">Not entered</strong>
+                        </div>
+                        <div class="d-flex justify-content-between py-1 border-bottom">
+                            <span class="text-muted">Requested Qty:</span>
+                            <span id="preview-qty" class="fw-bold text-primary">0 Units</span>
+                        </div>
+                        <div class="d-flex justify-content-between py-1 border-bottom">
+                            <span class="text-muted">Warehouse Balance:</span>
+                            <span id="preview-balance" class="text-muted">—</span>
+                        </div>
+                        <div class="d-flex justify-content-between py-1">
+                            <span class="text-muted">Stock Remaining:</span>
+                            <span id="preview-remaining" class="fw-bold text-muted">—</span>
+                        </div>
+                    </div>
+
+                    <div class="small text-muted d-flex align-items-center gap-2">
+                        <i class="bi bi-person-circle text-primary"></i>
+                        <span>Dispatched By: <strong class="text-dark">{{ request.user.get_full_name|default:request.user.username }}</strong></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Warehouse Protocol Card -->
+            <div class="card border-0 shadow-sm rounded-4 bg-white overflow-hidden">
+                <div class="card-body p-4">
+                    <h6 class="fw-bold text-dark mb-3">
+                        <i class="bi bi-shield-lock-fill text-warning me-1"></i> Dispatch Guidelines
+                    </h6>
+
+                    <ul class="list-unstyled mb-0 small text-muted d-flex flex-column gap-3">
+                        <li class="d-flex align-items-start gap-2">
+                            <i class="bi bi-check-circle-fill text-success mt-1 flex-shrink-0"></i>
+                            <span><strong>Serial Tracking:</strong> All inverters and solar PV modules must have their unique barcodes scanned before leaving warehouse.</span>
+                        </li>
+                        <li class="d-flex align-items-start gap-2">
+                            <i class="bi bi-check-circle-fill text-success mt-1 flex-shrink-0"></i>
+                            <span><strong>Custom Hardware:</strong> Manually typed materials are accepted and logged directly to the site material manifest.</span>
+                        </li>
+                        <li class="d-flex align-items-start gap-2">
+                            <i class="bi bi-check-circle-fill text-success mt-1 flex-shrink-0"></i>
+                            <span><strong>Physical Verification:</strong> Ensure cable bundles and mounting structures match the approved site engineering drawings.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
 
         </div>
 
     </div>
+    {% endif %}
 
 </div>
 
-<!-- 🔥 STOCK SCRIPT -->
+<!-- ===== DYNAMIC INTERACTIVE SCRIPT ===== -->
 <script>
-document.addEventListener("DOMContentLoaded", function(){
+document.addEventListener("DOMContentLoaded", function () {
+    const projectSelect = document.getElementById("id_project");
+    const materialInput = document.getElementById("id_material_name");
+    const quantityInput = document.getElementById("id_quantity");
+    const unitAddon = document.getElementById("quantity-unit-addon");
 
-    const materialSelect = document.getElementById("id_material");
-    const stockInfo = document.getElementById("stock-info");
+    const stockStatusBox = document.getElementById("stock-status-box");
+    const stockIconWrapper = document.getElementById("stock-icon-wrapper");
+    const stockHeadline = document.getElementById("stock-headline");
+    const stockSubtext = document.getElementById("stock-subtext");
+    const stockBadge = document.getElementById("stock-badge");
 
-    materialSelect.addEventListener("change", function(){
+    const previewProject = document.getElementById("preview-project");
+    const previewMaterial = document.getElementById("preview-material");
+    const previewQty = document.getElementById("preview-qty");
+    const previewBalance = document.getElementById("preview-balance");
+    const previewRemaining = document.getElementById("preview-remaining");
+    const quantityFeedback = document.getElementById("quantity-feedback");
+    const submitBtn = document.getElementById("btn-submit-allocation");
 
-        const materialId = this.value;
+    let isWarehouseItem = false;
+    let currentStock = 0;
+    let currentUnit = "Units";
+    let searchTimeout = null;
 
-        if(materialId){
+    // Update Project Preview
+    if (projectSelect) {
+        projectSelect.addEventListener("change", function () {
+            const selectedText = projectSelect.options[projectSelect.selectedIndex]?.text || "Not selected";
+            previewProject.textContent = projectSelect.value ? selectedText : "Not selected";
+        });
+        if (projectSelect.value) {
+            previewProject.textContent = projectSelect.options[projectSelect.selectedIndex]?.text || "Not selected";
+        }
+    }
 
-            fetch(`/material-stock/${materialId}/`)
-                .then(response => response.json())
-                .then(data => {
-                    stockInfo.innerHTML = "Available Stock: <strong>" + data.stock + "</strong>";
-                });
-
-        } else {
-            stockInfo.innerHTML = "Select material to view stock";
+    // Function to check stock by material name
+    function inspectMaterialStock(name) {
+        if (!name || name.trim().length === 0) {
+            isWarehouseItem = false;
+            currentStock = 0;
+            currentUnit = "Units";
+            unitAddon.textContent = "Units";
+            previewMaterial.textContent = "Not entered";
+            previewBalance.textContent = "—";
+            previewRemaining.textContent = "—";
+            stockStatusBox.className = "mt-3 p-3 rounded-3 bg-light border d-flex align-items-center justify-content-between";
+            stockIconWrapper.className = "rounded-circle bg-secondary-subtle text-secondary p-2 d-flex align-items-center justify-content-center";
+            stockHeadline.textContent = "Manual / Custom Hardware Mode";
+            stockSubtext.textContent = "Type any hardware name or choose a warehouse item to check stock.";
+            stockBadge.className = "badge bg-secondary-subtle text-secondary rounded-pill px-3 py-2";
+            stockBadge.textContent = "Manual Input";
+            updateQuantityCalculation();
+            return;
         }
 
-    });
+        previewMaterial.textContent = name;
 
+        // Query server to see if this matches a tracked warehouse material
+        fetch(`/procurement/material-stock-by-name/?name=${encodeURIComponent(name.trim())}`)
+            .then(res => res.json())
+            .then(data => {
+                if (data.exists) {
+                    isWarehouseItem = true;
+                    currentStock = parseInt(data.stock) || 0;
+                    currentUnit = data.unit || "Units";
+                    unitAddon.textContent = currentUnit;
+                    previewBalance.textContent = `${currentStock} ${currentUnit}`;
+
+                    if (currentStock <= 0) {
+                        stockStatusBox.className = "mt-3 p-3 rounded-3 bg-danger-subtle border border-danger-subtle d-flex align-items-center justify-content-between";
+                        stockIconWrapper.className = "rounded-circle bg-danger text-white p-2 d-flex align-items-center justify-content-center";
+                        stockHeadline.innerHTML = `<span class="text-danger fw-bold">Out of Stock (0 ${currentUnit})</span>`;
+                        stockSubtext.textContent = `Warehouse tracked item '${data.name}' has 0 stock.`;
+                        stockBadge.className = "badge bg-danger rounded-pill px-3 py-2";
+                        stockBadge.textContent = "Out of Stock";
+                    } else if (data.is_low_stock || currentStock < 10) {
+                        stockStatusBox.className = "mt-3 p-3 rounded-3 bg-warning-subtle border border-warning-subtle d-flex align-items-center justify-content-between";
+                        stockIconWrapper.className = "rounded-circle bg-warning text-dark p-2 d-flex align-items-center justify-content-center";
+                        stockHeadline.innerHTML = `<span class="text-warning-emphasis fw-bold">Available: ${currentStock} ${currentUnit} (Low Stock)</span>`;
+                        stockSubtext.textContent = `Warehouse Category: ${data.category}. Ready for dispatch.`;
+                        stockBadge.className = "badge bg-warning text-dark rounded-pill px-3 py-2";
+                        stockBadge.textContent = "Low Stock";
+                    } else {
+                        stockStatusBox.className = "mt-3 p-3 rounded-3 bg-success-subtle border border-success-subtle d-flex align-items-center justify-content-between";
+                        stockIconWrapper.className = "rounded-circle bg-success text-white p-2 d-flex align-items-center justify-content-center";
+                        stockHeadline.innerHTML = `<span class="text-success fw-bold">Available: ${currentStock} ${currentUnit} (In Stock)</span>`;
+                        stockSubtext.textContent = `Warehouse Category: ${data.category}. Live stock synchronized.`;
+                        stockBadge.className = "badge bg-success rounded-pill px-3 py-2";
+                        stockBadge.textContent = "Warehouse In Stock";
+                    }
+                } else {
+                    // Custom / manual hardware written by user
+                    isWarehouseItem = false;
+                    currentStock = 0;
+                    currentUnit = "Units";
+                    unitAddon.textContent = "Units";
+                    previewBalance.textContent = "Custom Hardware";
+                    previewRemaining.textContent = "Direct Site Allocation";
+
+                    stockStatusBox.className = "mt-3 p-3 rounded-3 bg-info-subtle border border-info-subtle d-flex align-items-center justify-content-between";
+                    stockIconWrapper.className = "rounded-circle bg-info text-white p-2 d-flex align-items-center justify-content-center";
+                    stockHeadline.innerHTML = `<span class="text-info-emphasis fw-bold">Custom Site Hardware</span>`;
+                    stockSubtext.textContent = `'${name}' will be allocated directly to site without stock restriction.`;
+                    stockBadge.className = "badge bg-info text-dark rounded-pill px-3 py-2";
+                    stockBadge.textContent = "Custom Hardware";
+                }
+                updateQuantityCalculation();
+            })
+            .catch(err => {
+                console.error("Stock check error:", err);
+            });
+    }
+
+    if (materialInput) {
+        materialInput.addEventListener("input", function () {
+            clearTimeout(searchTimeout);
+            const val = this.value;
+            searchTimeout = setTimeout(() => {
+                inspectMaterialStock(val);
+            }, 300);
+        });
+
+        materialInput.addEventListener("change", function () {
+            inspectMaterialStock(this.value);
+        });
+
+        if (materialInput.value) {
+            inspectMaterialStock(materialInput.value);
+        }
+    }
+
+    // Dynamic Quantity Calculation & Validation
+    function updateQuantityCalculation() {
+        const val = parseInt(quantityInput.value) || 0;
+        previewQty.textContent = `${val} ${currentUnit}`;
+
+        if (materialInput && materialInput.value.trim()) {
+            if (isWarehouseItem) {
+                const remaining = currentStock - val;
+                if (val > currentStock && currentStock > 0) {
+                    previewRemaining.innerHTML = `<span class="text-danger fw-bold">Deficit of ${Math.abs(remaining)} ${currentUnit}</span>`;
+                    quantityFeedback.innerHTML = `<span class="text-danger fw-semibold"><i class="bi bi-exclamation-triangle-fill me-1"></i> Warehouse stock only has ${currentStock} ${currentUnit}.</span>`;
+                    quantityInput.classList.add("is-invalid");
+                } else if (val <= 0) {
+                    previewRemaining.textContent = `${currentStock} ${currentUnit}`;
+                    quantityFeedback.innerHTML = `<span class="text-muted">Enter a valid quantity greater than 0.</span>`;
+                    quantityInput.classList.remove("is-invalid");
+                    if (submitBtn) submitBtn.disabled = false;
+                } else {
+                    previewRemaining.innerHTML = `<span class="text-success fw-bold">${remaining} ${currentUnit}</span>`;
+                    quantityFeedback.innerHTML = `<span class="text-success"><i class="bi bi-check-circle-fill me-1"></i> ${remaining} ${currentUnit} will remain in warehouse inventory.</span>`;
+                    quantityInput.classList.remove("is-invalid");
+                    if (submitBtn) submitBtn.disabled = false;
+                }
+            } else {
+                // Custom hardware: no warehouse block
+                previewRemaining.innerHTML = `<span class="text-success fw-bold">Direct Allocation</span>`;
+                quantityFeedback.innerHTML = `<span class="text-success"><i class="bi bi-check2-circle me-1"></i> ${val} ${currentUnit} will be dispatched to project.</span>`;
+                quantityInput.classList.remove("is-invalid");
+                if (submitBtn) submitBtn.disabled = false;
+            }
+        }
+    }
+
+    if (quantityInput) {
+        quantityInput.addEventListener("input", updateQuantityCalculation);
+    }
 });
 </script>
 
+<style>
+/* Modern styling enhancements */
+.form-select-lg, .form-control-lg {
+    font-size: 0.98rem;
+    border-radius: 0.75rem;
+    padding: 0.75rem 1rem;
+    border: 1px solid #dee2e6;
+    transition: all 0.2s ease-in-out;
+}
+.form-select-lg:focus, .form-control-lg:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.15);
+}
+.transition-all {
+    transition: all 0.3s ease;
+}
+</style>
 {% endblock %}

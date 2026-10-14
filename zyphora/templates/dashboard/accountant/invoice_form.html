@@ -1,85 +1,325 @@
 {% extends "dashboard/dashboard.html" %}
+{% load static %}
 
 {% block content %}
-<div class="container mt-5">
+<div class="container-fluid py-4 px-md-4">
 
-    <!-- Breadcrumbs -->
-    <nav aria-label="breadcrumb" class="mb-4">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
-            <li class="breadcrumb-item active" aria-current="page">{{ title }}</li>
+    <!-- ===== BREADCRUMB & HEADER ===== -->
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb bg-transparent p-0 mb-2 small">
+            <li class="breadcrumb-item">
+                <a href="{% url 'dashboard' %}" class="text-decoration-none text-muted">
+                    <i class="bi bi-house-door me-1"></i> Dashboard
+                </a>
+            </li>
+            <li class="breadcrumb-item">
+                <a href="{% url 'invoice_list' %}" class="text-decoration-none text-muted">
+                    Finance
+                </a>
+            </li>
+            <li class="breadcrumb-item">
+                <a href="{% url 'invoice_list' %}" class="text-decoration-none text-muted">
+                    Invoices
+                </a>
+            </li>
+            <li class="breadcrumb-item active text-primary fw-semibold" aria-current="page">
+                {{ title }}
+            </li>
         </ol>
     </nav>
 
-    <!-- Form Card -->
-    <div class="card shadow border-0">
-        <div class="card-header bg-primary text-white">
-            <h5 class="mb-0"><i class="bi bi-receipt me-2"></i>{{ title }}</h5>
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3 border-bottom pb-3">
+        <div>
+            <div class="d-flex align-items-center gap-3 mb-1">
+                <div class="rounded-3 bg-primary-subtle text-primary p-2 px-3 d-inline-flex align-items-center justify-content-center shadow-sm">
+                    <i class="bi bi-receipt-cutoff fs-4"></i>
+                </div>
+                <div>
+                    <h3 class="fw-bold mb-0 text-dark">{{ title }}</h3>
+                    <p class="text-muted mb-0 small">
+                        Generate and dispatch professional project billing statements and client tax invoices.
+                    </p>
+                </div>
+            </div>
         </div>
-        <div class="card-body">
-
-            <form method="POST">
-                {% csrf_token %}
-                <div class="row g-4">
-
-                    <!-- Project -->
-                    <div class="col-md-6">
-                        <label class="form-label fw-bold">Project</label>
-                        {{ form.project }}
-                    </div>
-
-                    <!-- Invoice Number -->
-                    <div class="col-md-6">
-                        <label class="form-label fw-bold">Invoice Number</label>
-                        {{ form.invoice_number }}
-                    </div>
-
-                    <!-- Issue Date -->
-                    <div class="col-md-6">
-                        <label class="form-label fw-bold">Issue Date</label>
-                        {{ form.issue_date }}
-                    </div>
-
-                    <!-- Due Date -->
-                    <div class="col-md-6">
-                        <label class="form-label fw-bold">Due Date</label>
-                        {{ form.due_date }}
-                    </div>
-
-                    <!-- Total Amount -->
-                    <div class="col-md-6">
-                        <label class="form-label fw-bold">Total Amount</label>
-                        {{ form.total_amount }}
-                    </div>
-
-                    <!-- Status -->
-                    <div class="col-md-6">
-                        <label class="form-label fw-bold">Status</label>
-                        {{ form.status }}
-                    </div>
-
-                    <!-- Notes -->
-                    <div class="col-12">
-                        <label class="form-label fw-bold">Notes</label>
-                        {{ form.notes }}
-                    </div>
-
-                </div>
-
-                <!-- Form Actions -->
-                <div class="mt-4 d-flex justify-content-end gap-2">
-                    <button type="submit" class="btn btn-success btn-lg">
-                        <i class="bi bi-check-circle me-1"></i> Save
-                    </button>
-                    <a href="{% url 'invoice_list' %}" class="btn btn-outline-secondary btn-lg">
-                        <i class="bi bi-x-circle me-1"></i> Cancel
-                    </a>
-                </div>
-
-            </form>
-
+        <div class="d-flex align-items-center gap-2">
+            <a href="{% url 'invoice_list' %}" class="btn btn-outline-secondary rounded-pill px-3 py-2 btn-sm fw-semibold">
+                <i class="bi bi-arrow-left me-1"></i> Back to Invoices
+            </a>
         </div>
     </div>
 
+    <!-- ===== MAIN CONTENT (FORM + LIVE SUMMARY) ===== -->
+    <div class="row g-4">
+
+        <!-- Form Column (Left) -->
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm rounded-4 bg-white overflow-hidden">
+                <div class="card-header bg-white border-bottom py-3 px-4 d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="bi bi-file-earmark-text text-primary fs-5"></i>
+                        <span class="fw-bold text-dark">Invoice Details</span>
+                    </div>
+                    <span class="badge bg-primary-subtle text-primary rounded-pill px-3 py-1 small">
+                        Tax & Commercial Invoice
+                    </span>
+                </div>
+
+                <div class="card-body p-4 p-md-4">
+                    <form method="POST" id="invoiceForm" novalidate>
+                        {% csrf_token %}
+
+                        <!-- Non-field Errors -->
+                        {% if form.non_field_errors %}
+                        <div class="alert alert-danger rounded-3 py-2 small mb-4">
+                            {% for error in form.non_field_errors %}
+                                <div><i class="bi bi-exclamation-circle me-1"></i> {{ error }}</div>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+
+                        <!-- SECTION 1: PROJECT & INVOICE NUMBER -->
+                        <div class="mb-4">
+                            <label for="id_project" class="form-label fw-bold text-dark d-flex align-items-center gap-1 mb-1">
+                                <i class="bi bi-folder-check text-primary"></i> Target Project
+                                <span class="text-danger">*</span>
+                            </label>
+                            <p class="text-muted small mb-2">Select the solar installation project this invoice is billed against.</p>
+                            
+                            {{ form.project }}
+
+                            {% for error in form.project.errors %}
+                                <div class="text-danger small mt-1 d-flex align-items-center gap-1">
+                                    <i class="bi bi-x-circle"></i> {{ error }}
+                                </div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="row g-3 mb-4">
+                            <!-- Invoice Number -->
+                            <div class="col-md-6">
+                                <label for="id_invoice_number" class="form-label fw-bold text-dark d-flex align-items-center gap-1 mb-1">
+                                    <i class="bi bi-hash text-secondary"></i> Invoice Number
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light text-muted border-end-0">#</span>
+                                    {{ form.invoice_number }}
+                                </div>
+                                <div class="form-text small text-muted">Unique serial identifier for GST/accounting.</div>
+                                {% for error in form.invoice_number.errors %}
+                                    <div class="text-danger small mt-1 d-flex align-items-center gap-1">
+                                        <i class="bi bi-x-circle"></i> {{ error }}
+                                    </div>
+                                {% endfor %}
+                            </div>
+
+                            <!-- Status -->
+                            <div class="col-md-6">
+                                <label for="id_status" class="form-label fw-bold text-dark d-flex align-items-center gap-1 mb-1">
+                                    <i class="bi bi-flag text-warning"></i> Invoice Status
+                                    <span class="text-danger">*</span>
+                                </label>
+                                {{ form.status }}
+                                <div class="form-text small text-muted">Initial stage of this billing statement.</div>
+                                {% for error in form.status.errors %}
+                                    <div class="text-danger small mt-1 d-flex align-items-center gap-1">
+                                        <i class="bi bi-x-circle"></i> {{ error }}
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <!-- SECTION 2: DATES & TOTAL AMOUNT -->
+                        <div class="p-3 p-md-4 rounded-4 bg-light bg-opacity-50 border mb-4">
+                            <h6 class="fw-bold text-dark mb-3 d-flex align-items-center gap-2">
+                                <i class="bi bi-calendar-event text-primary"></i> Billing Timeline & Amount
+                            </h6>
+
+                            <div class="row g-3">
+                                <!-- Issue Date -->
+                                <div class="col-md-4">
+                                    <label for="id_issue_date" class="form-label fw-semibold text-dark small mb-1">
+                                        Issue Date <span class="text-danger">*</span>
+                                    </label>
+                                    {{ form.issue_date }}
+                                    {% for error in form.issue_date.errors %}
+                                        <div class="text-danger small mt-1">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+
+                                <!-- Due Date -->
+                                <div class="col-md-4">
+                                    <label for="id_due_date" class="form-label fw-semibold text-dark small mb-1">
+                                        Due Date <span class="text-danger">*</span>
+                                    </label>
+                                    {{ form.due_date }}
+                                    {% for error in form.due_date.errors %}
+                                        <div class="text-danger small mt-1">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+
+                                <!-- Total Amount -->
+                                <div class="col-md-4">
+                                    <label for="id_total_amount" class="form-label fw-semibold text-dark small mb-1">
+                                        Total Amount (₹) <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-success-subtle text-success fw-bold border-end-0">₹</span>
+                                        {{ form.total_amount }}
+                                    </div>
+                                    {% for error in form.total_amount.errors %}
+                                        <div class="text-danger small mt-1">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- SECTION 3: NOTES & TERMS -->
+                        <div class="mb-4">
+                            <label for="id_notes" class="form-label fw-bold text-dark d-flex align-items-center gap-1 mb-1">
+                                <i class="bi bi-journal-text text-secondary"></i> Payment Terms & Bank Remarks
+                            </label>
+                            <p class="text-muted small mb-2">Include NEFT/RTGS bank details, installment milestones, or special terms.</p>
+                            {{ form.notes }}
+                            {% for error in form.notes.errors %}
+                                <div class="text-danger small mt-1">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <!-- ACTIONS -->
+                        <div class="pt-3 border-top d-flex justify-content-end align-items-center gap-3">
+                            <a href="{% url 'invoice_list' %}" class="btn btn-light border rounded-pill px-4 fw-semibold text-muted">
+                                Cancel
+                            </a>
+                            <button type="submit" class="btn btn-primary rounded-pill px-5 fw-bold shadow-sm d-inline-flex align-items-center gap-2">
+                                <i class="bi bi-check-circle-fill"></i> Save Invoice
+                            </button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Live Invoice Summary Card (Right Column) -->
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm rounded-4 bg-white p-4 sticky-top" style="top: 20px;">
+                <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-3">
+                    <span class="fw-bold text-dark d-flex align-items-center gap-2">
+                        <i class="bi bi-eye text-primary"></i> Live Preview
+                    </span>
+                    <span id="preview-status-badge" class="badge bg-secondary-subtle text-secondary rounded-pill px-3 py-1 text-uppercase small">
+                        Draft
+                    </span>
+                </div>
+
+                <!-- Preview Amount Box -->
+                <div class="bg-primary-subtle bg-gradient p-3 rounded-4 mb-3 text-center">
+                    <div class="small text-muted fw-semibold text-uppercase tracking-wider">Billed Amount</div>
+                    <div class="display-6 fw-bold text-primary mt-1" id="preview-amount">
+                        ₹0.00
+                    </div>
+                    <div class="small text-muted mt-1" id="preview-amount-words">
+                        Zero Rupees Only
+                    </div>
+                </div>
+
+                <!-- Invoice Details List -->
+                <ul class="list-group list-group-flush small mb-3">
+                    <li class="list-group-item d-flex justify-content-between px-0 py-2 bg-transparent">
+                        <span class="text-muted"><i class="bi bi-hash me-1"></i> Invoice No:</span>
+                        <strong class="text-dark" id="preview-invoice-no">—</strong>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between px-0 py-2 bg-transparent">
+                        <span class="text-muted"><i class="bi bi-folder me-1"></i> Project:</span>
+                        <strong class="text-dark text-truncate text-end ms-2" style="max-width: 170px;" id="preview-project-name">—</strong>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between px-0 py-2 bg-transparent">
+                        <span class="text-muted"><i class="bi bi-calendar me-1"></i> Issue Date:</span>
+                        <span class="text-dark" id="preview-issue-date">—</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between px-0 py-2 bg-transparent">
+                        <span class="text-muted"><i class="bi bi-calendar-check me-1"></i> Due Date:</span>
+                        <span class="text-dark" id="preview-due-date">—</span>
+                    </li>
+                </ul>
+
+                <!-- Pro Tips Box -->
+                <div class="alert alert-light border rounded-3 p-3 mb-0 small">
+                    <div class="fw-semibold text-dark mb-1 d-flex align-items-center gap-1">
+                        <i class="bi bi-lightbulb-fill text-warning"></i> Billing Tip:
+                    </div>
+                    <div class="text-muted" style="font-size: 0.82rem;">
+                        Setting status to <strong>Sent</strong> will notify project stakeholders and display the invoice under client pending receivables.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
 </div>
+
+<!-- Real-time Preview Script -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const invInput = document.getElementById('id_invoice_number');
+    const amtInput = document.getElementById('id_total_amount');
+    const projSelect = document.getElementById('id_project');
+    const statusSelect = document.getElementById('id_status');
+    const issueDate = document.getElementById('id_issue_date');
+    const dueDate = document.getElementById('id_due_date');
+
+    const previewNo = document.getElementById('preview-invoice-no');
+    const previewAmt = document.getElementById('preview-amount');
+    const previewProj = document.getElementById('preview-project-name');
+    const previewStatus = document.getElementById('preview-status-badge');
+    const previewIssue = document.getElementById('preview-issue-date');
+    const previewDue = document.getElementById('preview-due-date');
+
+    function updatePreview() {
+        if (invInput && invInput.value.trim()) {
+            previewNo.textContent = invInput.value.trim();
+        } else {
+            previewNo.textContent = '—';
+        }
+
+        if (amtInput && amtInput.value) {
+            const val = parseFloat(amtInput.value) || 0;
+            previewAmt.textContent = '₹' + val.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        } else {
+            previewAmt.textContent = '₹0.00';
+        }
+
+        if (projSelect && projSelect.selectedIndex > 0) {
+            previewProj.textContent = projSelect.options[projSelect.selectedIndex].text;
+        } else {
+            previewProj.textContent = '—';
+        }
+
+        if (statusSelect) {
+            const st = statusSelect.value;
+            previewStatus.textContent = st || 'Draft';
+            previewStatus.className = 'badge rounded-pill px-3 py-1 text-uppercase small ';
+            if (st === 'paid') previewStatus.className += 'bg-success-subtle text-success';
+            else if (st === 'sent') previewStatus.className += 'bg-primary-subtle text-primary';
+            else if (st === 'overdue') previewStatus.className += 'bg-danger-subtle text-danger';
+            else previewStatus.className += 'bg-secondary-subtle text-secondary';
+        }
+
+        if (issueDate && issueDate.value) previewIssue.textContent = issueDate.value;
+        if (dueDate && dueDate.value) previewDue.textContent = dueDate.value;
+    }
+
+    [invInput, amtInput, projSelect, statusSelect, issueDate, dueDate].forEach(el => {
+        if (el) {
+            el.addEventListener('input', updatePreview);
+            el.addEventListener('change', updatePreview);
+        }
+    });
+
+    updatePreview();
+});
+</script>
 {% endblock %}

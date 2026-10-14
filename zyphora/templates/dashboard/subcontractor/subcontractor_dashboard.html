@@ -1,0 +1,308 @@
+{% extends "dashboard/dashboard.html" %}
+{% load static %}
+
+{% block content %}
+<div class="admin-dashboard-container">
+    <div class="container-fluid px-0">
+
+        <!-- ================= TOP EXECUTIVE WELCOME BANNER (SLIM) ================= -->
+        <div class="executive-hero-banner">
+            <div class="d-flex align-items-center flex-wrap gap-2">
+                <div class="hero-live-badge">
+                    <span class="live-pulse-dot"></span>
+                    <span>SUB-CONTRACTOR</span>
+                </div>
+                <h5 class="fw-bold text-dark mb-0 d-flex align-items-center gap-2" style="font-size: 1.05rem;">
+                    <i class="bi bi-tools text-primary"></i>Contractor Operations & Execution
+                </h5>
+                <span class="text-muted small d-none d-lg-inline ms-1" style="font-size: 0.76rem;">• Installation sites, milestone proofs, site layouts & inventory</span>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+                <a href="{% url 'subcontractor_dashboard' %}" class="btn btn-primary btn-sm rounded-pill px-3 py-1 fw-semibold text-white shadow-xs" style="font-size: 0.78rem;">
+                    <i class="bi bi-camera me-1"></i>Submit Proof
+                </a>
+            </div>
+        </div>
+
+        <!-- ===== TASKS DUE TODAY ALERT ===== -->
+        {% if due_today_tasks %}
+        <div class="alert alert-danger border-0 shadow-sm rounded-3 p-3 mb-4 d-flex align-items-center justify-content-between flex-wrap gap-2">
+            <div class="d-flex align-items-center gap-3">
+                <div class="rounded-circle bg-danger-subtle text-danger p-2 d-flex align-items-center justify-content-center" style="width: 36px; height: 36px;">
+                    <i class="bi bi-bell-fill fs-5"></i>
+                </div>
+                <div>
+                    <strong class="d-block text-danger">Action Required Today!</strong>
+                    <span class="small text-muted">You have <strong>{{ due_today_tasks.count }}</strong> task(s) scheduled for completion today. Please finish work and upload site photos.</span>
+                </div>
+            </div>
+            <a href="{% url 'subcontractor_dashboard' %}" class="btn btn-sm btn-danger rounded-pill px-3">
+                View Due Tasks
+            </a>
+        </div>
+        {% endif %}
+
+        <!-- ================= KPI SECTION ================= -->
+        <div class="dashboard-section-bar">
+            <i class="bi bi-kanban text-primary"></i>Contract Milestones & Site Summary
+        </div>
+
+        <div class="row g-3 mb-4">
+            <!-- 1. Assigned Projects -->
+            <div class="col-12 col-sm-6 col-xl-3">
+                <div class="white-premium-card">
+                    <div class="card-top-bar bar-blue"></div>
+                    <div class="card-head-split">
+                        <div>
+                            <div class="card-label-sub">Assigned Sites</div>
+                            <div class="card-value-hero text-primary">{{ assigned_projects_count }}</div>
+                        </div>
+                        <div class="card-icon-pill icon-pill-blue">
+                            <i class="bi bi-buildings"></i>
+                        </div>
+                    </div>
+                    <div class="card-meta-pill pill-sub-blue">
+                        <i class="bi bi-file-earmark-text me-1"></i>Active Contracts
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. Pending Tasks -->
+            <div class="col-12 col-sm-6 col-xl-3">
+                <div class="white-premium-card">
+                    <div class="card-top-bar bar-amber"></div>
+                    <div class="card-head-split">
+                        <div>
+                            <div class="card-label-sub">Pending Tasks</div>
+                            <div class="card-value-hero text-dark">{{ pending_tasks_count }}</div>
+                        </div>
+                        <div class="card-icon-pill icon-pill-amber">
+                            <i class="bi bi-hourglass-split"></i>
+                        </div>
+                    </div>
+                    <div class="card-meta-pill pill-sub-amber">
+                        <i class="bi bi-clock-history me-1"></i>In-Execution
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. Awaiting Verification -->
+            <div class="col-12 col-sm-6 col-xl-3">
+                <div class="white-premium-card">
+                    <div class="card-top-bar bar-cyan"></div>
+                    <div class="card-head-split">
+                        <div>
+                            <div class="card-label-sub">Under Review</div>
+                            <div class="card-value-hero text-primary">{{ awaiting_verification_count }}</div>
+                        </div>
+                        <div class="card-icon-pill icon-pill-cyan">
+                            <i class="bi bi-clock-history"></i>
+                        </div>
+                    </div>
+                    <div class="card-meta-pill pill-sub-cyan">
+                        <i class="bi bi-shield-check me-1"></i>QC Approval
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. Verified & Completed -->
+            <div class="col-12 col-sm-6 col-xl-3">
+                <div class="white-premium-card">
+                    <div class="card-top-bar bar-emerald"></div>
+                    <div class="card-head-split">
+                        <div>
+                            <div class="card-label-sub">Approved & Done</div>
+                            <div class="card-value-hero text-success">{{ verified_count }}</div>
+                        </div>
+                        <div class="card-icon-pill icon-pill-emerald">
+                            <i class="bi bi-check-circle-fill"></i>
+                        </div>
+                    </div>
+                    <div class="card-meta-pill pill-sub-emerald">
+                        <i class="bi bi-trophy me-1"></i>Verified Work
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== QUICK OPERATIONS ===== -->
+        <div class="white-premium-panel mb-4">
+            <div class="panel-header-wrap">
+                <h6 class="panel-heading">
+                    <i class="bi bi-lightning-charge-fill text-warning"></i>Quick Operations & Navigation
+                </h6>
+            </div>
+            <div class="row g-2">
+                <div class="col-6 col-md-3">
+                    <a href="{% url 'subcontractor_dashboard' %}" class="btn btn-light border w-100 rounded-3 py-2 px-3 text-start d-flex align-items-center gap-2 hover-shadow">
+                        <i class="bi bi-camera text-warning fs-5"></i>
+                        <div>
+                            <strong class="d-block text-dark small">Upload Proof</strong>
+                            <span class="text-muted" style="font-size: 0.75rem;">Submit photos</span>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-6 col-md-3">
+                    <a href="{% url 'project_list' %}" class="btn btn-light border w-100 rounded-3 py-2 px-3 text-start d-flex align-items-center gap-2 hover-shadow">
+                        <i class="bi bi-folder-check text-primary fs-5"></i>
+                        <div>
+                            <strong class="d-block text-dark small">Assigned Projects</strong>
+                            <span class="text-muted" style="font-size: 0.75rem;">View project details</span>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-6 col-md-3">
+                    <a href="{% url 'layouts' %}" class="btn btn-light border w-100 rounded-3 py-2 px-3 text-start d-flex align-items-center gap-2 hover-shadow">
+                        <i class="bi bi-image text-info fs-5"></i>
+                        <div>
+                            <strong class="d-block text-dark small">Site Layouts</strong>
+                            <span class="text-muted" style="font-size: 0.75rem;">CAD & SLD drawings</span>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-6 col-md-3">
+                    <a href="{% url 'allocation_list' %}" class="btn btn-light border w-100 rounded-3 py-2 px-3 text-start d-flex align-items-center gap-2 hover-shadow">
+                        <i class="bi bi-box-seam text-success fs-5"></i>
+                        <div>
+                            <strong class="d-block text-dark small">Allocated Materials</strong>
+                            <span class="text-muted" style="font-size: 0.75rem;">Inventory for site</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== MAIN CONTENT ROW ===== -->
+        <div class="row g-4 mb-4">
+            <!-- LEFT: RECENT FIELD TASKS -->
+            <div class="col-lg-7">
+                <div class="white-premium-panel h-100">
+                    <div class="panel-header-wrap">
+                        <h6 class="panel-heading">
+                            <i class="bi bi-list-task text-primary"></i>Assigned Field Tasks
+                        </h6>
+                        <span class="badge bg-primary rounded-pill">{{ total_tasks }}</span>
+                    </div>
+
+                    {% if recent_tasks %}
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Task Name</th>
+                                    <th>Project</th>
+                                    <th>Due Date</th>
+                                    <th>Status</th>
+                                    <th class="text-end pe-3">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for task in recent_tasks %}
+                                <tr>
+                                    <td>
+                                        <div class="fw-bold text-dark">{{ task.task_name }}</div>
+                                        <small class="text-muted">{{ task.description|truncatechars:35|default:"Site installation task" }}</small>
+                                    </td>
+                                    <td>
+                                        <span class="text-dark small fw-semibold">{{ task.project.title }}</span>
+                                    </td>
+                                    <td>
+                                        {% if task.deadline == today %}
+                                            <span class="badge bg-danger rounded-pill px-2 py-1">Due Today</span>
+                                        {% elif task.deadline < today and task.status != 'verified' and task.status != 'completed' %}
+                                            <span class="badge bg-danger text-white rounded-pill px-2 py-1">Overdue</span>
+                                        {% else %}
+                                            <span class="text-muted small">{{ task.deadline|date:"d M, Y" }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if task.status == 'verified' %}
+                                            <span class="badge bg-success">Verified</span>
+                                        {% elif task.status == 'completed' %}
+                                            <span class="badge bg-warning text-dark">In Review</span>
+                                        {% else %}
+                                            <span class="badge bg-secondary">Pending</span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="text-end pe-3">
+                                        {% if task.status != 'verified' %}
+                                        <a href="{% url 'subcontractor_dashboard' %}" class="btn btn-sm btn-outline-warning rounded-pill px-3 fw-semibold">
+                                            <i class="bi bi-camera me-1"></i> Proof
+                                        </a>
+                                        {% else %}
+                                        <span class="text-success small"><i class="bi bi-check2-all fs-5"></i></span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="text-center py-5 text-muted">
+                        <i class="bi bi-clipboard2-check fs-2 text-secondary mb-2 d-block"></i>
+                        <h6 class="fw-bold">No Tasks Assigned</h6>
+                        <p class="small mb-0">You currently have no tasks assigned. New tasks will show up here.</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- RIGHT: ASSIGNED PROJECTS DIRECTORY -->
+            <div class="col-lg-5">
+                <div class="white-premium-panel h-100">
+                    <div class="panel-header-wrap">
+                        <h6 class="panel-heading">
+                            <i class="bi bi-folder2-open text-primary"></i>My Assigned Projects
+                        </h6>
+                        <a href="{% url 'project_list' %}" class="text-primary text-decoration-none small fw-semibold">
+                            All Projects <i class="bi bi-arrow-right"></i>
+                        </a>
+                    </div>
+
+                    {% if projects %}
+                    <div class="d-flex flex-column gap-2 p-2">
+                        {% for project in projects %}
+                        <div class="p-3 bg-white rounded-3 border d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="fw-bold text-dark mb-1">{{ project.title }}</h6>
+                                <div class="text-muted small d-flex align-items-center gap-2 flex-wrap">
+                                    <span><i class="bi bi-geo-alt text-danger"></i> {{ project.location|default:"Site location" }}</span>
+                                    <span>&bull;</span>
+                                    <span class="badge bg-light text-dark border">
+                                        {{ project.get_project_type_display|default:project.project_type }}
+                                    </span>
+                                </div>
+                            </div>
+                            <div>
+                                <a href="{% url 'project_detail' project.id %}" class="btn btn-sm btn-outline-primary rounded-pill px-3">
+                                    View
+                                </a>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="text-center py-5 text-muted">
+                        <i class="bi bi-folder-x fs-2 text-secondary mb-2 d-block"></i>
+                        <h6 class="fw-bold">No Projects Assigned</h6>
+                        <p class="small mb-0">Projects assigned to your contractor company will appear here.</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<style>
+.hover-shadow {
+    transition: all 0.2s ease-in-out;
+}
+.hover-shadow:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+</style>
+{% endblock %}

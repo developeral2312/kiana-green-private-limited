@@ -1,0 +1,295 @@
+/* ================= KIANA GREEN DESIGN SYSTEM ================= */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+    --kg-primary: #0b5c32;
+    --kg-primary-hover: #084826;
+    --kg-dark-green: #092c1a;
+    --kg-accent-lime: #7cb342;
+    --kg-cyan-accent: #38bdf8;
+    --kg-bg-light: #f9fbf9;
+    --kg-text-dark: #1e293b;
+    --kg-text-muted: #64748b;
+    --kg-border-color: #e2e8f0;
+}
+
+html {
+    font-size: 17px;
+}
+
+body {
+    font-family: 'Outfit', sans-serif;
+    background-color: var(--kg-bg-light);
+    color: var(--kg-text-dark);
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    font-size: 1.05rem;
+    line-height: 1.65;
+}
+
+/* ================= NAVBAR ================= */
+.custom-navbar {
+    background-color: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    box-shadow: 0 1px 15px rgba(0, 0, 0, 0.05);
+    padding: 1rem 0;
+    border-bottom: 1px solid rgba(237, 242, 247, 0.5);
+    transition: all 0.3s ease;
+}
+
+.custom-navbar .nav-link {
+    color: #475569;
+    font-weight: 500;
+    font-size: 1.05rem;
+    padding: 0.5rem 1.2rem !important;
+    transition: color 0.2s ease;
+}
+
+.custom-navbar .nav-link:hover,
+.custom-navbar .nav-link.active {
+    color: var(--kg-primary) !important;
+    font-weight: 600;
+}
+
+.btn-kiana-primary {
+    background-color: var(--kg-primary);
+    color: #ffffff;
+    border: none;
+    transition: all 0.2s ease;
+}
+
+.btn-kiana-primary:hover {
+    background-color: var(--kg-primary-hover);
+    color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(11, 92, 50, 0.25);
+}
+
+/* ================= FOOTER ================= */
+.kiana-footer {
+    background-color: var(--kg-dark-green);
+    color: #cbd5e1;
+    font-size: 0.9rem;
+}
+
+.kiana-footer .footer-title {
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 1.05rem;
+    margin-bottom: 1.2rem;
+}
+
+.kiana-footer .footer-links li {
+    margin-bottom: 0.7rem;
+}
+
+.kiana-footer .footer-links a {
+    color: #94a3b8;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.kiana-footer .footer-links a:hover {
+    color: #ffffff;
+}
+
+.social-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #cbd5e1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    transition: all 0.2s;
+    font-size: 0.9rem;
+}
+
+.social-btn:hover {
+    background-color: var(--kg-primary);
+    color: #ffffff;
+}
+
+/* ================= HERO SECTION COMMON ================= */
+.kiana-hero {
+    position: relative;
+    padding: 100px 0 80px;
+    background-color: #05140b;
+    background-size: cover;
+    background-position: center;
+    color: #ffffff;
+}
+
+.kiana-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    z-index: 1;
+}
+
+.kiana-hero .container {
+    position: relative;
+    z-index: 2;
+}
+
+.kiana-hero-subtitle {
+    color: #ffffff;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    padding: 0 10px;
+}
+
+.kiana-hero-subtitle-line {
+    display: inline-block;
+    width: 20px;
+    height: 1px;
+    background-color: var(--kg-accent-lime);
+}
+
+.kiana-hero-title {
+    font-size: 4.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    margin-bottom: 1.5rem;
+    line-height: 1.2;
+}
+
+.kiana-hero-text {
+    font-size: 1.4rem;
+    color: #cbd5e1;
+    max-width: 800px;
+    line-height: 1.6;
+}
+
+/* ================= CONTACT PAGE ================= */
+.contact-form-card {
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+    padding: 3rem;
+    border: none;
+}
+
+.contact-input {
+    background-color: #f4f7f6;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    padding: 0.85rem 1rem;
+    font-size: 0.95rem;
+    color: #334155;
+}
+
+.contact-input:focus {
+    background-color: #ffffff;
+    border-color: var(--kg-primary);
+    box-shadow: 0 0 0 3px rgba(11, 92, 50, 0.1);
+}
+
+.info-box-card {
+    background: #ffffff;
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+    border: 1px solid #f1f5f9;
+}
+
+/* ================= SOLAR CALCULATOR SECTION ================= */
+.solar-calc-section {
+    background-color: #070e20;
+    color: #ffffff;
+    padding: 90px 0;
+}
+
+.calc-box-card {
+    background: #0b142d;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 2.5rem;
+}
+
+.highlight-card-blue {
+    background: #e6f0fa;
+    border-radius: 12px;
+    padding: 1.5rem;
+    color: #0f172a;
+    transition: transform 0.2s;
+}
+
+.highlight-card-green {
+    background: #e6f7ec;
+    border-radius: 12px;
+    padding: 1.5rem;
+    color: #0f172a;
+    transition: transform 0.2s;
+}
+
+.cyan-btn {
+    background: #60c9f8;
+    color: #000000;
+    font-weight: 700;
+    border: none;
+    border-radius: 8px;
+    padding: 1rem 2rem;
+    transition: all 0.2s ease;
+}
+
+.cyan-btn:hover {
+    background: #38bdf8;
+    color: #000000;
+}
+
+/* ================= PRODUCT TABS ================= */
+.product-pill {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+    border-radius: 4px;
+    padding: 0.6rem 2rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.product-pill.active,
+.product-pill:hover {
+    background-color: var(--kg-primary);
+    border-color: var(--kg-primary);
+    color: #ffffff;
+}
+
+/* ================= CARDS (PROCESS & SERVICES) ================= */
+.process-card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 2rem;
+    border: 1px solid #f1f5f9;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+    height: 100%;
+}
+.process-icon-box {
+    width: 48px;
+    height: 48px;
+    background-color: #fcf4d4;
+    color: #b78028;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    margin-bottom: 1.25rem;
+}
+.service-card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 2rem;
+    border-top: 4px solid var(--kg-primary);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+    height: 100%;
+}

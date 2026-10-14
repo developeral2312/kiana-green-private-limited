@@ -63,6 +63,14 @@ class Project(models.Model):
         verbose_name = "Project"
         verbose_name_plural = "Projects"
 
+    @property
+    def client(self):
+        return self.lead
+
+    @property
+    def created_by(self):
+        return self.engineer.user if self.engineer else None
+
     def update_status(self):
 
         # 🔹 INSTALLATION TASKS
@@ -382,6 +390,10 @@ class Task(models.Model):
     due_date = models.DateField(null=True, blank=True)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='new')
     created_at = models.DateTimeField(auto_now_add=True)
+    
+    # SLA & Escalation
+    escalation_level = models.IntegerField(default=0, help_text="0: None, 1: L1, 2: L2, 3: L3")
+    escalated_at = models.DateTimeField(null=True, blank=True)
 
     class Meta:
         ordering = ['-created_at']
@@ -390,13 +402,17 @@ class Task(models.Model):
         is_new = self.pk is None
         super().save(*args, **kwargs)
         if is_new and self.assigned_to:
-            create_notification(
-                recipient=self.assigned_to,
-                title=self.title,
-                message=self.description,
-                sender=self.assigned_by,
-                link=reverse('my_tasks')
-            )
+            try:
+                create_notification(
+                    recipient=self.assigned_to,
+                    title=self.title,
+                    message=self.description or f"New task assigned: {self.title}",
+                    sender=self.assigned_by,
+                    link=reverse('my_tasks'),
+                    category="task"
+                )
+            except Exception:
+                pass
 
     def __str__(self):
         return self.title
@@ -491,6 +507,11 @@ class InstallationTask(models.Model):
     due_date = models.DateField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     completed_at = models.DateTimeField(null=True, blank=True)
+
+    # API / Mobile App Fields
+    latitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
+    longitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
+    signature = models.ImageField(upload_to='task_signatures/', null=True, blank=True)
 
     class Meta:
         ordering = ['project', 'created_at']
@@ -892,3 +913,120 @@ class AssetWarranty(models.Model):
 
     def __str__(self):
         return f"{self.component_name} - {self.serial_number} ({self.project.title})"
+
+
+# ===============================
+# FEATURE 24: WARRANTY & SERIAL TRACKING
+# ===============================
+class EquipmentSerial(models.Model):
+    CATEGORY_CHOICES = (
+        ('panel', 'Solar Panel'),
+        ('inverter', 'Inverter'),
+        ('battery', 'Battery'),
+        ('other', 'Other Asset'),
+    )
+    STATUS_CHOICES = (
+        ('active', 'Active (Under Warranty)'),
+        ('expired', 'Warranty Expired'),
+        ('faulty', 'Reported Faulty'),
+        ('replaced', 'Replaced'),
+    )
+
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='equipments')
+    category = models.CharField(max_length=20, choices=CATEGORY_CHOICES, default='panel')
+    brand = models.CharField(max_length=100)
+    model_name = models.CharField(max_length=100, blank=True)
+    serial_number = models.CharField(max_length=150, unique=True)
+    
+    installation_date = models.DateField(default=timezone.now)
+    warranty_months = models.PositiveIntegerField(default=120) # 10 years default for panels
+    warranty_expiry = models.DateField(null=True, blank=True)
+    
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='active')
+    replaced_by = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True, related_name='replacement_for')
+    
+    notes = models.TextField(blank=True)
+    added_by = models.ForeignKey('users.CustomUser', on_delete=models.SET_NULL, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def save(self, *args, **kwargs):
+        from dateutil.relativedelta import relativedelta
+        if not self.warranty_expiry and self.installation_date and self.warranty_months:
+            self.warranty_expiry = self.installation_date + relativedelta(months=self.warranty_months)
+            
+        # Update status if expired
+        if self.warranty_expiry and self.warranty_expiry < timezone.now().date() and self.status == 'active':
+            self.status = 'expired'
+            
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"{self.get_category_display()} - {self.serial_number}"
+
+
+# ===============================
+# FEATURE 22: HELPDESK & AMC TICKETS
+# ===============================
+class SupportTicket(models.Model):
+    PRIORITY_CHOICES = (
+        ('low', 'Low'),
+        ('medium', 'Medium'),
+        ('high', 'High'),
+        ('critical', 'Critical (System Down)'),
+    )
+    STATUS_CHOICES = (
+        ('open', 'Open'),
+        ('in_progress', 'In Progress'),
+        ('resolved', 'Resolved'),
+        ('closed', 'Closed'),
+    )
+    
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='support_tickets')
+    customer_name = models.CharField(max_length=150)
+    customer_phone = models.CharField(max_length=20)
+    
+    issue_title = models.CharField(max_length=200)
+    issue_description = models.TextField()
+    
+    priority = models.CharField(max_length=20, choices=PRIORITY_CHOICES, default='medium')
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='open')
+    
+    assigned_to = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, blank=True, related_name='assigned_tickets')
+    
+    created_at = models.DateTimeField(auto_now_add=True)
+    resolved_at = models.DateTimeField(null=True, blank=True)
+    resolution_notes = models.TextField(blank=True)
+
+    def __str__(self):
+        return f"Ticket #{self.id} - {self.issue_title}"
+
+
+# ===============================
+# FEATURE 23: SUB-CONTRACTOR PORTAL
+# ===============================
+class SubcontractorTask(models.Model):
+    STATUS_CHOICES = (
+        ('assigned', 'Assigned'),
+        ('in_progress', 'In Progress'),
+        ('completed', 'Completed (Pending Verification)'),
+        ('verified', 'Verified & Approved'),
+    )
+    
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='subcontractor_tasks')
+    subcontractor = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='subcontractor_tasks')
+    
+    task_name = models.CharField(max_length=200)
+    description = models.TextField()
+    
+    deadline = models.DateField()
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='assigned')
+    
+    completion_notes = models.TextField(blank=True)
+    photo_proof = models.ImageField(upload_to='subcontractor_proofs/', blank=True, null=True)
+    
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.task_name} for {self.project.title}"
+
