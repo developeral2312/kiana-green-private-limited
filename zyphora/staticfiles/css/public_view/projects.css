@@ -25,3 +25,18 @@
     box-shadow: 0 15px 35px rgba(0,0,0,0.15);
 }
 
+@media (max-width: 768px) {
+    .projects-hero {
+        height: auto;
+        min-height: 280px;
+        padding: 80px 15px 40px;
+    }
+    .projects-hero h1 {
+        font-size: 2rem !important;
+    }
+    .project-card img {
+        height: 200px;
+    }
+}
+
+

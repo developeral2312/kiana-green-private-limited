@@ -1,19 +1,23 @@
 {% extends 'public_view/base.html' %}
 {% load static %}
 
+{% block link %}
+<link rel="stylesheet" href="{% static 'css/public_view/services.css' %}?v={% now 'U' %}">
+{% endblock %}
+
 {% block code %}
 <!-- ================= 1. HERO SECTION ================= -->
-<section class="kiana-hero" style="background-image: url('{% static 'images/tech_3.jpg' %}'); min-height: 75vh; display: flex; align-items: center; padding-top: 100px; background-size: cover; background-position: center;">
-  <div class="container text-center py-5 mt-5">
-    <div class="d-flex align-items-center justify-content-center gap-2 mb-4">
+<section class="kiana-hero" style="background-image: url('{% static 'images/tech_3.jpg' %}');">
+  <div class="container text-center py-4 py-md-5 mt-4 mt-md-5">
+    <div class="d-flex align-items-center justify-content-center gap-2 mb-3 mb-md-4">
       <span class="kiana-hero-subtitle-line"></span>
       <span class="kiana-hero-subtitle text-white fw-bold">SERVICES</span>
       <span class="kiana-hero-subtitle-line"></span>
     </div>
-    <h1 class="kiana-hero-title mx-auto text-white" style="max-width: 950px; font-weight: 800; font-size: 4.0rem; text-shadow: 0 2px 4px rgba(0,0,0,0.3);">
+    <h1 class="kiana-hero-title mx-auto text-white">
       Support Across the Project Lifecycle
     </h1>
-    <p class="kiana-hero-text mx-auto mb-5 text-white fw-medium fs-5" style="text-shadow: 0 1px 3px rgba(0,0,0,0.3); max-width: 800px;">
+    <p class="kiana-hero-text mx-auto mb-4 mb-md-5 text-white fw-medium fs-5" style="text-shadow: 0 1px 3px rgba(0,0,0,0.3); max-width: 800px;">
       Kiana Green is not just a hardware supplier. We provide complete technical and operational support to ensure your solar systems achieve maximum return on investment.
     </p>
   </div>

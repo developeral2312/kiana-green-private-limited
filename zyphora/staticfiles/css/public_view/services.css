@@ -1,194 +1,99 @@
-/* ===============================
-   Services Page - Kiana Green
-================================== */
+/* =============================================================================
+   SERVICES PAGE RESPONSIVE STYLING - KIANA GREEN
+   ============================================================================= */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
 
-/* ========== Hero Section ========== */
-.services-hero {
-    height: 60vh;
-    background: url(/static/images/service-hero.png) center/cover no-repeat;
+.kiana-hero {
     position: relative;
+    min-height: 70vh;
     display: flex;
     align-items: center;
-    justify-content: center;
+    padding-top: 100px;
+    background-size: cover;
+    background-position: center;
 }
 
-.hero-overlay {
-    background: rgba(0, 0, 0, 0.45);
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 20px;
-}
-
-.hero-content h1 {
-    font-size: 3rem;
-    font-weight: 700;
-    color: #fff;
-}
-
-.hero-content p {
-    font-size: 1.2rem;
-    color: white;
-    margin-top: 15px;
-    max-width: 600px;
-}
-
-/* ========== Services Section ========== */
-.services-section {
-    padding: 90px 0;
-}
-
-.service-item {
-    display: flex;
-    align-items: center;
-    gap: 50px;
-    margin-bottom: 100px;
-}
-
-/* Reverse layout */
-.service-item.reverse {
-    flex-direction: row-reverse;
-}
-
-/* Image Container */
-.service-image {
-    flex: 1;
-    max-width: 520px;
-    overflow: hidden;
-    border-radius: 16px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
-}
-
-/* Image */
-.service-image img {
-    width: 100%;
-    height: 360px;
-    object-fit: cover;
-    display: block;
-    transition: transform 0.4s ease;
-}
-
-/* Hover Zoom Effect */
-.service-image:hover img {
-    transform: scale(1.05);
-}
-
-/* Content */
-.service-content {
-    flex: 1;
-}
-
-.service-content h2 {
-    font-size: 2rem;
-    margin-bottom: 20px;
-    font-weight: 700;
-    color: #0b3d2e;
-}
-
-.service-content p {
-    color: #555;
-    margin-bottom: 20px;
-    line-height: 1.7;
-}
-
-/* Bullet List */
-.service-content ul {
-    list-style: none;
-    padding: 0;
-}
-
-.service-content ul li {
-    margin-bottom: 12px;
-    position: relative;
-    padding-left: 25px;
-    color: #444;
-}
-
-.service-content ul li::before {
-    content: "✔";
+.kiana-hero::before {
+    content: '';
     position: absolute;
-    left: 0;
-    color: #28a745;
-    font-weight: bold;
+    inset: 0;
+    background: rgba(6, 24, 15, 0.78);
+    z-index: 1;
 }
 
-/* ========== CTA Section ========== */
-.services-cta {
-    background: linear-gradient(135deg, #0b3d2e, #28a745);
-    color: #fff;
-    text-align: center;
-    padding: 80px 20px;
-    border-radius: 12px;
-    margin-top: 50px;
+.kiana-hero .container {
+    position: relative;
+    z-index: 2;
 }
 
-.services-cta h2 {
-    font-size: 2.2rem;
-    margin-bottom: 20px;
-    font-weight: 700;
+.kiana-hero-title {
+    max-width: 950px;
+    font-weight: 800;
+    font-size: 3.5rem;
+    line-height: 1.2;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.4);
 }
 
-.services-cta p {
-    margin-bottom: 30px;
-    font-size: 1.1rem;
-}
-
-/* CTA Button */
-.cta-btn {
-    background: #fff;
-    color: #0b3d2e;
-    padding: 14px 35px;
-    border-radius: 50px;
-    font-weight: 600;
-    text-decoration: none;
-    transition: all 0.3s ease;
+.kiana-hero-subtitle-line {
     display: inline-block;
+    width: 30px;
+    height: 2px;
+    background: #10b981;
 }
 
-.cta-btn:hover {
-    background: #f4f4f4;
-    transform: translateY(-3px);
+.card-img-top {
+    height: 240px;
+    object-fit: cover;
+    width: 100%;
 }
 
-/* ========== Responsive Design ========== */
-@media (max-width: 992px) {
-    .service-item {
-        flex-direction: column;
-        text-align: center;
-        gap: 30px;
-        margin-bottom: 70px;
+@media (max-width: 991px) {
+    .kiana-hero {
+        min-height: 55vh;
+        padding-top: 90px;
     }
 
-    .service-item.reverse {
-        flex-direction: column;
+    .kiana-hero-title {
+        font-size: 2.6rem !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .kiana-hero {
+        min-height: auto;
+        padding-top: 80px;
+        padding-bottom: 50px;
     }
 
-    .service-image {
-        max-width: 100%;
+    .kiana-hero-title {
+        font-size: 2.0rem !important;
     }
 
-    .service-image img {
-        height: 280px;
+    .kiana-hero-text {
+        font-size: 1rem !important;
+        margin-bottom: 2rem !important;
     }
 
-    .service-content h2 {
-        font-size: 1.6rem;
+    .display-5, .display-6 {
+        font-size: 1.75rem !important;
+    }
+
+    .card-img-top {
+        height: 200px !important;
+    }
+
+    .card-body.p-4.p-lg-5 {
+        padding: 1.25rem !important;
+    }
+
+    /* Process steps numbers */
+    .d-flex.gap-4.mb-4.pb-4.border-bottom {
+        gap: 1rem !important;
     }
 }
 
 @media (max-width: 576px) {
-    .hero-content h1 {
-        font-size: 2.2rem;
-    }
-
-    .hero-content p {
-        font-size: 1rem;
-    }
-
-    .service-image img {
-        height: 240px;
+    .kiana-hero-title {
+        font-size: 1.7rem !important;
     }
 }

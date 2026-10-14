@@ -5,7 +5,7 @@
 
     <meta charset="UTF-8">
     <title>GREEN PRIVATE LIMITED Dashboard</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 
     <link rel="icon" type="image/png" href="{% static 'images/favicon.png' %}">
 
@@ -65,12 +65,14 @@
 
         {% endif %}
 
+        <!-- Mobile Sidebar Backdrop Overlay -->
+        <label for="sidebarToggleCheckbox" class="sidebar-overlay" aria-label="Close Sidebar"></label>
 
         <div class="main-wrapper">
 
             {% include "include/topnavbar.html" %}
 
-            <main class="main-content p-4">
+            <main class="main-content p-2 p-sm-3 p-lg-4">
 
                 {% if messages %}
                 <div class="container mb-3">

@@ -1,90 +1,53 @@
-/* Hero Section */
-.kiana-contact-hero {
-    height: 50vh;
-    background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
-                url(/static/images/contact-hero.png) center/cover no-repeat;
-    color: #ffffff;
+/* =============================================================================
+   CONTACT PAGE RESPONSIVE STYLING - KIANA GREEN
+   ============================================================================= */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
+
+.contact-form-card,
+.card {
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
-.kiana-title {
-    font-size: 3rem;
-    font-weight: 700;
+.contact-input {
+    font-size: 16px !important; /* CRITICAL: Prevents iOS Safari & Chrome unwanted auto-zoom */
+    min-height: 46px;
+    border-radius: 10px !important;
 }
 
-.kiana-subtitle {
-    font-size: 1.2rem;
-    opacity: 0.9;
+textarea.contact-input {
+    min-height: 110px;
 }
 
-/* Contact Cards */
-.contact-info-card,
-.contact-form-card {
-    background: #ffffff;
-    border-radius: 15px;
-    box-shadow: 0 20px 50px rgba(0,0,0,0.08);
-    transition: 0.3s ease;
+.contact-action-link {
+    text-decoration: none;
+    color: #1e293b;
+    transition: color 0.2s ease;
 }
 
-.contact-info-card:hover,
-.contact-form-card:hover {
-    transform: translateY(-5px);
-}
-.contact-form-card form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px; 
+.contact-action-link:hover {
+    color: #15803d;
 }
 
-.contact-form-card input,
-.contact-form-card textarea,
-.contact-form-card select {
-    border-radius: 10px;
-    padding: 10px;
-    width: 100%;
-    border: 1px solid #ccc; 
-    box-sizing: border-box; 
-    transition: all 0.3s ease; 
-    font-size: 14px;
-    font-family: inherit;
-}
+@media (max-width: 768px) {
+    .container {
+        padding-left: 12px !important;
+        padding-right: 12px !important;
+    }
 
-.contact-form-card input:focus,
-.contact-form-card textarea:focus,
-.contact-form-card select:focus {
-    border: 2px solid #4CAF50;
-    outline: none; 
-    box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
-}
+    .display-6 {
+        font-size: 1.75rem !important;
+    }
 
-.contact-form-card textarea {
-    height: auto;
-}
+    .card {
+        padding: 1.5rem 1.15rem !important;
+        border-radius: 16px !important;
+    }
 
-/* Button */
-.kiana-btn {
-    background: #198754;
-    color: white;
-    font-weight: 600;
-    border-radius: 30px;
-    padding: 12px;
-    transition: 0.3s ease;
-}
+    .contact-form-card .row.g-4 {
+        --bs-gutter-y: 1rem;
+    }
 
-.kiana-btn:hover {
-    background: #146c43;
-    color: white;
+    .map-container {
+        height: 200px !important;
+    }
 }
-
-#map {
-    height: 300px;
-    width: 100%;
-    border-radius: 15px;           /* Rounded corners */
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);  /* Soft shadow */
-    margin-bottom: 20px;
-    transition: transform 0.3s ease;
-}
-
-#map:hover {
-    transform: scale(1.02);  /* Slight zoom on hover */
-}
-

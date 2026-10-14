@@ -159,13 +159,13 @@
             <div class="rfq-item-row bg-light p-3 rounded-3 mb-2 border">
               <div class="row g-2 align-items-end">
                 <div class="col-md-5">
-                  <label class="form-label text-muted fw-bold small">Material <span class="text-danger">*</span></label>
-                  <select name="material_id[]" class="form-select rounded-3" required>
-                    <option value="">-- Select Material --</option>
+                  <label class="form-label text-muted fw-bold small">Material Name <span class="text-danger">*</span></label>
+                  <input type="text" name="material_id[]" list="rfq-materials-list" class="form-control rounded-3" placeholder="Type or write material name..." required autocomplete="off">
+                  <datalist id="rfq-materials-list">
                     {% for m in materials %}
-                    <option value="{{ m.id }}">{{ m.name }} ({{ m.get_category_display }} - {{ m.unit }})</option>
+                    <option value="{{ m.name }}">{{ m.name }} ({{ m.unit }})</option>
                     {% endfor %}
-                  </select>
+                  </datalist>
                 </div>
                 <div class="col-md-3">
                   <label class="form-label text-muted fw-bold small">Quantity <span class="text-danger">*</span></label>
@@ -211,7 +211,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
             const newRow = firstRow.cloneNode(true);
             newRow.querySelectorAll('input').forEach(input => input.value = '');
-            newRow.querySelector('select').selectedIndex = 0;
+            const sel = newRow.querySelector('select');
+            if (sel) sel.selectedIndex = 0;
 
             const removeBtn = newRow.querySelector('.remove-item-btn');
             removeBtn.removeAttribute('disabled');

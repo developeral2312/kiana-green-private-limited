@@ -258,3 +258,53 @@ h3, h5, .lead-info strong {
 .timeline-content:hover {
     transform: translateX(5px);
 }
+
+/* ====================================================
+   MOBILE RESPONSIVENESS - PROJECT DETAILS
+   ==================================================== */
+@media (max-width: 768px) {
+    .container {
+        padding-left: 6px !important;
+        padding-right: 6px !important;
+    }
+
+    .d-flex.justify-content-between.align-items-center.mb-4 {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 12px !important;
+    }
+
+    .d-flex.justify-content-between.align-items-center.mb-4 > div:last-child {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        width: 100%;
+    }
+
+    .d-flex.justify-content-between.align-items-center.mb-4 > div:last-child .btn {
+        flex: 1 1 calc(50% - 6px);
+        font-size: 0.8rem;
+        padding: 8px 10px;
+        text-align: center;
+        justify-content: center;
+    }
+
+    .card {
+        padding: 16px 14px !important;
+        border-radius: 12px !important;
+    }
+
+    .stage-tracker-wrapper {
+        padding: 12px 0;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .stage-tracker {
+        min-width: 900px;
+        padding: 0 10px;
+    }
+
+    .table-responsive {
+        -webkit-overflow-scrolling: touch;
+    }
+}

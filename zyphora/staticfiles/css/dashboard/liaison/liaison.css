@@ -9,3 +9,9 @@ canvas {
     height: 100% !important;
     display: block;
 }
+
+@media (max-width: 576px) {
+    .chart-container {
+        height: 220px;
+    }
+}

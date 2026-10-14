@@ -1,6 +1,10 @@
 {% extends "dashboard/dashboard.html" %}
 {% load static %}
 
+{% block link %}
+<link rel="stylesheet" href="{% static 'css/dashboard/admin/admin.css' %}?v={% now 'U' %}">
+{% endblock %}
+
 {% block content %}
 <div class="admin-dashboard-container">
     <div class="container-fluid px-0">

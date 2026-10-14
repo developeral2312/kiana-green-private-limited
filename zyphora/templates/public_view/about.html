@@ -1,20 +1,24 @@
 {% extends 'public_view/base.html' %}
 {% load static %}
 
+{% block link %}
+<link rel="stylesheet" href="{% static 'css/public_view/about.css' %}?v={% now 'U' %}">
+{% endblock %}
+
 {% block code %}
 
 <!-- ================= 1. HERO SECTION ================= -->
-<section class="kiana-hero" style="background-image: url('{% static 'images/about_hero_new.jpg' %}'); min-height: 75vh; display: flex; align-items: center; padding-top: 100px; background-size: cover; background-position: center;">
-  <div class="container text-center py-5 mt-5">
-    <div class="d-flex align-items-center justify-content-center gap-2 mb-4">
+<section class="kiana-hero" style="background-image: url('{% static 'images/about_hero_new.jpg' %}');">
+  <div class="container text-center py-4 py-md-5 mt-4 mt-md-5">
+    <div class="d-flex align-items-center justify-content-center gap-2 mb-3 mb-md-4">
       <span class="kiana-hero-subtitle-line"></span>
       <span class="kiana-hero-subtitle text-white fw-bold">ABOUT KIANA GREEN</span>
       <span class="kiana-hero-subtitle-line"></span>
     </div>
-    <h1 class="kiana-hero-title mx-auto text-white" style="max-width: 950px; font-weight: 800; font-size: 4.0rem; text-shadow: 0 2px 4px rgba(0,0,0,0.3);">
+    <h1 class="kiana-hero-title mx-auto text-white">
       Reliable, Practical, Built on Trust
     </h1>
-    <p class="kiana-hero-text mx-auto mb-5 text-white fw-medium fs-5" style="text-shadow: 0 1px 3px rgba(0,0,0,0.3);">
+    <p class="kiana-hero-text mx-auto mb-4 mb-md-5 text-white fw-medium fs-5" style="text-shadow: 0 1px 3px rgba(0,0,0,0.3);">
       Kiana Green is a leading solar EPC and technology company dedicated to driving renewable energy adoption across India.
     </p>
   </div>
@@ -40,7 +44,7 @@
         </p>
       </div>
       <div class="col-lg-6 order-1 order-lg-2">
-        <img src="{% static 'images/tech_2.jpg' %}" alt="Solar Installation" class="img-fluid rounded-4 shadow-sm w-100" style="object-fit: cover; height: 400px;">
+        <img src="{% static 'images/tech_2.jpg' %}" alt="Solar Installation" class="img-fluid about-img-box shadow-sm">
       </div>
     </div>
   </div>
@@ -51,7 +55,7 @@
   <div class="container py-5 my-3">
     <div class="row align-items-center g-5">
       <div class="col-lg-6">
-        <img src="{% static 'images/solar_tech_about.jpg' %}" alt="Rooftop Solar" class="img-fluid rounded-4 shadow-sm w-100" style="object-fit: cover; height: 400px;">
+        <img src="{% static 'images/solar_tech_about.jpg' %}" alt="Rooftop Solar" class="img-fluid about-img-box shadow-sm">
       </div>
       <div class="col-lg-6 ps-lg-5">
         <div class="d-flex align-items-center gap-2 mb-3">

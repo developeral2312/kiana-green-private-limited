@@ -136,7 +136,17 @@
                         </div>
                     </div>
 
-                    <div class="d-flex align-items-center gap-2">
+                    <div class="d-flex align-items-center flex-wrap gap-2">
+                        {% if visit.lead.phone %}
+                        <a href="tel:{{ visit.lead.phone }}" class="btn btn-sm btn-outline-success rounded-circle p-2" title="Call Client">
+                            <i class="bi bi-telephone-fill"></i>
+                        </a>
+                        {% endif %}
+                        {% if visit.lead.location or visit.project.location %}
+                        <a href="https://www.google.com/maps/dir/?api=1&destination={{ visit.project.location|default:visit.lead.location|urlencode }}" target="_blank" class="btn btn-sm btn-outline-primary rounded-circle p-2" title="Navigate Route">
+                            <i class="bi bi-map-fill"></i>
+                        </a>
+                        {% endif %}
                         <span class="badge bg-danger">Overdue</span>
                         <form method="post" action="{% url 'mark_site_visit_done' visit.id %}" class="d-inline">
                             {% csrf_token %}
@@ -181,7 +191,17 @@
                         </div>
                     </div>
 
-                    <div class="d-flex align-items-center gap-2">
+                    <div class="d-flex align-items-center flex-wrap gap-2">
+                        {% if visit.lead.phone %}
+                        <a href="tel:{{ visit.lead.phone }}" class="btn btn-sm btn-outline-success rounded-circle p-2" title="Call Client">
+                            <i class="bi bi-telephone-fill"></i>
+                        </a>
+                        {% endif %}
+                        {% if visit.lead.location or visit.project.location %}
+                        <a href="https://www.google.com/maps/dir/?api=1&destination={{ visit.project.location|default:visit.lead.location|urlencode }}" target="_blank" class="btn btn-sm btn-outline-primary rounded-circle p-2" title="Navigate Route">
+                            <i class="bi bi-map-fill"></i>
+                        </a>
+                        {% endif %}
                         <span class="badge bg-warning"><i class="bi bi-hourglass-split"></i> Pending</span>
                         <form method="post" action="{% url 'mark_site_visit_done' visit.id %}" class="d-inline">
                             {% csrf_token %}
@@ -220,7 +240,17 @@
                             <i class="bi bi-geo-alt me-1"></i>{{ visit.lead.location|default:"No location specified" }}
                         </div>
                     </div>
-                    <div class="d-flex align-items-center gap-2">
+                    <div class="d-flex align-items-center flex-wrap gap-2">
+                        {% if visit.lead.phone %}
+                        <a href="tel:{{ visit.lead.phone }}" class="btn btn-sm btn-outline-success rounded-circle p-2" title="Call Client">
+                            <i class="bi bi-telephone-fill"></i>
+                        </a>
+                        {% endif %}
+                        {% if visit.lead.location or visit.project.location %}
+                        <a href="https://www.google.com/maps/dir/?api=1&destination={{ visit.project.location|default:visit.lead.location|urlencode }}" target="_blank" class="btn btn-sm btn-outline-primary rounded-circle p-2" title="Navigate Route">
+                            <i class="bi bi-map-fill"></i>
+                        </a>
+                        {% endif %}
                         <span class="badge bg-warning">Upcoming</span>
                         <a href="{% url 'edit_visit' visit.id %}" class="btn-action-circle btn-action-edit" title="Edit Visit">
                             <i class="bi bi-pencil"></i>

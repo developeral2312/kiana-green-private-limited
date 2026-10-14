@@ -449,3 +449,60 @@
     color: #cbd5e1;
     margin-bottom: 12px;
 }
+
+/* ==========================================================================
+   MOBILE RESPONSIVE STYLES FOR LEADS MANAGEMENT
+   ========================================================================== */
+@media (max-width: 768px) {
+    .leads-header-card {
+        padding: 14px 16px !important;
+    }
+    
+    .leads-header-row {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 12px !important;
+    }
+
+    .btn-add-lead-hero {
+        width: 100% !important;
+        justify-content: center !important;
+    }
+
+    .leads-filter-card {
+        padding: 12px 14px !important;
+    }
+
+    .leads-filter-row {
+        flex-direction: column !important;
+        gap: 8px !important;
+    }
+
+    .leads-filter-row .col,
+    .leads-filter-row [class*="col-"] {
+        width: 100% !important;
+    }
+
+    .leads-table-wrapper {
+        border-radius: 8px !important;
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+    }
+
+    .leads-table-wrapper table {
+        min-width: 700px !important;
+    }
+
+    .leads-pagination-bar {
+        flex-direction: column !important;
+        align-items: center !important;
+        text-align: center;
+        gap: 10px !important;
+        padding: 12px !important;
+    }
+
+    .leads-pagination-bar .pagination {
+        flex-wrap: wrap !important;
+        justify-content: center !important;
+    }
+}

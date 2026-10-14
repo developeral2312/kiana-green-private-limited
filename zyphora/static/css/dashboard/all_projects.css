@@ -53,3 +53,22 @@
     background:#198754;
     color:white;
 }
+
+/* ====================================================
+   MOBILE RESPONSIVENESS - PROJECTS LIST
+   ==================================================== */
+@media (max-width: 768px) {
+    .container {
+        padding-left: 6px !important;
+        padding-right: 6px !important;
+    }
+
+    .card {
+        padding: 14px 12px !important;
+        border-radius: 12px !important;
+    }
+
+    .table-responsive table {
+        min-width: 650px;
+    }
+}

@@ -12,14 +12,23 @@
         </a>
 
         <!-- Logo Mini (Collapsed State) -->
-        <a href="{% url 'dashboard' %}" class="sidebar-logo-mini text-decoration-none d-none align-items-center justify-content-center" title="Dashboard">
+        <a href="{% url 'dashboard' %}"
+            class="sidebar-logo-mini text-decoration-none d-none align-items-center justify-content-center"
+            title="Dashboard">
             <img src="{% static 'images/favicon.png' %}" alt="Zyphora"
                 style="width: 36px; height: 36px; object-fit: contain; border-radius: 8px;">
         </a>
 
         <!-- Sidebar Toggle: ONLY on desktop. On mobile, hamburger in topnavbar is used. -->
-        <label for="sidebarToggleCheckbox" class="toggle-btn d-none d-lg-flex align-items-center justify-content-center" title="Toggle Sidebar">
+        <label for="sidebarToggleCheckbox" class="toggle-btn d-none d-lg-flex align-items-center justify-content-center"
+            title="Toggle Sidebar">
             <i class="bi bi-chevron-left arrow-icon"></i>
+        </label>
+
+        <!-- Mobile Sidebar Close Button -->
+        <label for="sidebarToggleCheckbox" class="btn btn-sm btn-light border text-body d-lg-none rounded-circle d-flex align-items-center justify-content-center"
+            style="width: 34px; height: 34px; cursor: pointer;" title="Close Sidebar">
+            <i class="bi bi-x-lg fs-6"></i>
         </label>
 
     </div>
@@ -32,93 +41,90 @@
         <li class="nav-item">
 
             <a href="{% url 'dashboard' %}"
-               class="nav-link d-flex align-items-center {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}"
-               data-bs-toggle="tooltip"
-               data-bs-placement="right"
-               title="Dashboard">
+                class="nav-link d-flex align-items-center {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}"
+                data-bs-toggle="tooltip" data-bs-placement="right" title="Dashboard">
 
                 <i class="bi bi-grid-1x2-fill nav-icon"></i>
                 <span class="link-text ms-2">Dashboard</span>
 
             </a>
 
-        </li>      
-      
-      <!-- ================= WORK SECTION ================= -->
+        </li>
+
+        <!-- ================= WORK SECTION ================= -->
 
         <li class="sidebar-heading mt-3 text-muted small text-uppercase">Work</li>
 
         <!-- Tasks -->
 
         <li class="nav-item">
-            <a class="nav-link d-flex align-items-center justify-content-between"
-            data-bs-toggle="collapse"
-            href="#engineerTaskMenu">
+            <a class="nav-link d-flex align-items-center justify-content-between" data-bs-toggle="collapse"
+                href="#engineerTaskMenu">
 
-            <div class="d-flex align-items-center">
-                <i class="bi bi-list-task nav-icon"></i>
-                <span class="link-text ms-2">
-                    Tasks
-                    {% if task_count %}
-                    <span class="badge bg-secondary rounded-pill">{{ task_count }}</span>
-                    {% endif %}
-                </span>
-            </div>
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-list-task nav-icon"></i>
+                    <span class="link-text ms-2">
+                        Tasks
+                        {% if task_count %}
+                        <span class="badge bg-secondary rounded-pill">{{ task_count }}</span>
+                        {% endif %}
+                    </span>
+                </div>
 
-            
-        </a>
 
-        <div class="collapse submenu" id="engineerTaskMenu" data-bs-parent="#sidebarMenu">
-            <ul class="nav flex-column ms-4">
+            </a>
 
-                <!-- My Tasks -->
-                <li>
-                    <a class="nav-link" href="{% url 'my_tasks' %}?filter=today">
-                        Today's Tasks
-                        {% if todays %}
+            <div class="collapse submenu" id="engineerTaskMenu" data-bs-parent="#sidebarMenu">
+                <ul class="nav flex-column ms-4">
+
+                    <!-- My Tasks -->
+                    <li>
+                        <a class="nav-link" href="{% url 'my_tasks' %}?filter=today">
+                            Today's Tasks
+                            {% if todays %}
                             <span class="badge bg-primary rounded-pill">{{ todays }}</span>
-                        {% endif %}
-                    </a>
-                </li>
+                            {% endif %}
+                        </a>
+                    </li>
 
-                <li>
-                    <a class="nav-link" href="{% url 'my_tasks' %}?filter=pending">
-                        Pending Tasks
-                        {% if pending %}
+                    <li>
+                        <a class="nav-link" href="{% url 'my_tasks' %}?filter=pending">
+                            Pending Tasks
+                            {% if pending %}
                             <span class="badge bg-warning text-dark rounded-pill">{{ pending }}</span>
-                        {% endif %}
-                    </a>
-                </li>
+                            {% endif %}
+                        </a>
+                    </li>
 
-                <li>
-                    <a class="nav-link" href="{% url 'my_tasks' %}?filter=overdue">
-                        Overdue Tasks
-                        {% if overdue %}
+                    <li>
+                        <a class="nav-link" href="{% url 'my_tasks' %}?filter=overdue">
+                            Overdue Tasks
+                            {% if overdue %}
                             <span class="badge bg-danger rounded-pill">{{ overdue }}</span>
-                        {% endif %}
-                    </a>
-                </li>
+                            {% endif %}
+                        </a>
+                    </li>
 
-                <li>
-                    <a class="nav-link" href="{% url 'my_tasks' %}?filter=completed">
-                        Completed Tasks
-                    </a>
-                </li>
+                    <li>
+                        <a class="nav-link" href="{% url 'my_tasks' %}?filter=completed">
+                            Completed Tasks
+                        </a>
+                    </li>
 
-                <li class="mt-2">
-                    <a class="nav-link" href="{% url 'assigned_tasks' %}">
-                        Assigned Tasks
-                    </a>
-                </li>
+                    <li class="mt-2">
+                        <a class="nav-link" href="{% url 'assigned_tasks' %}">
+                            Assigned Tasks
+                        </a>
+                    </li>
 
-                <li>
-                    <a class="nav-link" href="{% url 'update_work_progress' %}">
-                        Installation Tasks
-                    </a>
-                </li>
+                    <li>
+                        <a class="nav-link" href="{% url 'update_work_progress' %}">
+                            Installation Tasks
+                        </a>
+                    </li>
 
-            </ul>
-        </div>
+                </ul>
+            </div>
 
 
         </li>
@@ -129,9 +135,8 @@
 
         <li class="nav-item">
             <a class="nav-link d-flex align-items-center justify-content-between {% if '/projects/' in request.path or request.resolver_match.url_name in 'project_list feasibility_list design_list installation_progress recent_activity gallery_projects project_detail edit_project project_activities' %}active{% endif %}"
-               data-bs-toggle="collapse"
-               href="#engineerProjectMenu"
-               aria-expanded="{% if '/projects/' in request.path or request.resolver_match.url_name in 'project_list feasibility_list design_list installation_progress recent_activity gallery_projects project_detail edit_project project_activities' %}true{% else %}false{% endif %}">
+                data-bs-toggle="collapse" href="#engineerProjectMenu"
+                aria-expanded="{% if '/projects/' in request.path or request.resolver_match.url_name in 'project_list feasibility_list design_list installation_progress recent_activity gallery_projects project_detail edit_project project_activities' %}true{% else %}false{% endif %}">
 
                 <div class="d-flex align-items-center">
                     <i class="bi bi-kanban nav-icon"></i>
@@ -139,14 +144,21 @@
                 </div>
             </a>
 
-            <div class="collapse submenu {% if '/projects/' in request.path or request.resolver_match.url_name in 'project_list feasibility_list design_list installation_progress recent_activity gallery_projects project_detail edit_project project_activities' %}show{% endif %}" id="engineerProjectMenu">
+            <div class="collapse submenu {% if '/projects/' in request.path or request.resolver_match.url_name in 'project_list feasibility_list design_list installation_progress recent_activity gallery_projects project_detail edit_project project_activities' %}show{% endif %}"
+                id="engineerProjectMenu">
                 <ul class="nav flex-column ms-4">
-                    <li><a class="nav-link {% if request.resolver_match.url_name == 'project_list' %}active{% endif %}" href="{% url 'project_list' %}">My Projects</a></li>
-                    <li><a class="nav-link {% if request.resolver_match.url_name == 'feasibility_list' %}active{% endif %}" href="{% url 'feasibility_list' %}">Feasibility Study</a></li>
-                    <li><a class="nav-link {% if request.resolver_match.url_name == 'design_list' %}active{% endif %}" href="{% url 'design_list' %}">Design Management</a></li>
-                    <li><a class="nav-link {% if request.resolver_match.url_name == 'installation_progress' %}active{% endif %}" href="{% url 'installation_progress' %}">Installation Progress</a></li>
-                    <li><a class="nav-link {% if request.resolver_match.url_name == 'recent_activity' %}active{% endif %}" href="{% url 'recent_activity' %}">Project Activities</a></li>
-                    <li><a class="nav-link {% if request.resolver_match.url_name == 'gallery_projects' %}active{% endif %}" href="{% url 'gallery_projects' %}">Project Gallery</a></li>
+                    <li><a class="nav-link {% if request.resolver_match.url_name == 'project_list' %}active{% endif %}"
+                            href="{% url 'project_list' %}">My Projects</a></li>
+                    <li><a class="nav-link {% if request.resolver_match.url_name == 'feasibility_list' %}active{% endif %}"
+                            href="{% url 'feasibility_list' %}">Feasibility Study</a></li>
+                    <li><a class="nav-link {% if request.resolver_match.url_name == 'design_list' %}active{% endif %}"
+                            href="{% url 'design_list' %}">Design Management</a></li>
+                    <li><a class="nav-link {% if request.resolver_match.url_name == 'installation_progress' %}active{% endif %}"
+                            href="{% url 'installation_progress' %}">Installation Progress</a></li>
+                    <li><a class="nav-link {% if request.resolver_match.url_name == 'recent_activity' %}active{% endif %}"
+                            href="{% url 'recent_activity' %}">Project Activities</a></li>
+                    <li><a class="nav-link {% if request.resolver_match.url_name == 'gallery_projects' %}active{% endif %}"
+                            href="{% url 'gallery_projects' %}">Project Gallery</a></li>
                 </ul>
             </div>
         </li>
@@ -156,16 +168,15 @@
 
         <!-- Site Visit -->
         <li class="nav-item">
-            <a class="nav-link d-flex align-items-center justify-content-between"
-               data-bs-toggle="collapse"
-               href="#siteVisitMenu">
+            <a class="nav-link d-flex align-items-center justify-content-between" data-bs-toggle="collapse"
+                href="#siteVisitMenu">
 
                 <div class="d-flex align-items-center">
                     <i class="bi bi-geo-alt nav-icon"></i>
                     <span class="link-text ms-2">Site Visit</span>
                 </div>
 
-                
+
             </a>
 
             <div class="collapse submenu" id="siteVisitMenu" data-bs-parent="#sidebarMenu">
@@ -178,16 +189,15 @@
 
         <!-- Materials -->
         <li class="nav-item">
-            <a class="nav-link d-flex align-items-center justify-content-between"
-               data-bs-toggle="collapse"
-               href="#engineerInventoryMenu">
+            <a class="nav-link d-flex align-items-center justify-content-between" data-bs-toggle="collapse"
+                href="#engineerInventoryMenu">
 
                 <div class="d-flex align-items-center">
                     <i class="bi bi-boxes nav-icon"></i>
                     <span class="link-text ms-2">Materials</span>
                 </div>
 
-                
+
             </a>
 
             <div class="collapse submenu" id="engineerInventoryMenu" data-bs-parent="#sidebarMenu">
@@ -203,52 +213,50 @@
         <!-- ================= FINANCE SECTION ================= -->
         <li class="sidebar-heading mt-3 text-muted small text-uppercase">Finance</li>
 
-            <li class="nav-item">
-                <a class="nav-link d-flex align-items-center justify-content-between"
-                data-bs-toggle="collapse"
+        <li class="nav-item">
+            <a class="nav-link d-flex align-items-center justify-content-between" data-bs-toggle="collapse"
                 href="#engineerFinanceMenu">
 
-                    <div class="d-flex align-items-center">
-                        <i class="bi bi-wallet2 nav-icon"></i>
-                        <span class="link-text ms-2">Expenses</span>
-                    </div>
-
-                    
-                </a>
-
-                <div class="collapse submenu" id="engineerFinanceMenu">
-                    <ul class="nav flex-column ms-4">
-
-                        <li>                    
-                            <a href="{% url 'create_expense' %}" class="nav-link">
-                                Create Expense Report
-                            </a>
-                        </li>
-
-                        <li>
-                            <a href="{% url 'my_expenses' %}" class="nav-link">
-                                My Expense Reports
-                            </a>
-                        </li>
-
-                    </ul>
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-wallet2 nav-icon"></i>
+                    <span class="link-text ms-2">Expenses</span>
                 </div>
-            </li>
+
+
+            </a>
+
+            <div class="collapse submenu" id="engineerFinanceMenu">
+                <ul class="nav flex-column ms-4">
+
+                    <li>
+                        <a href="{% url 'create_expense' %}" class="nav-link">
+                            Create Expense Report
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="{% url 'my_expenses' %}" class="nav-link">
+                            My Expense Reports
+                        </a>
+                    </li>
+
+                </ul>
+            </div>
+        </li>
 
         <!-- ================= SERVICE SECTION ================= -->
         <li class="sidebar-heading mt-3 text-muted small text-uppercase">Service</li>
 
         <li class="nav-item">
-            <a class="nav-link d-flex align-items-center justify-content-between"
-               data-bs-toggle="collapse"
-               href="#engineerServiceMenu">
+            <a class="nav-link d-flex align-items-center justify-content-between" data-bs-toggle="collapse"
+                href="#engineerServiceMenu">
 
                 <div class="d-flex align-items-center">
                     <i class="bi bi-tools nav-icon"></i>
                     <span class="link-text ms-2">Service Requests</span>
                 </div>
 
-                
+
             </a>
 
             <div class="collapse submenu" id="engineerServiceMenu" data-bs-parent="#sidebarMenu">
@@ -260,32 +268,31 @@
             </div>
         </li>
 
-        
-            <!-- ================= REPORTS ================= -->
-            <li class="sidebar-heading mt-3 text-muted small">REPORTS</li>
-            <li class="nav-item">
-                <a class="nav-link d-flex align-items-center justify-content-between"
-                   data-bs-toggle="collapse"
-                   href="#workReportsMenu">
-                    <div class="d-flex align-items-center">
-                        <i class="bi bi-file-earmark-bar-graph nav-icon"></i>
-                        <span class="link-text ms-2">
-                            Work Reports
-                        </span>
-                    </div>
-                    
-                </a>
-                <div class="collapse submenu" id="workReportsMenu" data-bs-parent="#sidebarMenu">
-                    <ul class="nav flex-column ms-4">
-                        <li><a class="nav-link" href="{% url 'daily_report_list' %}">Daily Work Report</a></li>
-                        <li><a class="nav-link" href="{% url 'weekly_report_list' %}">Weekly Summary</a></li>
-                        <li><a class="nav-link" href="{% url 'completion_report_list' %}">Work Completion Report</a></li>
-                    </ul>
+
+        <!-- ================= REPORTS ================= -->
+        <li class="sidebar-heading mt-3 text-muted small">REPORTS</li>
+        <li class="nav-item">
+            <a class="nav-link d-flex align-items-center justify-content-between" data-bs-toggle="collapse"
+                href="#workReportsMenu">
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-file-earmark-bar-graph nav-icon"></i>
+                    <span class="link-text ms-2">
+                        Work Reports
+                    </span>
                 </div>
-            </li>
+
+            </a>
+            <div class="collapse submenu" id="workReportsMenu" data-bs-parent="#sidebarMenu">
+                <ul class="nav flex-column ms-4">
+                    <li><a class="nav-link" href="{% url 'daily_report_list' %}">Daily Work Report</a></li>
+                    <li><a class="nav-link" href="{% url 'weekly_report_list' %}">Weekly Summary</a></li>
+                    <li><a class="nav-link" href="{% url 'completion_report_list' %}">Work Completion Report</a></li>
+                </ul>
+            </div>
+        </li>
 
 
-            <li class="sidebar-heading mt-3 text-muted small text-uppercase">System</li>
+        <li class="sidebar-heading mt-3 text-muted small text-uppercase">System</li>
         <!-- ================= NOTIFICATIONS ================= -->
         <li class="nav-item mt-3">
             <a href="{% url 'notifications' %}" class="nav-link d-flex align-items-center">
@@ -295,7 +302,7 @@
         </li>
 
 
-        <!-- ================= PROFILE ================= -->        
+        <!-- ================= PROFILE ================= -->
         <li class="nav-item mt-3">
             <a href="{% url 'profile' %}" class="nav-link d-flex align-items-center">
                 <i class="bi bi-person-circle nav-icon"></i>
@@ -310,15 +317,15 @@
 
 <!-- ================= TOOLTIP SCRIPT ================= -->
 <script>
-document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("DOMContentLoaded", function () {
 
-    var tooltipTriggerList = [].slice.call(
-        document.querySelectorAll('[data-bs-toggle="tooltip"]')
-    );
+        var tooltipTriggerList = [].slice.call(
+            document.querySelectorAll('[data-bs-toggle="tooltip"]')
+        );
 
-    tooltipTriggerList.map(function (tooltipTriggerEl) {
-        return new bootstrap.Tooltip(tooltipTriggerEl);
+        tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+
     });
-
-});
 </script>

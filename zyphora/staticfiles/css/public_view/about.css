@@ -1,21 +1,106 @@
-/* ABOUT CSS */
+/* =============================================================================
+   ABOUT PAGE RESPONSIVE STYLING - KIANA GREEN
+   ============================================================================= */
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
 
-body {
-    font-family: 'Outfit', sans-serif;
+.kiana-hero {
+    position: relative;
+    min-height: 70vh;
+    display: flex;
+    align-items: center;
+    padding-top: 100px;
+    background-size: cover;
+    background-position: center;
 }
-.text-dark-navy { color: #0f172a !important; }
-.tracking-wider { letter-spacing: 0.1em; }
-.max-w-700 { max-width: 700px; }
 
-.about-hero {
-    min-height: 50vh;
-    background: url('/static/images/energy.avif') no-repeat center center/cover;
-    background-attachment: fixed;
-}
-.hero-overlay {
+.kiana-hero::before {
+    content: '';
     position: absolute;
     inset: 0;
-    background: rgba(15, 23, 42, 0.85);
+    background: rgba(6, 24, 15, 0.75);
     z-index: 1;
+}
+
+.kiana-hero .container {
+    position: relative;
+    z-index: 2;
+}
+
+.kiana-hero-title {
+    max-width: 950px;
+    font-weight: 800;
+    font-size: 3.5rem;
+    line-height: 1.2;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+}
+
+.kiana-hero-subtitle-line {
+    display: inline-block;
+    width: 30px;
+    height: 2px;
+    background: #10b981;
+}
+
+.about-img-box {
+    object-fit: cover;
+    height: 380px;
+    width: 100%;
+    border-radius: 16px;
+}
+
+@media (max-width: 991px) {
+    .kiana-hero {
+        min-height: 55vh;
+        padding-top: 90px;
+    }
+
+    .kiana-hero-title {
+        font-size: 2.6rem !important;
+    }
+
+    .about-img-box {
+        height: 300px;
+    }
+}
+
+@media (max-width: 768px) {
+    .kiana-hero {
+        min-height: auto;
+        padding-top: 80px;
+        padding-bottom: 50px;
+    }
+
+    .kiana-hero-title {
+        font-size: 2.0rem !important;
+    }
+
+    .kiana-hero-text {
+        font-size: 1rem !important;
+        margin-bottom: 2rem !important;
+    }
+
+    .display-5, .display-6 {
+        font-size: 1.75rem !important;
+    }
+
+    .about-img-box {
+        height: 240px;
+    }
+
+    .col-md-6.border-end {
+        border-right: none !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        padding-bottom: 2rem;
+        margin-bottom: 2rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .kiana-hero-title {
+        font-size: 1.7rem !important;
+    }
+
+    .process-card {
+        padding: 1.25rem !important;
+    }
 }

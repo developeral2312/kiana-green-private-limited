@@ -439,3 +439,92 @@
   filter: blur(60px);
   pointer-events: none;
 }
+
+/* =============================================================================
+   MOBILE RESPONSIVE ENHANCEMENTS FOR HOME PAGE
+   ============================================================================= */
+@media (max-width: 768px) {
+  .home-hero {
+    min-height: auto;
+    padding-top: 90px;
+    padding-bottom: 50px;
+  }
+
+  .home-hero-glow {
+    width: 320px;
+    height: 250px;
+  }
+
+  .hero-pill-badge {
+    font-size: 0.75rem;
+    padding: 6px 14px;
+    white-space: normal;
+    text-align: center;
+  }
+
+  .hero-main-heading {
+    font-size: 2.1rem !important;
+    line-height: 1.25;
+  }
+
+  .hero-sub-text {
+    font-size: 1rem;
+    line-height: 1.55;
+    padding: 0 10px;
+  }
+
+  .hero-stats-number {
+    font-size: 1.45rem !important;
+  }
+
+  .hero-stats-label {
+    font-size: 0.72rem;
+  }
+
+  .partner-strip {
+    padding: 20px 0;
+  }
+
+  .brand-chip {
+    padding: 8px 14px;
+    font-size: 0.82rem;
+  }
+
+  .high-impact-cta {
+    padding: 2.5rem 1.25rem !important;
+    border-radius: 20px !important;
+  }
+
+  .high-impact-cta h2 {
+    font-size: 1.8rem !important;
+  }
+
+  .high-impact-cta p {
+    font-size: 0.95rem !important;
+  }
+
+  .project-img-box {
+    height: 190px;
+  }
+
+  .review-card-item {
+    padding: 1.4rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .hero-main-heading {
+    font-size: 1.85rem !important;
+  }
+
+  .hero-stats-card {
+    padding: 1rem 0.75rem;
+  }
+
+  .home-hero .d-flex.justify-content-center.gap-3 a {
+    width: 100%;
+    justify-content: center;
+    font-size: 0.95rem !important;
+  }
+}
+

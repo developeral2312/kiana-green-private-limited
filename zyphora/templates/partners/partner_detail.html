@@ -236,13 +236,13 @@
         </div>
         <div class="modal-body">
           <div class="mb-3">
-            <label class="form-label text-muted fw-bold small">Material</label>
-            <select name="material_id" class="form-select bg-light" required>
-                <option value="">-- Select Material --</option>
+            <label class="form-label text-muted fw-bold small">Material Name</label>
+            <input type="text" name="material_name" list="partner-materials-list" class="form-control bg-light" placeholder="Type or write material name..." required autocomplete="off">
+            <datalist id="partner-materials-list">
                 {% for mat in materials %}
-                <option value="{{ mat.id }}">{{ mat.name }} ({{ mat.get_category_display }})</option>
+                <option value="{{ mat.name }}">{{ mat.name }}</option>
                 {% endfor %}
-            </select>
+            </datalist>
           </div>
           <div class="mb-3">
             <label class="form-label text-muted fw-bold small">Quantity (Available)</label>

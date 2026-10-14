@@ -32,11 +32,14 @@ def material_list(request):
 
     # Category filter
     if category:
-        materials = materials.filter(category=category)
+        materials = materials.filter(category__iexact=category)
+
+    distinct_categories = Material.objects.exclude(category__isnull=True).exclude(category='').values_list('category', flat=True).distinct().order_by('category')
+    category_choices = [(c, c.replace('_', ' ').title()) for c in distinct_categories]
 
     context = {
         "materials": materials,
-        "category_choices": Material.CATEGORY_CHOICES,
+        "category_choices": category_choices,
         "category": category,
     }
 
@@ -220,15 +223,27 @@ def create_purchase_order(request):
             prices = request.POST.getlist("price[]")
 
             for material, qty, price in zip(materials, quantities, prices):
-
                 if material and qty and price:
+                    mat_str = str(material).strip()
+                    if mat_str.isdigit():
+                        mat_obj = Material.objects.filter(id=int(mat_str)).first()
+                    else:
+                        mat_obj = Material.objects.filter(name__iexact=mat_str).first()
+                        if not mat_obj:
+                            mat_obj = Material.objects.create(
+                                name=mat_str,
+                                unit="Units",
+                                minimum_stock=5
+                            )
+                            Stock.objects.get_or_create(material=mat_obj, defaults={'quantity': 0})
 
-                    PurchaseOrderItem.objects.create(
-                        purchase_order=po,
-                        material_id=material,
-                        quantity=int(qty),
-                        unit_price=float(price)
-                    )
+                    if mat_obj:
+                        PurchaseOrderItem.objects.create(
+                            purchase_order=po,
+                            material=mat_obj,
+                            quantity=int(qty),
+                            unit_price=float(price)
+                        )
 
             # update total
             po.update_total()
@@ -722,13 +737,27 @@ def rfq_list(request):
         item_count = 0
         for mid, qty, tp in zip(material_ids, quantities, target_prices):
             if mid and qty:
-                RFQItem.objects.create(
-                    rfq=rfq,
-                    material_id=mid,
-                    quantity=int(qty),
-                    target_price=float(tp) if tp else None
-                )
-                item_count += 1
+                mid_str = str(mid).strip()
+                if mid_str.isdigit():
+                    mat_obj = Material.objects.filter(id=int(mid_str)).first()
+                else:
+                    mat_obj = Material.objects.filter(name__iexact=mid_str).first()
+                    if not mat_obj:
+                        mat_obj = Material.objects.create(
+                            name=mid_str,
+                            unit="Units",
+                            minimum_stock=5
+                        )
+                        Stock.objects.get_or_create(material=mat_obj, defaults={'quantity': 0})
+
+                if mat_obj:
+                    RFQItem.objects.create(
+                        rfq=rfq,
+                        material=mat_obj,
+                        quantity=int(qty),
+                        target_price=float(tp) if tp else None
+                    )
+                    item_count += 1
 
         messages.success(request, f'RFQ #{rfq.id:04d} "{rfq.title}" created with {item_count} items.')
         return redirect('rfq_detail', rfq_id=rfq.id)

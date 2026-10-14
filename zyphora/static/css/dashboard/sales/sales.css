@@ -8,10 +8,10 @@
 /* ================= DASHBOARD CARD ================= */
 
 .dashboard-card {
-    border-radius: 16px;
-    padding: 20px;
+    border-radius: 12px;
+    padding: 14px 16px;
     background: #ffffff;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
     transition: 0.3s ease;
 }
 
@@ -104,8 +104,20 @@
 
 /* ================= MOBILE ================= */
 
-@media (max-width:768px) {
+@media (max-width: 768px) {
     .kpi-card {
-        min-height: 140px;
+        min-height: auto;
+        padding: 14px 12px;
+        margin-bottom: 12px;
+    }
+    .chart-container {
+        height: 220px;
     }
 }
+
+@media (max-width: 576px) {
+    .dashboard-card {
+        padding: 14px 12px;
+        border-radius: 12px;
+    }
+}

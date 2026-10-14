@@ -78,11 +78,12 @@
                             <tbody id="itemsBody">
                                 <tr>
                                     <td>
-                                        <select name="material[]" class="form-select">
+                                        <input type="text" name="material[]" class="form-control" list="material-suggestions" placeholder="Type material name..." required autocomplete="off">
+                                        <datalist id="material-suggestions">
                                             {% for m in materials %}
-                                                <option value="{{ m.id }}">{{ m.name }}</option>
+                                                <option value="{{ m.name }}"></option>
                                             {% endfor %}
-                                        </select>
+                                        </datalist>
                                     </td>
                                     <td>
                                         <input type="number" name="quantity[]" class="form-control qty" value="1" min="1">

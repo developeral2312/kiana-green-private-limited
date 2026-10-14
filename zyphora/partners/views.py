@@ -217,19 +217,29 @@ def add_partner_lead(request, pk):
 def update_partner_stock(request, pk):
     if request.method == 'POST':
         partner = get_object_or_404(Partner, pk=pk)
-        material_id = request.POST.get('material_id')
+        material_input = request.POST.get('material_name') or request.POST.get('material_id')
         quantity = request.POST.get('quantity')
         
-        if material_id and quantity:
-            stock, created = PartnerStock.objects.get_or_create(
-                partner=partner,
-                material_id=material_id,
-                defaults={'quantity': 0}
-            )
-            # Update quantity (adding or replacing depending on logic, let's just set it)
-            stock.quantity = int(quantity)
-            stock.save()
-            messages.success(request, 'Stock updated successfully.')
+        if material_input and quantity:
+            from procurement.models import Material, Stock
+            mat_str = str(material_input).strip()
+            if mat_str.isdigit():
+                material = Material.objects.filter(id=int(mat_str)).first()
+            else:
+                material = Material.objects.filter(name__iexact=mat_str).first()
+                if not material:
+                    material = Material.objects.create(name=mat_str, unit='Units', minimum_stock=5)
+                    Stock.objects.get_or_create(material=material, defaults={'quantity': 0})
+            
+            if material:
+                stock, created = PartnerStock.objects.get_or_create(
+                    partner=partner,
+                    material=material,
+                    defaults={'quantity': 0}
+                )
+                stock.quantity = int(quantity)
+                stock.save()
+                messages.success(request, f'Stock for "{material.name}" updated successfully.')
             
     return redirect('partner_detail', pk=pk)
 

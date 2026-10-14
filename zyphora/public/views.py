@@ -124,7 +124,15 @@ def projects_page(request):
     capacity = 0
 
     for project in projects:
-        capacity += project.feasibility.suggested_capacity
+        try:
+            if project.feasibility and project.feasibility.suggested_capacity:
+                capacity += project.feasibility.suggested_capacity
+        except Exception:
+            try:
+                if project.lead and project.lead.required_capacity:
+                    capacity += float(project.lead.required_capacity)
+            except Exception:
+                pass
 
     if capacity >= 1000:
         capacity = round(capacity/1000,2)

@@ -28,3 +28,9 @@
     height: 300px !important;
     /* fixed height */
 }
+
+@media (max-width: 576px) {
+    .card canvas {
+        height: 210px !important;
+    }
+}

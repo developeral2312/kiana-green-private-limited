@@ -161,16 +161,26 @@
                     <div class="d-flex justify-content-between align-items-center p-3 mb-2 bg-light rounded" style="border: 1px solid #f1f5f9;">
                         <div>
                             <strong class="text-dark">{{ task.title }}</strong><br>
-                            <small class="text-muted">{{ task.get_status_display }}</small>
+                            <small class="text-muted"><i class="bi bi-tag me-1"></i>{{ task.get_status_display }}</small>
+                            {% if task.project %}
+                            <small class="text-muted d-block"><i class="bi bi-folder me-1"></i>{{ task.project.title }}</small>
+                            {% endif %}
                         </div>
-                        <span class="badge 
-                            {% if task.status == 'new' %}bg-primary
-                            {% elif task.status == 'in_progress' %}bg-warning
-                            {% elif task.status == 'completed' %}bg-success
-                            {% elif task.status == 'overdue' %}bg-danger
-                            {% endif %}">
-                            {{ task.status|title }}
-                        </span>
+                        <div class="d-flex align-items-center gap-2">
+                            {% if task.project.lead.phone %}
+                            <a href="tel:{{ task.project.lead.phone }}" class="btn btn-sm btn-outline-success rounded-circle p-1" title="Call Client">
+                                <i class="bi bi-telephone"></i>
+                            </a>
+                            {% endif %}
+                            <span class="badge 
+                                {% if task.status == 'new' %}bg-primary
+                                {% elif task.status == 'in_progress' %}bg-warning
+                                {% elif task.status == 'completed' %}bg-success
+                                {% elif task.status == 'overdue' %}bg-danger
+                                {% endif %}">
+                                {{ task.status|title }}
+                            </span>
+                        </div>
                     </div>
                     {% empty %}
                     <div class="text-center py-5 text-muted">
@@ -192,16 +202,31 @@
                     {% for visit in site_visits %}
                     <div class="d-flex justify-content-between align-items-center p-3 mb-2 bg-light rounded" style="border: 1px solid #f1f5f9;">
                         <div>
-                            <strong class="text-dark">{{ visit.project.title|default:"No Project" }}</strong><br>
+                            <strong class="text-dark">{{ visit.project.title|default:visit.lead.name|default:"Site Visit" }}</strong><br>
                             <small class="text-muted"><i class="bi bi-clock me-1"></i>{{ visit.scheduled_date }}</small>
+                            {% if visit.lead.location or visit.project.location %}
+                            <small class="text-muted d-block"><i class="bi bi-geo-alt me-1 text-danger"></i>{{ visit.project.location|default:visit.lead.location }}</small>
+                            {% endif %}
                         </div>
-                        <span class="badge 
-                            {% if visit.status == 'pending' %}bg-warning
-                            {% elif visit.status == 'done' %}bg-success
-                            {% elif visit.status == 'cancelled' %}bg-danger
-                            {% endif %}">
-                            {{ visit.status|title }}
-                        </span>
+                        <div class="d-flex align-items-center gap-2">
+                            {% if visit.lead.phone %}
+                            <a href="tel:{{ visit.lead.phone }}" class="btn btn-sm btn-success rounded-circle p-2" title="Call Client">
+                                <i class="bi bi-telephone-fill"></i>
+                            </a>
+                            {% endif %}
+                            {% if visit.project.location or visit.lead.location %}
+                            <a href="https://www.google.com/maps/dir/?api=1&destination={{ visit.project.location|default:visit.lead.location|urlencode }}" target="_blank" class="btn btn-sm btn-primary rounded-circle p-2" title="Navigate Route">
+                                <i class="bi bi-map-fill"></i>
+                            </a>
+                            {% endif %}
+                            <span class="badge 
+                                {% if visit.status == 'pending' %}bg-warning
+                                {% elif visit.status == 'done' %}bg-success
+                                {% elif visit.status == 'cancelled' %}bg-danger
+                                {% endif %}">
+                                {{ visit.status|title }}
+                            </span>
+                        </div>
                     </div>
                     {% empty %}
                     <div class="text-center py-5 text-muted">

@@ -201,3 +201,45 @@ body::before {
     .hero-title { font-size: 1.8rem; }
     .form-container { margin: 0 auto; }
 }
+
+@media (max-width: 576px) {
+    .login-wrapper {
+        padding: 12px;
+        padding-top: 84px;
+    }
+    .split-card {
+        border-radius: 16px;
+    }
+    .card-left {
+        padding: 24px 18px;
+    }
+    .card-right {
+        padding: 28px 18px;
+    }
+    .hero-title {
+        font-size: 1.45rem;
+    }
+    .hero-subtitle {
+        font-size: 0.88rem;
+    }
+    .stats-row {
+        margin-top: 18px;
+        gap: 18px;
+    }
+    .stat-value {
+        font-size: 1.3rem;
+    }
+    .form-title {
+        font-size: 1.4rem;
+        margin-bottom: 22px;
+    }
+    .custom-input {
+        font-size: 16px !important;
+        padding: 12px 14px;
+    }
+    .sign-in-btn {
+        padding: 12px;
+        font-size: 0.95rem;
+    }
+}
+
