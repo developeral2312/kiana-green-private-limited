@@ -336,23 +336,26 @@
                         </div>
                         <!-- Quick Prompt Chips -->
                         <div class="d-flex flex-wrap gap-1 mt-2" id="aiQuickChips">
+                            <button type="button" class="btn btn-outline-warning text-dark btn-sm py-1 px-2 rounded-pill ai-chip fw-semibold" data-prompt="3kw subsidy" style="font-size: 0.75rem;">
+                                <i class="bi bi-sun-fill text-warning me-1"></i>3kW Subsidy
+                            </button>
+                            <button type="button" class="btn btn-outline-success btn-sm py-1 px-2 rounded-pill ai-chip" data-prompt="profit and loss" style="font-size: 0.75rem;">
+                                <i class="bi bi-cash-coin me-1"></i>Profit & Loss
+                            </button>
                             <button type="button" class="btn btn-outline-primary btn-sm py-1 px-2 rounded-pill ai-chip" data-prompt="summary" style="font-size: 0.75rem;">
                                 <i class="bi bi-bar-chart me-1"></i>Summary
                             </button>
                             <button type="button" class="btn btn-outline-danger btn-sm py-1 px-2 rounded-pill ai-chip" data-prompt="delayed projects" style="font-size: 0.75rem;">
                                 <i class="bi bi-exclamation-triangle me-1"></i>Delayed Projects
                             </button>
-                            <button type="button" class="btn btn-outline-info btn-sm py-1 px-2 rounded-pill ai-chip" data-prompt="subsidy" style="font-size: 0.75rem;">
-                                <i class="bi bi-bank me-1"></i>Subsidy
+                            <button type="button" class="btn btn-outline-info btn-sm py-1 px-2 rounded-pill ai-chip" data-prompt="PRJ-1001" style="font-size: 0.75rem;">
+                                <i class="bi bi-folder-check me-1"></i>PRJ-1001
                             </button>
                             <button type="button" class="btn btn-outline-success btn-sm py-1 px-2 rounded-pill ai-chip" data-prompt="leads" style="font-size: 0.75rem;">
                                 <i class="bi bi-people me-1"></i>New Leads
                             </button>
-                            <button type="button" class="btn btn-outline-warning btn-sm py-1 px-2 rounded-pill ai-chip text-dark" data-prompt="stock" style="font-size: 0.75rem;">
-                                <i class="bi bi-boxes me-1"></i>Stock Alert
-                            </button>
-                            <button type="button" class="btn btn-outline-secondary btn-sm py-1 px-2 rounded-pill ai-chip" data-prompt="revenue" style="font-size: 0.75rem;">
-                                <i class="bi bi-currency-rupee me-1"></i>Revenue
+                            <button type="button" class="btn btn-outline-secondary btn-sm py-1 px-2 rounded-pill ai-chip" data-prompt="Waaree panel" style="font-size: 0.75rem;">
+                                <i class="bi bi-boxes me-1"></i>Waaree Stock
                             </button>
                             <button type="button" class="btn btn-outline-primary btn-sm py-1 px-2 rounded-pill ai-chip" data-prompt="vendors" style="font-size: 0.75rem;">
                                 <i class="bi bi-truck me-1"></i>Vendors & PO
@@ -366,7 +369,7 @@
             <div class="card-footer bg-white p-2 border-top">
                 <div class="input-group">
                     <input type="text" id="aiQueryInput" class="form-control border-end-0 shadow-none ps-3" 
-                           placeholder="Ask AI (e.g., 'delayed projects', 'stock')..." 
+                           placeholder="Poochiye (e.g. '3kw subsidy', 'PRJ-1001', 'profit')..." 
                            style="border-radius: 24px 0 0 24px; font-size: 0.88rem;">
                     <button class="btn btn-primary px-3" id="aiSendBtn" style="border-radius: 0 24px 24px 0;">
                         <i class="bi bi-send-fill"></i>
@@ -420,12 +423,14 @@
                                     Poochiye koi bhi live ERP question Hindi ya English me:
                                 </div>
                                 <div class="d-flex flex-wrap gap-1 mt-2">
+                                    <button type="button" class="btn btn-outline-warning text-dark btn-sm py-1 px-2 rounded-pill ai-chip fw-semibold" data-prompt="3kw subsidy" style="font-size: 0.75rem;"><i class="bi bi-sun-fill text-warning me-1"></i>3kW Subsidy</button>
+                                    <button type="button" class="btn btn-outline-success btn-sm py-1 px-2 rounded-pill ai-chip" data-prompt="profit and loss" style="font-size: 0.75rem;"><i class="bi bi-cash-coin me-1"></i>Profit & Loss</button>
                                     <button type="button" class="btn btn-outline-primary btn-sm py-1 px-2 rounded-pill ai-chip" data-prompt="summary" style="font-size: 0.75rem;"><i class="bi bi-bar-chart me-1"></i>Summary</button>
                                     <button type="button" class="btn btn-outline-danger btn-sm py-1 px-2 rounded-pill ai-chip" data-prompt="delayed projects" style="font-size: 0.75rem;"><i class="bi bi-exclamation-triangle me-1"></i>Delayed Projects</button>
-                                    <button type="button" class="btn btn-outline-info btn-sm py-1 px-2 rounded-pill ai-chip" data-prompt="subsidy" style="font-size: 0.75rem;"><i class="bi bi-bank me-1"></i>Subsidy</button>
+                                    <button type="button" class="btn btn-outline-info btn-sm py-1 px-2 rounded-pill ai-chip" data-prompt="PRJ-1001" style="font-size: 0.75rem;"><i class="bi bi-folder-check me-1"></i>PRJ-1001</button>
                                     <button type="button" class="btn btn-outline-success btn-sm py-1 px-2 rounded-pill ai-chip" data-prompt="leads" style="font-size: 0.75rem;"><i class="bi bi-people me-1"></i>New Leads</button>
-                                    <button type="button" class="btn btn-outline-warning btn-sm py-1 px-2 rounded-pill ai-chip text-dark" data-prompt="stock" style="font-size: 0.75rem;"><i class="bi bi-boxes me-1"></i>Stock Alert</button>
-                                    <button type="button" class="btn btn-outline-secondary btn-sm py-1 px-2 rounded-pill ai-chip" data-prompt="revenue" style="font-size: 0.75rem;"><i class="bi bi-currency-rupee me-1"></i>Revenue</button>
+                                    <button type="button" class="btn btn-outline-secondary btn-sm py-1 px-2 rounded-pill ai-chip" data-prompt="Waaree panel" style="font-size: 0.75rem;"><i class="bi bi-boxes me-1"></i>Waaree Stock</button>
+                                    <button type="button" class="btn btn-outline-primary btn-sm py-1 px-2 rounded-pill ai-chip" data-prompt="vendors" style="font-size: 0.75rem;"><i class="bi bi-truck me-1"></i>Vendors & PO</button>
                                 </div>
                             </div>
                         </div>
